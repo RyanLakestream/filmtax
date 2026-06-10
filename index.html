@@ -1,0 +1,2379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Film Tax Credit Manager</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f3f6fb;
+  --bg-elevated:#ffffff;
+  --bg-soft:#f7f9fc;
+  --bg-muted:#eef3f9;
+  --bg-strong:#e6edf6;
+  --bg2:var(--bg-elevated);
+  --bg3:var(--bg-soft);
+  --bg4:var(--bg-strong);
+  --border:rgba(15,23,42,0.08);
+  --border-strong:rgba(15,23,42,0.14);
+  --border2:var(--border-strong);
+  --text:#0f172a;
+  --text-2:#334155;
+  --text-3:#64748b;
+  --text-4:#94a3b8;
+  --text2:var(--text-2);
+  --text3:var(--text-3);
+  --navy:#153b63;
+  --navy-2:#0f2b48;
+  --navy-3:#081b31;
+  --teal:#0f9a8b;
+  --teal-2:#0c7c70;
+  --teal-bg:rgba(15,154,139,0.10);
+  --red:#d14343;
+  --red-bg:rgba(209,67,67,0.10);
+  --amber:#d97706;
+  --amber-bg:rgba(217,119,6,0.11);
+  --green:#16a34a;
+  --green-bg:rgba(22,163,74,0.10);
+  --purple:#7c3aed;
+  --purple-bg:rgba(124,58,237,0.10);
+  --blue-bg:rgba(21,59,99,0.08);
+  --shadow-sm:0 1px 3px rgba(15,23,42,0.06),0 1px 2px rgba(15,23,42,0.04);
+  --shadow-md:0 10px 30px rgba(15,23,42,0.08),0 4px 12px rgba(15,23,42,0.06);
+  --shadow-lg:0 24px 64px rgba(15,23,42,0.16),0 12px 28px rgba(15,23,42,0.08);
+  --radius:10px;
+  --radius-lg:16px;
+  --radius-xl:24px;
+}
+html,body{min-height:100%}
+body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(15,154,139,0.08), transparent 28%),
+    radial-gradient(circle at top right, rgba(124,58,237,0.07), transparent 22%),
+    linear-gradient(180deg,#f8fbff 0%,#f3f6fb 100%);
+  color:var(--text);
+  min-height:100vh;
+  font-size:13px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+#root{min-height:100vh}
+a{color:inherit}
+button{cursor:pointer;border:none;font-family:inherit;font-size:13px;transition:transform .08s ease,filter .14s ease,box-shadow .14s ease}
+button:hover{filter:brightness(0.99)}
+button:active{transform:translateY(1px)}
+input,select,textarea{font-family:inherit;font-size:13px;outline:none}
+input::placeholder,textarea::placeholder{color:var(--text-4)}
+input:focus,select:focus,textarea:focus{border-color:rgba(15,154,139,0.5)!important;box-shadow:0 0 0 4px rgba(15,154,139,0.12)}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px!important}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(15,23,42,0.15);border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:rgba(15,23,42,0.22)}
+.ai-pulse{animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.38}}
+.card-shadow{box-shadow:var(--shadow-sm)}
+.glass{background:rgba(255,255,255,0.72);backdrop-filter:blur(12px)}
+.gradient-panel{background:linear-gradient(135deg,rgba(21,59,99,0.96),rgba(12,124,112,0.96))}
+.hero-panel{background:linear-gradient(135deg,rgba(21,59,99,0.96),rgba(124,58,237,0.92));color:#fff}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.grid-auto-wide{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.status-dot{display:inline-flex;width:8px;height:8px;border-radius:999px;background:currentColor}
+@media (max-width:1100px){
+  body{font-size:12.5px}
+}
+@media (max-width:960px){
+  #root>div{flex-direction:column}
+}
+@media (max-width:720px){
+  .hide-mobile{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef,useCallback,useMemo}=React;
+
+// ─── STATE PROGRAM DEFINITIONS ────────────────────────────
+const STATE_PROGRAMS={
+  NJ:{
+    name:'New Jersey',abbr:'NJ',
+    rate:'35%',rateNote:'Transferable tax credit',
+    minSpend:1000000,minSpendNote:'$1M minimum qualified spend',
+    cap:'No annual cap',
+    atl:false,atlNote:'ATL costs (directors, lead actors) do NOT qualify',
+    transferable:true,
+    residencyLabel:'NJ Residency',
+    vendorLabel:'NJ Vendor Status',
+    cats:{
+      "NJ Resident Cast":{q:true,type:"payroll"},
+      "NJ Resident Crew":{q:true,type:"payroll"},
+      "NJ Resident Production Staff":{q:true,type:"payroll"},
+      "NJ Resident Post-Production Staff":{q:true,type:"payroll"},
+      "Non-NJ Cast":{q:false,type:"payroll"},
+      "Non-NJ Crew":{q:false,type:"payroll"},
+      "Equipment Rentals":{q:true,type:"vendor"},
+      "Stage / Studio Rental":{q:true,type:"vendor"},
+      "Location Fees":{q:true,type:"vendor"},
+      "Set Construction":{q:true,type:"vendor"},
+      "Wardrobe / HMU":{q:true,type:"vendor"},
+      "Production Supplies":{q:true,type:"vendor"},
+      "Catering":{q:true,type:"vendor"},
+      "Transportation":{q:true,type:"vendor"},
+      "Lodging":{q:true,type:"vendor"},
+      "Post-Production Services":{q:true,type:"vendor"},
+      "Editing / VFX / Sound":{q:true,type:"vendor"},
+      "Out-of-State Vendors":{q:false,type:"vendor"},
+      "Above-the-Line":{q:false,type:"vendor"},
+      "Financing Fees":{q:false,type:"vendor"},
+      "Legal / Accounting":{q:false,type:"vendor"},
+      "Insurance":{q:false,type:"vendor"},
+      "Penalties / Interest":{q:false,type:"vendor"},
+    },
+    aiPromptRules:`NEW JERSEY FILM TAX CREDIT RULES:
+- 35% transferable tax credit on qualified NJ expenditures
+- Minimum $1M qualified spend required
+- QUALIFIES: NJ resident cast/crew wages, equipment rentals from NJ vendors, stage/studio rental in NJ, location fees, set construction, wardrobe, catering, transportation, lodging, NJ post-production services
+- DOES NOT QUALIFY: Non-NJ resident labor, out-of-state vendor payments, above-the-line costs (director fees, lead actor salaries, producer fees), financing fees, legal/accounting fees, insurance, penalties
+- Key test for vendors: Is the vendor a NJ-based company?
+- Key test for payroll: Is the employee a NJ resident?`,
+  },
+  CA:{
+    name:'California',abbr:'CA',
+    rate:'35–40%',rateNote:'Refundable tax credit (Program 4.0)',
+    minSpend:1000000,minSpendNote:'$1M minimum per project or per episode',
+    cap:'$750M annually through 2030',
+    atl:false,atlNote:'ATL costs (directors, lead actors, producers) do NOT qualify',
+    transferable:false,transferableNote:'Non-transferable except indie films',
+    residencyLabel:'CA Residency',
+    vendorLabel:'CA Vendor Status',
+    cats:{
+      "CA Resident BTL Crew":{q:true,type:"payroll"},
+      "CA Resident BTL Cast":{q:true,type:"payroll"},
+      "CA Resident Post-Production Staff":{q:true,type:"payroll"},
+      "Non-CA Resident Labor":{q:false,type:"payroll"},
+      "Above-the-Line (Director/Producer/Lead Actor)":{q:false,type:"payroll"},
+      "Equipment Rentals (CA)":{q:true,type:"vendor"},
+      "Stage / Studio Rental (CA)":{q:true,type:"vendor"},
+      "Location Fees (CA)":{q:true,type:"vendor"},
+      "Set Construction (CA)":{q:true,type:"vendor"},
+      "Wardrobe / HMU (CA)":{q:true,type:"vendor"},
+      "Production Supplies (CA)":{q:true,type:"vendor"},
+      "Catering (CA)":{q:true,type:"vendor"},
+      "Transportation (CA)":{q:true,type:"vendor"},
+      "Lodging (CA)":{q:true,type:"vendor"},
+      "VFX / Post-Production (CA)":{q:true,type:"vendor"},
+      "Out-of-Zone / Out-of-State Vendors":{q:false,type:"vendor"},
+      "Standalone VFX (filmed outside CA)":{q:false,type:"vendor"},
+      "Financing Fees":{q:false,type:"vendor"},
+      "Legal / Accounting":{q:false,type:"vendor"},
+      "Insurance":{q:false,type:"vendor"},
+    },
+    aiPromptRules:`CALIFORNIA FILM TAX CREDIT RULES (Program 4.0):
+- 35-40% refundable tax credit; up to 45% with bonuses
+- Minimum $1M per project or per episode
+- 75% of principal photography days must be in CA, OR 75% of production budget spent in CA
+- QUALIFIES: CA below-the-line (BTL) crew/cast wages, equipment rentals from CA vendors, stage/studio rental in CA, location fees, set construction, wardrobe, catering, transportation, lodging, CA-based VFX and post-production
+- DOES NOT QUALIFY: Above-the-line costs (director salary, lead actor salary, producer salary, writer fees), non-CA resident labor, out-of-state vendor payments, standalone VFX/post done outside CA, financing fees, legal/accounting, insurance
+- Above-the-line = director, writer, executive producer, lead/principal actors
+- Below-the-line = everyone else on crew and supporting cast`,
+  },
+  GA:{
+    name:'Georgia',abbr:'GA',
+    rate:'20–30%',rateNote:'20% base + 10% GEP logo uplift; transferable',
+    minSpend:500000,minSpendNote:'$500K minimum qualified GA spend',
+    cap:'No annual cap, no sunset date',
+    atl:true,atlNote:'ATL costs qualify (subject to $500K per-person salary cap)',
+    transferable:true,
+    residencyLabel:'GA Residency',
+    vendorLabel:'GA Vendor Status',
+    cats:{
+      "GA Resident Cast":{q:true,type:"payroll"},
+      "GA Resident Crew":{q:true,type:"payroll"},
+      "GA Resident Post-Production":{q:true,type:"payroll"},
+      "Director / Producer (ATL)":{q:true,type:"payroll",note:"Qualifies, $500K cap per person"},
+      "Lead Actor (ATL)":{q:true,type:"payroll",note:"Qualifies, $500K cap per person"},
+      "Non-GA Labor (any)":{q:false,type:"payroll"},
+      "Equipment Rentals (GA)":{q:true,type:"vendor"},
+      "Stage / Studio Rental (GA)":{q:true,type:"vendor"},
+      "Location Fees (GA)":{q:true,type:"vendor"},
+      "Set Construction (GA)":{q:true,type:"vendor"},
+      "Wardrobe / HMU (GA)":{q:true,type:"vendor"},
+      "Production Supplies (GA)":{q:true,type:"vendor"},
+      "Catering (GA)":{q:true,type:"vendor"},
+      "Transportation (GA)":{q:true,type:"vendor"},
+      "Lodging (GA)":{q:true,type:"vendor"},
+      "Post-Production (GA)":{q:true,type:"vendor"},
+      "Out-of-State Vendors":{q:false,type:"vendor"},
+      "Development / Story Rights":{q:false,type:"vendor"},
+      "Marketing / Promotion":{q:false,type:"vendor"},
+      "Legal Fees":{q:false,type:"vendor"},
+      "Licensing Fees":{q:false,type:"vendor"},
+      "Financing Fees":{q:false,type:"vendor"},
+    },
+    aiPromptRules:`GEORGIA FILM TAX CREDIT RULES:
+- 20% transferable tax credit on qualified GA expenditures; +10% if Georgia Entertainment Promotion logo included in end credits
+- Minimum $500,000 in qualified GA spend (can aggregate multiple projects in same tax year)
+- Must be shot in Georgia and distributed commercially outside Georgia
+- QUALIFIES: Cast and crew wages (including above-the-line such as directors, producers, lead actors — subject to $500K per-person salary cap), GA-based vendor payments for equipment, studio, locations, set construction, wardrobe, catering, transportation, lodging, GA post-production
+- DOES NOT QUALIFY: Non-GA vendor payments, development costs, story rights, marketing/promotion, legal fees, licensing fees, financing fees, double-dipping between production credit and post-production credit
+- Key difference from other states: ATL costs (directors, lead actors, producers) DO qualify here
+- $500,000 per-person salary cap applies regardless of role`,
+  },
+  NY:{
+    name:'New York',abbr:'NY',
+    rate:'30–50%',rateNote:'30% base; up to 50% with upstate + Production Plus bonuses',
+    minSpend:1000000,minSpendNote:'$1M min (NYC/metro); $250K min (upstate)',
+    cap:'$700M/yr main program + $100M/yr indie program',
+    atl:true,atlNote:'ATL qualifies but capped at 40% of all other qualified spend',
+    transferable:false,transferableNote:'Non-transferable but fully refundable',
+    residencyLabel:'NY Residency',
+    vendorLabel:'NY Vendor Status',
+    cats:{
+      "NY BTL Crew Wages":{q:true,type:"payroll"},
+      "NY BTL Cast Wages":{q:true,type:"payroll"},
+      "Director (ATL)":{q:true,type:"payroll",note:"Qualifies; ATL total capped at 40% of BTL"},
+      "Writer (ATL)":{q:true,type:"payroll",note:"Qualifies; ATL total capped at 40% of BTL"},
+      "Producer (ATL)":{q:true,type:"payroll",note:"Qualifies; ATL total capped at 40% of BTL"},
+      "Principal Actor (ATL)":{q:true,type:"payroll",note:"Qualifies; ATL total capped at 40% of BTL"},
+      "Non-NY Labor":{q:false,type:"payroll"},
+      "Equipment Rentals (NY)":{q:true,type:"vendor"},
+      "Qualified Production Facility (NY)":{q:true,type:"vendor"},
+      "Location Fees (NY)":{q:true,type:"vendor"},
+      "Set Construction (NY)":{q:true,type:"vendor"},
+      "Wardrobe / HMU (NY)":{q:true,type:"vendor"},
+      "Production Supplies (NY)":{q:true,type:"vendor"},
+      "Catering (NY)":{q:true,type:"vendor"},
+      "Transportation (NY)":{q:true,type:"vendor"},
+      "Lodging (NY)":{q:true,type:"vendor"},
+      "Post-Production (NY)":{q:true,type:"vendor"},
+      "Music Scoring (NY, 5+ musicians)":{q:true,type:"vendor"},
+      "Out-of-State Vendors":{q:false,type:"vendor"},
+      "Reality / Game Show / Sports Content":{q:false,type:"vendor"},
+      "Financing Fees":{q:false,type:"vendor"},
+      "Legal / Accounting":{q:false,type:"vendor"},
+      "NYS ESD Grant-Covered Costs":{q:false,type:"vendor"},
+    },
+    aiPromptRules:`NEW YORK STATE FILM TAX CREDIT RULES:
+- 30% fully refundable non-transferable tax credit on qualified NY expenditures
+- Upstate bonus: +10% on labor in designated upstate counties (50%+ shoot days there)
+- Production Plus: +5-10% for companies with 2+ productions totaling $20M+ or $100M+
+- Minimum $1M qualified spend in NYC/metro area; $250K minimum upstate
+- Must film 75% of principal photography days in NY, OR spend $3M+ at a qualified production facility
+- QUALIFIES: NY below-the-line crew/cast wages, above-the-line (directors, writers, producers, principal actors) subject to ATL cap, NY-based equipment rental, qualified production facilities, location fees, set construction, wardrobe, catering, transportation, lodging, NY post-production, music scoring (min 5 NY musicians)
+- DOES NOT QUALIFY: Non-NY labor, out-of-state vendors, reality shows, game shows, sports programming, commercials, music videos, news, costs covered by NYS ESD grants, financing fees
+- ATL costs are eligible but ATL total cannot exceed 40% of all other qualified production costs`,
+  },
+  TX:{
+    name:'Texas',abbr:'TX',
+    rate:'Up to 31%',rateNote:'Cash grant (not tax credit) — direct check after production',
+    minSpend:250000,minSpendNote:'$250K minimum TX spend (film/TV); $100K for commercials',
+    cap:'$300M per biennium through 2035',
+    atl:false,atlNote:'Only TX resident labor qualifies; non-TX resident labor is completely ineligible',
+    transferable:false,transferableNote:'Cash grant — no transfer needed',
+    residencyLabel:'TX Residency',
+    vendorLabel:'TX Vendor Status',
+    cats:{
+      "TX Resident Cast Wages":{q:true,type:"payroll"},
+      "TX Resident Crew Wages":{q:true,type:"payroll"},
+      "TX Resident Staff Wages":{q:true,type:"payroll"},
+      "Non-TX Resident Labor":{q:false,type:"payroll"},
+      "Above-the-Line (non-TX resident)":{q:false,type:"payroll"},
+      "Equipment Rentals (TX)":{q:true,type:"vendor"},
+      "Stage / Studio Rental (TX)":{q:true,type:"vendor"},
+      "Location Fees (TX)":{q:true,type:"vendor"},
+      "Set Construction (TX)":{q:true,type:"vendor"},
+      "Wardrobe / HMU (TX)":{q:true,type:"vendor"},
+      "Production Supplies (TX)":{q:true,type:"vendor"},
+      "Catering (TX)":{q:true,type:"vendor"},
+      "Transportation (TX, TX vendors)":{q:true,type:"vendor"},
+      "Lodging (TX hotels)":{q:true,type:"vendor"},
+      "Post-Production (TX)":{q:true,type:"vendor"},
+      "Out-of-State Vendors":{q:false,type:"vendor"},
+      "Non-TX Hotel / Travel":{q:false,type:"vendor"},
+      "News / Sports / Reality (ineligible)":{q:false,type:"vendor"},
+      "Financing Fees":{q:false,type:"vendor"},
+      "Legal / Accounting":{q:false,type:"vendor"},
+    },
+    aiPromptRules:`TEXAS MOVING IMAGE INDUSTRY INCENTIVE PROGRAM (TMIIIP) RULES:
+- Cash GRANT (not a tax credit) — direct check issued after production completes and documentation is audited
+- Up to 31% of qualified Texas expenditures; base rate varies by budget tier
+- Minimum $250,000 in TX spend for film/TV; $100,000 for commercials
+- At least 60% of the total project must be completed in Texas
+- At least 35% of paid crew must be TX residents; at least 35% of paid cast (including extras) must be TX residents
+- QUALIFIES: TX resident cast/crew wages (capped at first $1M per person), TX vendor invoices for equipment, studio, locations, set construction, wardrobe, catering, TX hotels, TX-based transportation, TX post-production, petty cash for TX purchases
+- DOES NOT QUALIFY: Non-TX resident labor (completely ineligible — no exceptions), out-of-state vendor payments, non-TX hotels, flights on non-TX airlines, news/current events, political advertising, financing fees, legal fees
+- Per-person labor cap: Only the first $1,000,000 of each TX resident's wages is eligible
+- Content restriction: State can deny projects with inappropriate content or content portraying Texas negatively`,
+  },
+};
+
+const QUAL_OPTS=["QE","NQ","Not Required","Untagged"];
+
+// ─── HELPERS ─────────────────────────────────────────────
+function fmt(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:0,maximumFractionDigits:0}).format(n||0);}
+function fmtd(n){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(n||0);}
+function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36);}
+function sumAmt(arr){return arr.reduce((s,l)=>s+(Number(l.amount)||0),0);}
+function getStateProgram(stateAbbr){return STATE_PROGRAMS[stateAbbr]||STATE_PROGRAMS.NJ;}
+function getStateCats(stateAbbr){return getStateProgram(stateAbbr).cats;}
+function countWarnings(lines){return (lines||[]).reduce((s,l)=>s+((l.warnings||[]).length||0),0);}
+function getProjectSuggestedView(project){
+  const uploads=project?.uploads||[];
+  const lines=project?.lines||[];
+  if(!uploads.length)return 'upload';
+  if(!lines.length)return 'map';
+  return 'review';
+}
+function getProjectHealth(project){
+  const uploads=project?.uploads||[];
+  const lines=project?.lines||[];
+  const untagged=lines.filter(l=>l.qs==='Untagged').length;
+  const warnings=countWarnings(lines);
+  if(!uploads.length)return {label:'Needs files',color:'amber'};
+  if(!lines.length)return {label:'Map columns',color:'navy'};
+  if(untagged>0)return {label:'Review AI',color:'purple'};
+  if(warnings>0)return {label:'Warnings to check',color:'amber'};
+  return {label:'Ready to export',color:'green'};
+}
+function formatDate(value){
+  if(!value)return '—';
+  try{return new Date(value).toLocaleDateString();}catch{return value;}
+}
+
+// ─── BROWSER PERSISTENCE ────────────────────────────────
+const DB_NAME='filmtax_manager_v3';
+const DB_VERSION=1;
+const DB_STORE='app_state';
+const PROJECTS_KEY='projects';
+
+function openDB(){
+  return new Promise((resolve,reject)=>{
+    if(!window.indexedDB){reject(new Error('IndexedDB unavailable'));return;}
+    const req=indexedDB.open(DB_NAME,DB_VERSION);
+    req.onupgradeneeded=()=>{
+      const db=req.result;
+      if(!db.objectStoreNames.contains(DB_STORE))db.createObjectStore(DB_STORE);
+    };
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error||new Error('DB open failed'));
+  });
+}
+function dbGet(key){
+  return openDB().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction(DB_STORE,'readonly');
+    const store=tx.objectStore(DB_STORE);
+    const req=store.get(key);
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error||new Error('DB read failed'));
+  }));
+}
+function dbSet(key,value){
+  return openDB().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction(DB_STORE,'readwrite');
+    const store=tx.objectStore(DB_STORE);
+    const req=store.put(value,key);
+    req.onsuccess=()=>resolve(true);
+    req.onerror=()=>reject(req.error||new Error('DB write failed'));
+  }));
+}
+function dbDelete(key){
+  return openDB().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction(DB_STORE,'readwrite');
+    const store=tx.objectStore(DB_STORE);
+    const req=store.delete(key);
+    req.onsuccess=()=>resolve(true);
+    req.onerror=()=>reject(req.error||new Error('DB delete failed'));
+  }));
+}
+
+const LS_FALLBACK_KEY='filmtax_projects_v3_fallback';
+async function loadProjects(){
+  try{
+    const data=await dbGet(PROJECTS_KEY);
+    if(Array.isArray(data))return data;
+  }catch(_){/* fall through */}
+  try{
+    const raw=localStorage.getItem(LS_FALLBACK_KEY);
+    return raw?JSON.parse(raw):[];
+  }catch{return [];}
+}
+
+async function saveProjects(projects){
+  try{
+    await dbSet(PROJECTS_KEY,projects);
+    try{localStorage.removeItem(LS_FALLBACK_KEY);}catch{}
+  }catch(e){
+    try{localStorage.setItem(LS_FALLBACK_KEY,JSON.stringify(projects));}catch{}
+    throw e;
+  }
+}
+
+async function clearProjectStore(){
+  try{await dbDelete(PROJECTS_KEY);}catch(_){/* ignore */}
+  try{localStorage.removeItem(LS_FALLBACK_KEY);}catch{}
+}
+
+const LS_API_KEY='filmtax_api_key';
+function loadApiKey(){try{return localStorage.getItem(LS_API_KEY)||'';}catch{return '';}}
+function saveApiKey(k){try{localStorage.setItem(LS_API_KEY,k);}catch{}}
+
+// ─── FILE PARSER ─────────────────────────────────────────
+// CSV: PapaParse with auto-detect delimiter/newline and header trimming.
+// XLSX/XLS: SheetJS with first non-empty row treated as headers so blank intro rows don't break import.
+function sanitizeHeader(value,index){
+  const text=String(value??'').trim();
+  return text||`Column ${index+1}`;
+}
+function normalizeCell(value){
+  if(value==null)return '';
+  if(typeof value==='string')return value.trim();
+  return value;
+}
+
+function parseWorkbookRows(ws){
+  const matrix=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false,dateNF:'yyyy-mm-dd',blankrows:false});
+  const headerIndex=matrix.findIndex(row=>Array.isArray(row)&&row.some(cell=>String(cell??'').trim()!==''));
+  if(headerIndex===-1)throw new Error('File appears empty or has no column headers');
+  const headers=(matrix[headerIndex]||[]).map((h,i)=>sanitizeHeader(h,i));
+  const rows=matrix.slice(headerIndex+1)
+    .filter(row=>Array.isArray(row)&&row.some(cell=>String(cell??'').trim()!==''))
+    .map(row=>{
+      const obj={};
+      headers.forEach((header,i)=>{obj[header]=normalizeCell(row[i]);});
+      return obj;
+    });
+  return {headers,rows};
+}
+
+function parseFile(file){
+  return new Promise((res,rej)=>{
+    const ext=(file.name.toLowerCase().split('.').pop()||'').trim();
+    const isCsv=['csv','tsv','txt'].includes(ext);
+
+    if(isCsv){
+      Papa.parse(file,{
+        header:true,
+        skipEmptyLines:'greedy',
+        delimiter:'',
+        newline:'',
+        dynamicTyping:false,
+        worker:false,
+        transformHeader:(h,i)=>sanitizeHeader(h,i),
+        transform:v=>normalizeCell(v),
+        complete:result=>{
+          const headers=(result.meta?.fields||[]).map((h,i)=>sanitizeHeader(h,i));
+          if(!headers.length){rej(new Error('No headers found in CSV'));return;}
+          const rows=(result.data||[]).filter(row=>Object.values(row||{}).some(v=>String(v??'').trim()!==''));
+          res({headers,rows});
+        },
+        error:err=>rej(new Error('CSV parse error: '+err.message)),
+      });
+      return;
+    }
+
+    const reader=new FileReader();
+    reader.onload=e=>{
+      try{
+        const wb=XLSX.read(e.target.result,{type:'array',cellText:true,cellDates:false});
+        const ws=wb.Sheets[wb.SheetNames[0]];
+        const parsed=parseWorkbookRows(ws);
+        res(parsed);
+      }catch(err){rej(err);}
+    };
+    reader.onerror=()=>rej(new Error('Failed to read file'));
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+// ─── MONEY PARSER ────────────────────────────────────────
+// Handles US and EU-style numbers without relying on browser locale.
+function parseMoney(value){
+  if(value==null)return 0;
+  let s=String(value).trim();
+  if(!s||s==='-'||s==='—')return 0;
+
+  const negative=/^\(.*\)$/.test(s)||s.startsWith('-')||s.endsWith('-');
+  s=s.replace(/[()]/g,'').replace(/^-/,'').replace(/-$/,'').trim();
+
+  // Remove currency text/symbols, keep digits and separators.
+  s=s.replace(/[^\d.,'\s]/g,'').trim();
+  if(!s)return 0;
+
+  // Remove spaces/apostrophes used as group separators.
+  s=s.replace(/[\s']/g,'');
+
+  const lastDot=s.lastIndexOf('.');
+  const lastComma=s.lastIndexOf(',');
+  let decimal='';
+
+  if(lastDot>-1 && lastComma>-1){
+    decimal=lastDot>lastComma?'.':',';
+  }else if(lastDot>-1){
+    const digitsAfter=s.length-lastDot-1;
+    decimal=digitsAfter===0?'':(digitsAfter<=2?'.':'');
+  }else if(lastComma>-1){
+    const digitsAfter=s.length-lastComma-1;
+    decimal=digitsAfter===0?'':(digitsAfter<=2?',':'');
+  }
+
+  if(decimal){
+    const group=decimal==='.'?',':'.';
+    s=s.split(group).join('');
+    if(decimal!=='.')s=s.replace(decimal,'.');
+  }else{
+    s=s.replace(/[.,]/g,'');
+  }
+
+  const n=Number(s);
+  if(!Number.isFinite(n))return 0;
+  return negative?-n:n;
+}
+
+// ─── QUAL TAG NORMALIZER ──────────────────────────────────
+// Handles common ledger export variants: QE, Q/E, QUALIFYING,
+// NQ, NON-QUAL, NONQUALIFYING, NR, NOT REQUIRED, etc.
+function normalizeQualTag(raw){
+  const norm=String(raw??'').trim().toUpperCase().replace(/[\-_]+/g,' ').replace(/\s+/g,' ').trim();
+  if(!norm)return 'Untagged';
+  if(['QE','Q/E','Q E'].includes(norm) || /^QUAL(IFY|IFYING|IFIED)?/.test(norm))return 'QE';
+  if(['NQ','N Q','NON QE','NONQ'].includes(norm) || /^(NON ?QUAL|NONQUALIFYING|NOT QUAL|NOT QUALIFYING)/.test(norm))return 'NQ';
+  if(['NR','N/R','N R','NOT REQUIRED','NOTREQUIRED','NOT REQ','NOTREQ','NOT APPLICABLE','NOTAPPLICABLE','NA','N A'].includes(norm))return 'Not Required';
+  return 'Untagged';
+}
+
+// ─── AI CLASSIFICATION ───────────────────────────────────
+const CLAUDE_API_URL='https://api.anthropic.com/v1/messages';
+const CLAUDE_API_VERSION='2023-06-01';
+// Anthropic announced Claude Sonnet 4 retirement for June 15, 2026, so use Sonnet 4.6 going forward.
+const CLAUDE_MODEL='claude-sonnet-4-6';
+
+async function requestClaude(apiKey, body){
+  const resp=await fetch(CLAUDE_API_URL,{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':apiKey,
+      'anthropic-version':CLAUDE_API_VERSION,
+      'anthropic-dangerous-direct-browser-access':'true',
+    },
+    body:JSON.stringify(body),
+  });
+  const data=await resp.json().catch(()=>({}));
+  if(!resp.ok){
+    const message=data?.error?.message||`API error ${resp.status}`;
+    throw new Error(message);
+  }
+  return data;
+}
+
+function extractTextBlocks(data){
+  return (data?.content||[])
+    .filter(block=>block?.type==='text' && typeof block.text==='string')
+    .map(block=>block.text)
+    .join('\n')
+    .trim();
+}
+
+function extractWebSources(data){
+  const urls=[];
+  (data?.content||[]).forEach(block=>{
+    if(block?.type==='web_search_tool_result' && Array.isArray(block.content)){
+      block.content.forEach(item=>{if(item?.url)urls.push(item.url);});
+    }
+    if(block?.type==='text' && Array.isArray(block.citations)){
+      block.citations.forEach(c=>{if(c?.url)urls.push(c.url);});
+    }
+  });
+  return [...new Set(urls)].slice(0,6);
+}
+
+async function verifyApiKey(apiKey){
+  await requestClaude(apiKey,{model:CLAUDE_MODEL,max_tokens:16,messages:[{role:'user',content:'Reply with OK.'}]});
+  return true;
+}
+
+// Step 1: fetch latest rules from the web via Claude's web_search tool.
+async function fetchLiveRules(stateAbbr, apiKey, onStatus){
+  const program=getStateProgram(stateAbbr);
+  const year=new Date().getFullYear();
+  const isNY=stateAbbr==='NY';
+  const prompt=isNY
+    ?`Find the most current New York State film AND commercial tax incentive qualification rules for ${year}. Cover both the main NY Film Production Tax Credit AND the NY Commercial Production Tax Credit (downstate 20% / upstate 30%). Focus on: 1) what expenses qualify for each program, 2) what does not qualify — especially that commercials exclude directors, writers, and principal performers (only background extras qualify for labor), 3) minimum spend thresholds ($500K downstate, $100K upstate for commercials), 4) any rule or rate changes from the past 12 months. Prefer official ESD sources. Concise plain-English summary for a production accountant.`
+    :`Find the most current ${program.name} film tax incentive qualification rules for ${year}. Focus on: 1) what expenses qualify, 2) what does not qualify, 3) any rule or rate changes from the past 12 months, and 4) how above-the-line vs below-the-line costs are treated. Prefer official state or film-office sources when available. Respond with a concise plain-English summary for a production accountant.`;
+
+  if(onStatus)onStatus('Checking the latest '+program.name+' rules…');
+  try{
+    const data=await requestClaude(apiKey,{
+      model:CLAUDE_MODEL,
+      max_tokens:1400,
+      tools:[{type:'web_search_20250305',name:'web_search',max_uses:4}],
+      messages:[{role:'user',content:prompt}],
+    });
+    return {
+      summary:extractTextBlocks(data)||'Web search completed.',
+      sources:extractWebSources(data),
+      checkedAt:new Date().toISOString(),
+      model:CLAUDE_MODEL,
+    };
+  }catch(e){
+    return {summary:'',sources:[],checkedAt:new Date().toISOString(),model:CLAUDE_MODEL,error:e.message};
+  }
+}
+
+// Step 2: classify lines using built-in rules + live rule summary.
+async function classifyLinesWithAI(lines,stateAbbr,apiKey,onProgress,onStatus,liveRules){
+  const program=getStateProgram(stateAbbr);
+  const categoryNames=Object.keys(program.cats);
+  const categoryList=categoryNames.map(name=>`${name} (${program.cats[name].q?'QUALIFIES':'DOES NOT QUALIFY'})`).join('\n');
+  const BATCH=15;
+  const results={};
+
+  const liveRulesSection=liveRules&&liveRules.summary
+    ? `\nLATEST RULES CHECK (${new Date(liveRules.checkedAt||Date.now()).toLocaleDateString()}):\n${liveRules.summary}\n\nIf the latest rules summary conflicts with the built-in rules, use the latest rules summary.`
+    : '';
+
+  for(let i=0;i<lines.length;i+=BATCH){
+    const batch=lines.slice(i,i+BATCH);
+    if(onStatus)onStatus(`Classifying lines ${i+1}–${Math.min(i+BATCH,lines.length)} of ${lines.length}…`);
+
+    const lineDescriptions=batch.map((l,idx)=>`Line ${idx+1}: source=${l.src}; vendor_or_employee="${(l.vendor||l.employee||'').replace(/"/g,"'")}"; memo="${(l.memo||l.acct_name||'').replace(/"/g,"'")}"; department="${(l.dept||'').replace(/"/g,"'")}"; account="${(l.acct_name||l.acct||'').replace(/"/g,"'")}"; residency="${(l.residency||'').replace(/"/g,"'")}"; amount=${Number(l.amount||0).toFixed(2)}`).join('\n');
+
+    const prompt=`You are a film production accountant specializing in ${program.name} incentive applications.${liveRulesSection}
+
+BUILT-IN ${stateAbbr} RULES:
+${program.aiPromptRules}
+
+AVAILABLE CATEGORIES:
+${categoryList}
+
+Classify each line as one of:
+- QE = qualifying expense
+- NQ = non-qualifying expense
+- NR = not required / not applicable
+
+Return ONLY a JSON object shaped exactly like this, with one entry per input line:
+{"results":[{"line":1,"tag":"QE","confidence":"high","category":"<category name or empty string>","reason":"<short reason>"}]}
+"tag" must be QE, NQ, or NR. "confidence" must be high, medium, or low. Keep reasons under 12 words. Use low confidence if the information is incomplete or ambiguous. Use an empty string for category if none fits. Do not wrap the JSON in markdown fences or add any other text.
+
+Lines:
+${lineDescriptions}`;
+
+    try{
+      const data=await requestClaude(apiKey,{
+        model:CLAUDE_MODEL,
+        max_tokens:2000,
+        messages:[{role:'user',content:prompt}],
+      });
+
+      const rawText=extractTextBlocks(data);
+      const tryParse=(s)=>{
+        try{return JSON.parse(s);}catch{
+          const fixed=s.replace(/```json|```/g,'').trim().replace(/,\s*([\]}])/g,'$1');
+          return JSON.parse(fixed);
+        }
+      };
+      let parsed=null;
+      const objStart=rawText.indexOf('{');const objEnd=rawText.lastIndexOf('}');
+      const arrStart=rawText.indexOf('[');const arrEnd=rawText.lastIndexOf(']');
+      if(objStart!==-1&&objEnd!==-1){try{const cand=tryParse(rawText.slice(objStart,objEnd+1));if(cand&&Array.isArray(cand.results))parsed=cand;}catch{}}
+      if(!parsed&&arrStart!==-1&&arrEnd!==-1){try{parsed={results:tryParse(rawText.slice(arrStart,arrEnd+1))};}catch{}}
+
+      const items=Array.isArray(parsed?.results)?parsed.results:[];
+
+      items.forEach((r,idx)=>{
+        if(!r||typeof r!=='object')return;
+        const rowIndex=typeof r.line==='number'?r.line-1:idx;
+        const line=batch[rowIndex]||batch[idx];
+        if(!line)return;
+        const tag=['QE','NQ','NR'].includes(r.tag)?r.tag:null;
+        const conf=['high','medium','low'].includes(r.confidence)?r.confidence:'low';
+        const category=categoryNames.includes(r.category)?r.category:'';
+        results[line.id]={
+          ai_tag:tag==='NR'?'Not Required':tag,
+          ai_confidence:conf,
+          ai_reason:typeof r.reason==='string'?r.reason.slice(0,96):'',
+          ai_cat:category,
+          ai_failed:false,
+        };
+      });
+
+      batch.forEach(line=>{
+        if(!results[line.id]){
+          results[line.id]={
+            ai_tag:null,
+            ai_confidence:'low',
+            ai_reason:'No structured result returned',
+            ai_cat:'',
+            ai_failed:true,
+          };
+        }
+      });
+    }catch(e){
+      batch.forEach(line=>{
+        results[line.id]={
+          ai_tag:null,
+          ai_confidence:'low',
+          ai_reason:'Classification failed: '+e.message.slice(0,72),
+          ai_cat:'',
+          ai_failed:true,
+        };
+      });
+    }
+
+    if(onProgress)onProgress(Math.min(100,Math.round(((i+BATCH)/lines.length)*100)));
+    if(i+BATCH<lines.length)await new Promise(r=>setTimeout(r,220));
+  }
+
+  return results;
+}
+
+// ─── UI ATOMS ────────────────────────────────────────────
+function Chip({color,children,small,style}){
+  const palette={
+    green:{bg:'rgba(22,163,74,0.11)',text:'#15803d'},
+    red:{bg:'rgba(209,67,67,0.11)',text:'#c2410c'},
+    amber:{bg:'rgba(217,119,6,0.12)',text:'#b45309'},
+    navy:{bg:'rgba(21,59,99,0.10)',text:'#153b63'},
+    teal:{bg:'rgba(15,154,139,0.12)',text:'#0f766e'},
+    gray:{bg:'rgba(15,23,42,0.06)',text:'#475569'},
+    purple:{bg:'rgba(124,58,237,0.10)',text:'#6d28d9'},
+  };
+  const c=palette[color]||palette.gray;
+  return <span style={{background:c.bg,color:c.text,padding:small?'2px 7px':'3px 9px',borderRadius:999,fontSize:small?10:11,fontWeight:700,whiteSpace:'nowrap',display:'inline-flex',alignItems:'center',gap:5,letterSpacing:'0.01em',...style}}>{children}</span>;
+}
+function Pill({val}){
+  const map={QE:'teal',NQ:'red','Not Required':'gray','Untagged':'amber'};
+  return <Chip color={map[val]||'gray'} small>{val}</Chip>;
+}
+function ConfBadge({conf}){
+  const map={high:'green',medium:'amber',low:'red'};
+  return <Chip color={map[conf]||'gray'} small>AI: {conf||'—'}</Chip>;
+}
+function Btn({variant='primary',onClick,disabled,children,small,style,title,type='button',fullWidth,...rest}){
+  const base={
+    borderRadius:'12px',
+    fontWeight:700,
+    fontSize:small?12:13,
+    padding:small?'8px 12px':'10px 16px',
+    opacity:disabled?0.55:1,
+    cursor:disabled?'not-allowed':'pointer',
+    boxShadow:'var(--shadow-sm)',
+    width:fullWidth?'100%':undefined,
+    display:'inline-flex',
+    alignItems:'center',
+    justifyContent:'center',
+    gap:8,
+  };
+  const variants={
+    primary:{background:'var(--navy)',color:'#fff'},
+    secondary:{background:'var(--bg-elevated)',color:'var(--text)',border:'1px solid var(--border-strong)'},
+    ghost:{background:'transparent',color:'var(--text-2)',boxShadow:'none'},
+    teal:{background:'linear-gradient(135deg,var(--teal),var(--teal-2))',color:'#fff'},
+    danger:{background:'var(--red-bg)',color:'var(--red)',border:'1px solid rgba(209,67,67,0.22)',boxShadow:'none'},
+    purple:{background:'linear-gradient(135deg,#8b5cf6,#6d28d9)',color:'#fff'},
+  };
+  return <button type={type} title={title} onClick={disabled?undefined:onClick} style={{...base,...(variants[variant]||variants.primary),...style}} disabled={disabled} {...rest}>{children}</button>;
+}
+function Card({children,style,soft}){
+  return <div style={{background:soft?'var(--bg-soft)':'var(--bg-elevated)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',overflow:'hidden',boxShadow:'var(--shadow-sm)',...style}}>{children}</div>;
+}
+function SectionHead({label,action,sub}){
+  return <div style={{padding:'14px 18px',background:'linear-gradient(180deg,var(--bg-soft),var(--bg-muted))',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12}}><div><div style={{fontSize:11,fontWeight:800,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.10em'}}>{label}</div>{sub&&<div style={{fontSize:12,color:'var(--text-3)',marginTop:4,textTransform:'none',letterSpacing:'normal',fontWeight:500}}>{sub}</div>}</div>{action}</div>;
+}
+function StatTile({label,value,color,sub,icon}){
+  return <div style={{background:'var(--bg-elevated)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:'16px 18px',minWidth:0,boxShadow:'var(--shadow-sm)'}}>
+    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:10,marginBottom:8}}>
+      <div style={{fontSize:11,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.10em',fontWeight:700}}>{label}</div>
+      {icon&&<span style={{fontSize:16,opacity:0.85}}>{icon}</span>}
+    </div>
+    <div style={{fontSize:22,fontWeight:800,color:color||'var(--text)',letterSpacing:'-0.03em',lineHeight:1.1}}>{value}</div>
+    {sub&&<div style={{fontSize:11,color:'var(--text-3)',marginTop:6}}>{sub}</div>}
+  </div>;
+}
+function Modal({title,onClose,children,wide}){
+  return <div style={{position:'fixed',inset:0,background:'rgba(15,23,42,0.56)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20}} onClick={e=>e.target===e.currentTarget&&onClose()}><div style={{background:'var(--bg-elevated)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-xl)',width:'100%',maxWidth:wide?840:560,maxHeight:'88vh',display:'flex',flexDirection:'column',boxShadow:'var(--shadow-lg)'}}><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 22px',borderBottom:'1px solid var(--border)',flexShrink:0}}><span style={{fontWeight:800,fontSize:16,color:'var(--navy)'}}>{title}</span><button onClick={onClose} style={{background:'transparent',color:'var(--text-3)',fontSize:22,lineHeight:1,padding:'0 4px'}}>×</button></div><div style={{padding:22,overflow:'auto'}}>{children}</div></div></div>;
+}
+function Alert({type,children,style}){
+  const s={
+    warning:{bg:'var(--amber-bg)',border:'rgba(217,119,6,0.22)',text:'#92400e',icon:'⚠'},
+    success:{bg:'var(--green-bg)',border:'rgba(22,163,74,0.22)',text:'#166534',icon:'✓'},
+    info:{bg:'var(--blue-bg)',border:'rgba(21,59,99,0.16)',text:'var(--navy)',icon:'ℹ'},
+    error:{bg:'var(--red-bg)',border:'rgba(209,67,67,0.24)',text:'#b91c1c',icon:'✗'},
+  }[type]||{bg:'var(--blue-bg)',border:'rgba(21,59,99,0.16)',text:'var(--navy)',icon:'ℹ'};
+  return <div style={{background:s.bg,border:`1px solid ${s.border}`,borderRadius:'14px',padding:'12px 14px',fontSize:13,color:s.text,display:'flex',gap:10,alignItems:'flex-start',...style}}><span style={{flexShrink:0,fontWeight:800}}>{s.icon}</span><span style={{lineHeight:1.55}}>{children}</span></div>;
+}
+function EmptyState({icon,title,text,action}){
+  return <div style={{background:'var(--bg-elevated)',border:'1px dashed var(--border-strong)',borderRadius:'var(--radius-xl)',padding:'52px 34px',textAlign:'center',boxShadow:'var(--shadow-sm)'}}>
+    <div style={{fontSize:42,marginBottom:16}}>{icon}</div>
+    <div style={{fontSize:18,fontWeight:800,color:'var(--navy)',marginBottom:8}}>{title}</div>
+    <div style={{color:'var(--text-2)',fontSize:13,marginBottom:18,maxWidth:480,marginInline:'auto'}}>{text}</div>
+    {action}
+  </div>;
+}
+function PageHeader({eyebrow,title,subtitle,actions,badge}){
+  return <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',gap:18,marginBottom:24,flexWrap:'wrap'}}>
+    <div>
+      {eyebrow&&<div style={{fontSize:11,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.10em',marginBottom:6,fontWeight:700}}>{eyebrow}</div>}
+      <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap',marginBottom:6}}>
+        <h1 style={{fontSize:26,fontWeight:900,letterSpacing:'-0.03em',color:'var(--navy)'}}>{title}</h1>
+        {badge}
+      </div>
+      {subtitle&&<p style={{color:'var(--text-2)',fontSize:13,maxWidth:760,lineHeight:1.65}}>{subtitle}</p>}
+    </div>
+    {actions&&<div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}>{actions}</div>}
+  </div>;
+}
+function Field({label,children,help,required}){
+  return <div>
+    <label style={{display:'block',fontSize:11,color:'var(--text-2)',marginBottom:6,fontWeight:800,textTransform:'uppercase',letterSpacing:'0.08em'}}>{label}{required&&<span style={{color:'var(--red)'}}> *</span>}</label>
+    {children}
+    {help&&<div style={{fontSize:11,color:'var(--text-3)',marginTop:6,lineHeight:1.5}}>{help}</div>}
+  </div>;
+}
+
+// ─── SIDEBAR ─────────────────────────────────────────────
+function Sidebar({view,setView,project,setProject,hasKey}){
+  const steps=project?[
+    {id:'upload',n:1,label:'Upload Files'},
+    {id:'map',n:2,label:'Map Columns'},
+    {id:'review',n:3,label:'Review Lines'},
+    {id:'export',n:4,label:'Export'},
+  ]:[];
+  const stateColor={NJ:'#3b82f6',CA:'#f59e0b',GA:'#10b981',NY:'#8b5cf6',TX:'#ef4444'};
+  const prog=project?getStateProgram(project.state):{};
+
+  return (
+    <div style={{width:214,background:'var(--navy)',display:'flex',flexDirection:'column',minHeight:'100vh',flexShrink:0}}>
+      <div style={{padding:'18px 16px 14px',borderBottom:'1px solid rgba(255,255,255,0.09)'}}>
+        <div style={{fontSize:9,color:'rgba(255,255,255,0.38)',letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:3}}>Film Incentive</div>
+        <div style={{fontSize:14,fontWeight:800,color:'#fff',letterSpacing:'-0.01em',lineHeight:1.25}}>Tax Credit<br/>Manager</div>
+        <div style={{fontSize:10,color:'rgba(255,255,255,0.35)',marginTop:4}}>CA · GA · NJ · NY · TX</div>
+      </div>
+      <div style={{padding:'10px 8px'}}>
+        <button onClick={()=>{setView('projects');setProject(null);}} style={{width:'100%',textAlign:'left',padding:'8px 10px',borderRadius:'var(--radius)',background:view==='projects'&&!project?'rgba(255,255,255,0.12)':'none',color:'rgba(255,255,255,0.75)',fontSize:13,display:'flex',alignItems:'center',gap:8,border:'none'}}>
+          <span style={{opacity:0.5,fontSize:14}}>◈</span> All Projects
+        </button>
+        <button onClick={()=>setView('settings')} style={{width:'100%',textAlign:'left',padding:'8px 10px',borderRadius:'var(--radius)',background:view==='settings'?'rgba(255,255,255,0.12)':'none',color:'rgba(255,255,255,0.75)',fontSize:13,display:'flex',alignItems:'center',gap:8,border:'none'}}>
+          <span style={{opacity:0.5,fontSize:14}}>⚙</span>
+          <span style={{flex:1}}>AI Settings</span>
+          {hasKey
+            ?<span style={{fontSize:9,background:'rgba(13,148,136,0.35)',color:'#5eead4',padding:'1px 5px',borderRadius:3,fontWeight:700,letterSpacing:'0.05em'}}>KEY ✓</span>
+            :<span style={{fontSize:9,background:'rgba(217,119,6,0.35)',color:'#fbbf24',padding:'1px 5px',borderRadius:3,fontWeight:700,letterSpacing:'0.05em'}}>SETUP</span>
+          }
+        </button>
+      </div>
+      {project&&(
+        <div style={{padding:'0 8px',flex:1}}>
+          <div style={{padding:'6px 10px',fontSize:10,color:'rgba(255,255,255,0.32)',letterSpacing:'0.1em',textTransform:'uppercase'}}>Current Project</div>
+          <div style={{padding:'4px 10px 8px',fontSize:12,fontWeight:600,wordBreak:'break-word',lineHeight:1.4}}>
+            <span style={{color:'#5eead4'}}>{project.name}</span>
+            <div style={{marginTop:4,display:'inline-block',background:stateColor[project.state]||'#888',color:'#fff',fontSize:10,padding:'1px 7px',borderRadius:10,fontWeight:700}}>{project.state}</div>
+          </div>
+          <div style={{borderBottom:'1px solid rgba(255,255,255,0.08)',marginBottom:8}}/>
+          {steps.map(s=>(
+            <button key={s.id} onClick={()=>setView(s.id)} style={{width:'100%',textAlign:'left',padding:'8px 10px',borderRadius:'var(--radius)',background:view===s.id?'rgba(255,255,255,0.13)':'none',color:view===s.id?'#fff':'rgba(255,255,255,0.58)',fontSize:13,display:'flex',alignItems:'center',gap:9,marginBottom:2,border:'none'}}>
+              <span style={{width:20,height:20,borderRadius:'50%',background:view===s.id?'var(--teal)':'rgba(255,255,255,0.1)',color:view===s.id?'#fff':'rgba(255,255,255,0.4)',display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:700,flexShrink:0}}>{s.n}</span>
+              {s.label}
+            </button>
+          ))}
+        </div>
+      )}
+      <div style={{padding:'12px 16px',borderTop:'1px solid rgba(255,255,255,0.07)',fontSize:10,color:'rgba(255,255,255,0.22)'}}>v3.0 · persistent storage · AI review</div>
+    </div>
+  );
+}
+
+// ─── WELCOME / ONBOARDING MODAL ──────────────────────────
+function WelcomeModal({onDone}){
+  const [step,setStep]=useState(0);
+  const [key,setKey]=useState('');
+  const [saved,setSaved]=useState(false);
+  const [testing,setTesting]=useState(false);
+  const [testResult,setTestResult]=useState(null);
+
+  async function testAndSave(){
+    const k=key.trim();
+    if(!k)return;
+    setTesting(true);setTestResult(null);setSaved(false);
+    try{
+      await verifyApiKey(k);
+      saveApiKey(k);
+      setTestResult('ok');
+      setSaved(true);
+    }catch(e){
+      setTestResult(e.message||'That key did not work. Double-check it and try again.');
+    }
+    setTesting(false);
+  }
+
+  const steps=[
+    {
+      emoji:'👋',
+      title:"Hey, glad you're here.",
+      subtitle:"30 seconds and you're ready to go.",
+      content:(
+        <div>
+          <p style={{fontSize:15,color:'var(--text)',lineHeight:1.8,marginBottom:20}}>
+            This tool does the <strong>tedious part</strong> of film tax credit work for you — reads your GL and payroll exports and figures out which lines qualify and which don't.
+          </p>
+          <div style={{display:'grid',gap:10,marginBottom:18}}>
+            {[
+              ['📂','Drop in your files','GL and payroll exports — CSV or Excel, whatever you have'],
+              ['🤖','AI reads every line',"Qualifies or disqualifies based on the state's actual rules"],
+              ['📊','Download the workbook','Clean, submission-ready XLSX in seconds'],
+            ].map(([icon,title,sub])=>(
+              <div key={icon} style={{display:'flex',gap:14,alignItems:'flex-start',background:'var(--bg-soft)',border:'1px solid var(--border)',borderRadius:'16px',padding:'14px 16px'}}>
+                <span style={{fontSize:22,flexShrink:0,marginTop:2}}>{icon}</span>
+                <div>
+                  <div style={{fontWeight:800,fontSize:13,color:'var(--navy)'}}>{title}</div>
+                  <div style={{fontSize:12,color:'var(--text-3)',marginTop:3,lineHeight:1.5}}>{sub}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <Alert type="info">Works for CA · GA · NJ · NY · TX — more states coming soon</Alert>
+        </div>
+      )
+    },
+    {
+      emoji:'🔑',
+      title:'One quick thing.',
+      subtitle:'You need a free access code. Takes 60 seconds.',
+      content:(
+        <div>
+          <p style={{fontSize:14,color:'var(--text-2)',lineHeight:1.75,marginBottom:18}}>
+            The AI runs on Claude. To use it you need your own <strong>access code</strong> — free to get, costs about <strong>50 cents per project</strong> to use.
+          </p>
+          <div style={{display:'grid',gap:8,marginBottom:18}}>
+            {[
+              {n:'1',jsx:<>Open <a href="https://console.anthropic.com" target="_blank" rel="noopener noreferrer" style={{color:'var(--teal)',fontWeight:800,textDecoration:'none'}}>this link ↗</a> in a new tab</>},
+              {n:'2',jsx:<>Create a free account (just email + password)</>},
+              {n:'3',jsx:<>In the left menu, click <strong>"API Keys"</strong></>},
+              {n:'4',jsx:<>Hit <strong>"Create Key"</strong> — name it anything</>},
+              {n:'5',jsx:<>Copy the code it gives you and come back here</>},
+            ].map(s=>(
+              <div key={s.n} style={{display:'flex',gap:12,alignItems:'center',padding:'11px 14px',background:'var(--bg-soft)',border:'1px solid var(--border)',borderRadius:'14px'}}>
+                <span style={{width:24,height:24,borderRadius:'999px',background:'var(--navy)',color:'#fff',display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,flexShrink:0}}>{s.n}</span>
+                <span style={{fontSize:13,color:'var(--text)',lineHeight:1.45}}>{s.jsx}</span>
+              </div>
+            ))}
+          </div>
+          <Alert type="warning">While you're there, set a <strong>$10/month limit</strong> under Billing. You'll barely touch it.</Alert>
+        </div>
+      )
+    },
+    {
+      emoji:'✅',
+      title:"Paste it in and you're done.",
+      subtitle:'This is the last step, promise.',
+      content:(
+        <div>
+          <p style={{fontSize:14,color:'var(--text-2)',lineHeight:1.75,marginBottom:14}}>Paste that code below. We'll make sure it works, then you're off to the races.</p>
+          <div style={{marginBottom:14}}>
+            <input
+              type="password"
+              value={key}
+              onChange={e=>{setKey(e.target.value);setTestResult(null);setSaved(false);}}
+              placeholder="Paste your code here…"
+              autoFocus
+              style={{
+                width:'100%',
+                background:'var(--bg-soft)',
+                border:`1.5px solid ${testResult==='ok'?'var(--teal)':testResult?'var(--red)':'var(--border-strong)'}`,
+                borderRadius:'16px',
+                padding:'15px 16px',
+                color:'var(--text)',
+                fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace',
+                fontSize:13,
+              }}
+            />
+          </div>
+          {testResult&&testResult!=='ok'&&<div style={{marginBottom:12}}><Alert type="error">{testResult}</Alert></div>}
+          {testResult==='ok'&&(
+            <div style={{marginBottom:12,background:'var(--green-bg)',border:'1px solid rgba(22,163,74,0.2)',borderRadius:'14px',padding:'14px 16px',display:'flex',alignItems:'center',gap:12}}>
+              <span style={{fontSize:24,flexShrink:0}}>🎉</span>
+              <div>
+                <div style={{fontWeight:800,fontSize:13,color:'var(--green)'}}>You're all set!</div>
+                <div style={{fontSize:12,color:'var(--text-2)',marginTop:2}}>Everything connected. Hit the button below to get started.</div>
+              </div>
+            </div>
+          )}
+          <Btn variant="teal" onClick={testAndSave} disabled={!key.trim()||testing||saved} fullWidth>
+            {testing?'Checking…':saved?'✓ Connected':'Connect & continue →'}
+          </Btn>
+          <p style={{fontSize:11,color:'var(--text-3)',textAlign:'center',marginTop:12,lineHeight:1.5}}>
+            Your code stays on your device. We never store it anywhere else.
+          </p>
+        </div>
+      )
+    },
+  ];
+
+  const isLast=step===steps.length-1;
+  const current=steps[step];
+
+  return (
+    <div style={{position:'fixed',inset:0,background:'rgba(15,23,42,0.64)',zIndex:300,display:'flex',alignItems:'center',justifyContent:'center',padding:20}}>
+      <div style={{background:'var(--bg-elevated)',borderRadius:'var(--radius-xl)',width:'100%',maxWidth:560,boxShadow:'var(--shadow-lg)',display:'flex',flexDirection:'column',overflow:'hidden'}}>
+        <div style={{height:4,background:'var(--bg-strong)'}}><div style={{height:'100%',background:'linear-gradient(135deg,var(--teal),var(--purple))',width:`${((step+1)/steps.length)*100}%`,transition:'width 0.35s ease'}}/></div>
+        <div style={{padding:'30px 30px 0',textAlign:'center'}}>
+          <div style={{fontSize:44,marginBottom:10,lineHeight:1}}>{current.emoji}</div>
+          <h2 style={{fontSize:24,fontWeight:900,color:'var(--navy)',marginBottom:6,letterSpacing:'-0.03em'}}>{current.title}</h2>
+          <p style={{fontSize:13,color:'var(--text-3)',marginBottom:22}}>{current.subtitle}</p>
+        </div>
+        <div style={{padding:'0 30px 18px'}}>{current.content}</div>
+        <div style={{padding:'16px 30px 22px',display:'flex',justifyContent:'space-between',alignItems:'center',gap:12}}>
+          <div style={{display:'flex',gap:6}}>
+            {steps.map((_,i)=><div key={i} style={{width:i===step?22:7,height:7,borderRadius:999,background:i===step?'var(--teal)':i<step?'rgba(15,154,139,0.28)':'var(--border-strong)',transition:'all 0.3s'}}/>)}
+          </div>
+          <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap',justifyContent:'flex-end'}}>
+            {step>0&&!saved&&<button onClick={()=>setStep(s=>s-1)} style={{background:'transparent',border:'none',color:'var(--text-3)',fontSize:13,padding:'6px 10px'}}>← Back</button>}
+            {!isLast&&<Btn variant="teal" onClick={()=>setStep(s=>s+1)}>Next →</Btn>}
+            {isLast&&saved&&<Btn variant="teal" onClick={onDone}>Start working →</Btn>}
+            {isLast&&!saved&&<button onClick={onDone} style={{background:'transparent',border:'none',color:'var(--text-3)',fontSize:12,padding:'6px 10px'}}>Skip for now</button>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── SETTINGS PAGE ────────────────────────────────────────
+function SettingsPage({onShowWelcome}){
+  const [key,setKey]=useState(loadApiKey());
+  const [saved,setSaved]=useState(!!loadApiKey());
+  const [testing,setTesting]=useState(false);
+  const [testResult,setTestResult]=useState(null);
+
+  async function testAndSave(){
+    const k=key.trim();
+    if(!k)return;
+    setTesting(true);setTestResult(null);
+    try{
+      await verifyApiKey(k);
+      saveApiKey(k);
+      setTestResult('ok');
+      setSaved(true);
+    }catch(e){
+      setTestResult(e.message||'Invalid key — check it and try again.');
+    }
+    setTesting(false);
+  }
+
+  const hasKey=!!loadApiKey();
+  return (
+    <div style={{flex:1,padding:32,maxWidth:760}}>
+      <PageHeader
+        eyebrow="Configuration"
+        title="AI settings"
+        subtitle="This app uses Claude to classify untagged GL and payroll lines. It also supports a live rule check so you can spot recent program changes before you export."
+        badge={hasKey?<Chip color="green">Key saved</Chip>:<Chip color="amber">Key not set</Chip>}
+      />
+
+      <Card style={{marginBottom:18}}>
+        <SectionHead label="Anthropic API key" sub="Stored locally in this browser for quick internal use."/>
+        <div style={{padding:'18px 20px',display:'grid',gap:14}}>
+          <Alert type="warning">This browser-based version is ideal for internal speed, but a backend proxy is safer for a broader rollout because it keeps API keys off end-user devices.</Alert>
+          <Field label="API key" help="Get a key from console.anthropic.com → API Keys. You can clear it at any time.">
+            <input type="password" value={key} onChange={e=>{setKey(e.target.value);setTestResult(null);setSaved(false);}} placeholder="sk-ant-..." style={{width:'100%',background:'var(--bg-soft)',border:`1px solid ${testResult==='ok'?'var(--teal)':testResult?'var(--red)':'var(--border-strong)'}`,borderRadius:'14px',padding:'11px 13px',color:'var(--text)',fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace',fontSize:12}}/>
+          </Field>
+          {testResult&&testResult!=='ok'&&<Alert type="error">{testResult}</Alert>}
+          {testResult==='ok'&&<Alert type="success">Key verified. The app can reach Anthropic successfully.</Alert>}
+          <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}>
+            <Btn variant="teal" onClick={testAndSave} disabled={!key.trim()||testing}>{testing?'Verifying…':'Verify & save key'}</Btn>
+            {key&&<Btn variant="danger" small onClick={()=>{setKey('');saveApiKey('');setTestResult(null);setSaved(false);}}>Clear key</Btn>}
+            <Btn variant="secondary" small onClick={onShowWelcome}>Open setup guide</Btn>
+          </div>
+          <div style={{fontSize:11,color:'var(--text-3)'}}>Current model: <strong>{CLAUDE_MODEL}</strong>. The app was updated to avoid the older Sonnet 4 model that Anthropic scheduled for retirement in June 2026.</div>
+        </div>
+      </Card>
+
+      <div className="grid-auto-wide">
+        <Card>
+          <SectionHead label="What the AI does"/>
+          <div style={{padding:'16px 18px',display:'grid',gap:10}}>
+            {[
+              'Reads only the untagged lines in your imported data',
+              'Applies built-in state program rules for CA, GA, NJ, NY, and TX',
+              'Optionally checks the web for recent rule updates before classification',
+              'Suggests QE, NQ, or Not Required with a confidence score and short reason',
+            ].map((item,i)=><div key={i} style={{display:'flex',gap:10,fontSize:13,color:'var(--text-2)'}}><span style={{color:'var(--teal)',fontWeight:800,marginTop:1}}>{i+1}.</span><span>{item}</span></div>)}
+          </div>
+        </Card>
+        <Card>
+          <SectionHead label="If the page won't connect"/>
+          <div style={{padding:'16px 18px',display:'grid',gap:10,fontSize:13,color:'var(--text-2)'}}>
+            <div>1. Make sure you are online and your API key is active.</div>
+            <div>2. Try serving the file from a tiny local web server instead of double-clicking it.</div>
+            <div style={{background:'var(--bg-soft)',border:'1px solid var(--border)',borderRadius:'12px',padding:'10px 12px',fontFamily:'ui-monospace,SFMono-Regular,Menlo,monospace',fontSize:12,color:'var(--navy)'}}>python -m http.server</div>
+            <div>3. Then open the address your terminal shows, usually localhost:8000.</div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+// ─── PROJECTS PAGE ────────────────────────────────────────
+function ProjectsPage({projects,onCreate,onOpen,onDelete}){
+  const [showForm,setShowForm]=useState(false);
+  const [query,setQuery]=useState('');
+  const [form,setForm]=useState({name:'',entity:'',state:'NJ',tier:'Mid-Budget ($1M–$10M)',start:'',end:''});
+  const TIERS=['Low-Budget (Under $1M)','Mid-Budget ($1M–$10M)','High-Budget (Over $10M)'];
+  const STATE_OPTS=Object.entries(STATE_PROGRAMS).map(([k,v])=>({k,label:`${v.name} (${v.abbr}) — ${v.rate}`}));
+
+  function handleCreate(){
+    if(!form.name.trim()||!form.entity.trim())return;
+    onCreate({id:uid(),name:form.name.trim(),entity:form.entity.trim(),state:form.state,tier:form.tier,start:form.start,end:form.end,status:'Active',created:new Date().toISOString(),uploads:[],lines:[],vendors:{},mappings:{},exports:[],liveRules:null,lastOpenedAt:null});
+    setShowForm(false);
+    setForm({name:'',entity:'',state:'NJ',tier:'Mid-Budget ($1M–$10M)',start:'',end:''});
+  }
+
+  const filtered=projects.filter(p=>{
+    const q=query.trim().toLowerCase();
+    if(!q)return true;
+    return [p.name,p.entity,p.state,p.tier].some(v=>String(v||'').toLowerCase().includes(q));
+  });
+
+  const stats={
+    projects:projects.length,
+    qe:projects.reduce((s,p)=>s+sumAmt((p.lines||[]).filter(l=>l.qs==='QE')),0),
+    review:projects.reduce((s,p)=>s+((p.lines||[]).filter(l=>l.qs==='Untagged').length),0),
+    warnings:projects.reduce((s,p)=>s+countWarnings(p.lines||[]),0),
+  };
+
+  return (
+    <div style={{flex:1,padding:32,maxWidth:1020}}>
+      <PageHeader
+        eyebrow="Dashboard"
+        title="Projects"
+        subtitle="Create a project per production entity, import files, review the tax treatment, then export a workbook your team can actually use."
+        actions={<Btn variant="teal" onClick={()=>setShowForm(true)}>+ New project</Btn>}
+      />
+
+      <div className="grid-auto" style={{marginBottom:18}}>
+        <StatTile label="Projects" value={stats.projects} icon="🎬"/>
+        <StatTile label="Potential QE tracked" value={fmt(stats.qe)} color="var(--teal)" icon="💸"/>
+        <StatTile label="Untagged lines" value={stats.review} color="var(--amber)" icon="🤖"/>
+        <StatTile label="Warnings" value={stats.warnings} color="var(--amber)" icon="⚠️"/>
+      </div>
+
+      <Card style={{marginBottom:20,overflow:'visible'}}>
+        <div style={{padding:'16px 18px',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap'}}>
+          <div style={{fontWeight:800,color:'var(--navy)',fontSize:14}}>Your productions</div>
+          <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
+            <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search project, entity, or state…" style={{width:280,maxWidth:'100%',background:'var(--bg-soft)',border:'1px solid var(--border-strong)',borderRadius:'12px',padding:'9px 12px'}}/>
+            <Chip color="gray">{filtered.length} shown</Chip>
+          </div>
+        </div>
+      </Card>
+
+      <div className="grid-auto-wide" style={{marginBottom:24}}>
+        {Object.entries(STATE_PROGRAMS).map(([k,v])=>(
+          <div key={k} style={{background:'var(--bg-elevated)',border:'1px solid var(--border)',borderRadius:'18px',padding:'14px 15px',boxShadow:'var(--shadow-sm)'}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
+              <div style={{fontWeight:900,fontSize:16,color:'var(--navy)'}}>{k}</div>
+              <Chip color={k==='CA'?'amber':k==='GA'?'teal':k==='NY'?'purple':k==='TX'?'red':'navy'}>{v.rate}</Chip>
+            </div>
+            <div style={{fontSize:12,color:'var(--text-2)',lineHeight:1.55}}>{v.rateNote}</div>
+          </div>
+        ))}
+      </div>
+
+      {filtered.length===0?(
+        projects.length===0
+          ? <EmptyState icon="🎞️" title="No projects yet" text="Create your first production project to start importing files and classifying spend." action={<Btn variant="teal" onClick={()=>setShowForm(true)}>Create project</Btn>}/>
+          : <EmptyState icon="🔎" title="No matching projects" text="Try a different search term or clear the filter." action={<Btn variant="secondary" onClick={()=>setQuery('')}>Clear search</Btn>}/>
+      ):(
+        <div style={{display:'grid',gap:12}}>
+          {filtered.map(p=>{
+            const qeAmt=sumAmt((p.lines||[]).filter(l=>l.qs==='QE'));
+            const warnCnt=countWarnings(p.lines||[]);
+            const aiPending=(p.lines||[]).filter(l=>l.qs==='Untagged').length;
+            const health=getProjectHealth(p);
+            return (
+              <div key={p.id} style={{background:'var(--bg-elevated)',border:'1px solid var(--border)',borderRadius:'20px',padding:'18px 20px',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',gap:18,boxShadow:'var(--shadow-sm)'}} onClick={()=>onOpen(p)}>
+                <div style={{minWidth:0}}>
+                  <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap',marginBottom:6}}>
+                    <span style={{fontWeight:900,fontSize:16,color:'var(--navy)'}}>{p.name}</span>
+                    <Chip color={health.color}>{health.label}</Chip>
+                    <Chip color="gray">{p.state}</Chip>
+                  </div>
+                  <div style={{color:'var(--text-2)',fontSize:12,marginBottom:5}}>{p.entity} · {getStateProgram(p.state).name} · {p.tier}</div>
+                  <div style={{display:'flex',gap:16,flexWrap:'wrap',fontSize:11,color:'var(--text-3)'}}>
+                    <span>Created {formatDate(p.created)}</span>
+                    <span>{(p.uploads||[]).length} uploads</span>
+                    <span>{(p.lines||[]).length.toLocaleString()} lines</span>
+                  </div>
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap',justifyContent:'flex-end'}} onClick={e=>e.stopPropagation()}>
+                  {qeAmt>0&&<Chip color="teal">{fmt(qeAmt)} QE</Chip>}
+                  {aiPending>0&&<Chip color="purple">{aiPending} to review</Chip>}
+                  {warnCnt>0&&<Chip color="amber">{warnCnt} warnings</Chip>}
+                  <Btn variant="secondary" small onClick={()=>onOpen(p)}>Open</Btn>
+                  <Btn variant="danger" small onClick={()=>{if(confirm(`Delete project "${p.name}"? This cannot be undone.`))onDelete(p.id);}}>Delete</Btn>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {showForm&&(
+        <Modal title="New project" onClose={()=>setShowForm(false)}>
+          <div style={{display:'grid',gap:15}}>
+            <Field label="Project name" required>
+              <input type="text" placeholder='e.g. "Garden State Chronicles"' value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))} style={{width:'100%',background:'var(--bg-soft)',border:'1px solid var(--border-strong)',borderRadius:'12px',padding:'10px 12px'}}/>
+            </Field>
+            <Field label="Production entity" required>
+              <input type="text" placeholder='e.g. "Garden Films LLC"' value={form.entity} onChange={e=>setForm(f=>({...f,entity:e.target.value}))} style={{width:'100%',background:'var(--bg-soft)',border:'1px solid var(--border-strong)',borderRadius:'12px',padding:'10px 12px'}}/>
+            </Field>
+            <Field label="State program" required help={`${getStateProgram(form.state).atl?'ATL can qualify in this state':'ATL does not qualify in this state'} · Minimum spend ${fmt(getStateProgram(form.state).minSpend)}`}>
+              <select value={form.state} onChange={e=>setForm(f=>({...f,state:e.target.value}))} style={{width:'100%',background:'var(--bg-soft)',border:'1px solid var(--border-strong)',borderRadius:'12px',padding:'10px 12px'}}>
+                {STATE_OPTS.map(o=><option key={o.k} value={o.k}>{o.label}</option>)}
+              </select>
+            </Field>
+            <Field label="Budget tier">
+              <select value={form.tier} onChange={e=>setForm(f=>({...f,tier:e.target.value}))} style={{width:'100%',background:'var(--bg-soft)',border:'1px solid var(--border-strong)',borderRadius:'12px',padding:'10px 12px'}}>
+                {TIERS.map(t=><option key={t}>{t}</option>)}
+              </select>
+            </Field>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+              <Field label="Production start">
+                <input type="date" value={form.start} onChange={e=>setForm(f=>({...f,start:e.target.value}))} style={{width:'100%',background:'var(--bg-soft)',border:'1px solid var(--border-strong)',borderRadius:'12px',padding:'10px 12px'}}/>
+              </Field>
+              <Field label="Production end">
+                <input type="date" value={form.end} onChange={e=>setForm(f=>({...f,end:e.target.value}))} style={{width:'100%',background:'var(--bg-soft)',border:'1px solid var(--border-strong)',borderRadius:'12px',padding:'10px 12px'}}/>
+              </Field>
+            </div>
+            <div style={{display:'flex',gap:10,justifyContent:'flex-end',paddingTop:10,borderTop:'1px solid var(--border)'}}>
+              <Btn variant="secondary" onClick={()=>setShowForm(false)}>Cancel</Btn>
+              <Btn variant="teal" onClick={handleCreate} disabled={!form.name.trim()||!form.entity.trim()}>Create project</Btn>
+            </div>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}
+
+// ─── STEP 1: UPLOAD ───────────────────────────────────────
+function UploadStep({project,onUpdate}){
+  const [dragging,setDragging]=useState(null);
+  const [parsing,setParsing]=useState(false);
+  const [pendingType,setPendingType]=useState('GL');
+  const [message,setMessage]=useState('');
+  const [error,setError]=useState('');
+  const fileInputRef=useRef(null);
+  const uploads=project.uploads||[];
+
+  async function handleFile(file,type){
+    if(!file)return;
+    if(uploads.length>=20){setError('Maximum 20 uploads per project reached.');return;}
+    setParsing(true);setError('');setMessage('');
+    try{
+      const {headers,rows}=await parseFile(file);
+      const upload={id:uid(),name:file.name,type,date:new Date().toISOString(),headers,rows,size:file.size};
+      onUpdate({...project,uploads:[...uploads,upload]});
+      setMessage(`${file.name} imported successfully — ${rows.length.toLocaleString()} rows found.`);
+    }catch(e){
+      setError('Could not parse file: '+e.message);
+    }
+    setParsing(false);
+  }
+
+  function handleDrop(e,type){e.preventDefault();setDragging(null);handleFile(e.dataTransfer.files[0],type);}
+
+  function removeUpload(id){
+    const remaining=uploads.filter(u=>u.id!==id);
+    const remainingIds=new Set(remaining.map(u=>u.id));
+    const cleanedLines=(project.lines||[]).filter(l=>{
+      const uploadId=l.id.split('_').slice(1,-1).join('_');
+      return remainingIds.has(uploadId);
+    });
+    const cleanedVendors={};
+    Object.entries(project.vendors||{}).forEach(([name,v])=>{if(cleanedLines.some(l=>l.vendor===name))cleanedVendors[name]=v;});
+    const cleanedMappings={};
+    Object.entries(project.mappings||{}).forEach(([k,v])=>{
+      if(k==='GL'||k==='Payroll')cleanedMappings[k]=v;
+      else if(remainingIds.has(k))cleanedMappings[k]=v;
+    });
+    const stalledExports=(project.exports||[]).map(e=>({...e,stale:true}));
+    onUpdate({...project,uploads:remaining,lines:cleanedLines,vendors:cleanedVendors,mappings:cleanedMappings,exports:stalledExports});
+    setMessage('Upload removed. Existing exports were marked stale.');
+  }
+
+  function downloadTemplate(type){
+    const rows=type==='GL'
+      ? [['Date','Account Number','Account Name','Vendor','Memo','Amount','Department','Qualification Tag'],['2026-01-05','6100','Equipment Rentals','CameraCo','Lens package week 1','12500','Camera','QE']]
+      : [['Employee Name','Payroll Amount','Department','Date','Residency Status','Qualification Tag'],['Jamie Rivera','2850','Grip','2026-01-12','NJ Resident','QE']];
+    const csv=rows.map(r=>r.map(value=>`"${String(value).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const link=document.createElement('a');
+    link.href=URL.createObjectURL(blob);
+    link.download=`film_tax_${type.toLowerCase()}_template.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(link.href);
+  }
+
+  const prog=getStateProgram(project.state);
+  const FILE_TYPES=[
+    {type:'GL',label:'General ledger',icon:'📒',color:'navy',desc:'Vendor, memo, account, amount, department'},
+    {type:'Payroll',label:'Payroll',icon:'👥',color:'teal',desc:'Employee, amount, date, department, residency'},
+    {type:'Trial Balance',label:'Trial balance',icon:'⚖️',color:'gray',desc:'Optional reference file for tie-out work'},
+  ];
+
+  return (
+    <div style={{flex:1,padding:32,maxWidth:920}}>
+      <PageHeader
+        eyebrow="Step 1 of 4"
+        title="Upload files"
+        subtitle={`Bring in your GL and payroll exports for ${prog.name}. The app stores full file data in browser storage so you can come back and remap later without losing the imported rows.`}
+        badge={<Chip color="navy">{prog.abbr} program</Chip>}
+      />
+
+      <div className="grid-auto-wide" style={{marginBottom:18}}>
+        <Card className="hero-panel" style={{padding:'18px 20px',background:'linear-gradient(135deg,rgba(21,59,99,0.95),rgba(15,154,139,0.92))',color:'#fff'}}>
+          <div style={{fontSize:11,textTransform:'uppercase',letterSpacing:'0.10em',opacity:0.7,fontWeight:700,marginBottom:8}}>Program snapshot</div>
+          <div style={{display:'grid',gap:8}}>
+            <div><strong>Rate:</strong> {prog.rate} · {prog.rateNote}</div>
+            <div><strong>Minimum spend:</strong> {fmt(prog.minSpend)}</div>
+            <div><strong>Above-the-line:</strong> {prog.atl?'Can qualify in this state':'Does not qualify in this state'}</div>
+          </div>
+        </Card>
+        <Card style={{padding:'18px 20px'}}>
+          <div style={{fontSize:11,textTransform:'uppercase',letterSpacing:'0.10em',color:'var(--text-3)',fontWeight:700,marginBottom:8}}>Helpful files</div>
+          <div style={{display:'grid',gap:9,fontSize:13,color:'var(--text-2)'}}>
+            <div>• General ledger export for production spend</div>
+            <div>• Payroll register with residency where possible</div>
+            <div>• Optional trial balance for tie-out work</div>
+          </div>
+          <div style={{display:'flex',gap:8,marginTop:14,flexWrap:'wrap'}}>
+            <Btn variant="secondary" small onClick={()=>downloadTemplate('GL')}>GL template</Btn>
+            <Btn variant="secondary" small onClick={()=>downloadTemplate('Payroll')}>Payroll template</Btn>
+          </div>
+        </Card>
+      </div>
+
+      <div className="grid-auto-wide" style={{marginBottom:22}}>
+        {FILE_TYPES.map(({type,label,icon,desc})=>(
+          <div key={type} onDragOver={e=>{e.preventDefault();setDragging(type);}} onDragLeave={()=>setDragging(null)} onDrop={e=>handleDrop(e,type)} onClick={()=>{setPendingType(type);fileInputRef.current.click();}}
+            style={{border:`2px dashed ${dragging===type?'var(--teal)':'var(--border-strong)'}`,borderRadius:'20px',padding:'24px 18px',textAlign:'center',cursor:'pointer',background:dragging===type?'var(--teal-bg)':'var(--bg-elevated)',boxShadow:'var(--shadow-sm)',transition:'all 0.15s'}}>
+            <div style={{fontSize:28,marginBottom:10}}>{icon}</div>
+            <div style={{fontWeight:900,fontSize:14,marginBottom:4,color:'var(--navy)'}}>{label}</div>
+            <div style={{color:'var(--text-3)',fontSize:12,lineHeight:1.5,marginBottom:8}}>{desc}</div>
+            <Chip color={type==='GL'?'navy':type==='Payroll'?'teal':'gray'}>{type==='Trial Balance'?'Optional':'Upload'}</Chip>
+          </div>
+        ))}
+      </div>
+
+      <input ref={fileInputRef} type="file" accept=".csv,.xlsx,.xls,.tsv,.txt" style={{display:'none'}} onChange={e=>{handleFile(e.target.files[0],pendingType);e.target.value='';}}/>
+      {parsing&&<Alert type="info" style={{marginBottom:14}}>Parsing file… depending on size, this can take a few seconds.</Alert>}
+      {message&&<Alert type="success" style={{marginBottom:14}}>{message}</Alert>}
+      {error&&<Alert type="error" style={{marginBottom:14}}>{error}</Alert>}
+
+      {uploads.length>0?(
+        <Card style={{marginBottom:16}}>
+          <SectionHead label={`Uploaded files (${uploads.length} / 20)`} sub="You can remove and replace files at any time. Removing a file also marks prior exports as stale."/>
+          <div>
+            {uploads.map(u=>{
+              const rowCount=(u.rows||[]).length;
+              return (
+                <div key={u.id} style={{display:'flex',alignItems:'center',gap:12,padding:'12px 16px',borderBottom:'1px solid var(--border)'}}>
+                  <span style={{fontSize:22}}>📄</span>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontWeight:800,fontSize:13,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{u.name}</div>
+                    <div style={{color:'var(--text-3)',fontSize:11,marginTop:2}}>{rowCount.toLocaleString()} rows · {(u.headers||[]).length} columns · added {formatDate(u.date)}</div>
+                  </div>
+                  <Chip color={u.type==='GL'?'navy':u.type==='Payroll'?'teal':'gray'}>{u.type}</Chip>
+                  <Btn variant="danger" small onClick={()=>removeUpload(u.id)}>Remove</Btn>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      ):(
+        <EmptyState icon="📤" title="Nothing uploaded yet" text="Start with your GL and payroll files. The mapping step becomes much easier once the files are in." />
+      )}
+
+      <Alert type="info"><strong>Tip:</strong> If your exports already include a qualification field such as QE / NQ, map that column in Step 2. The AI will only work on the lines that remain untagged.</Alert>
+    </div>
+  );
+}
+
+// ─── STEP 2: MAP ──────────────────────────────────────────
+const GL_FIELDS=[
+  {k:'date',l:'Date',req:true},{k:'account_number',l:'Account Number'},{k:'account_name',l:'Account Name'},
+  {k:'vendor',l:'Vendor / Payee'},{k:'memo',l:'Memo / Description'},
+  {k:'amount',l:'Amount (net)',note:'Use this OR map Debit + Credit below'},{k:'debit',l:'Debit'},{k:'credit',l:'Credit'},
+  {k:'department',l:'Department / Cost Center'},{k:'qual_tag',l:'Qualification Tag',pref:true,note:'If your export already contains QE/NQ values, map that column'},
+];
+const PAY_FIELDS=[
+  {k:'employee_name',l:'Employee Name',req:true},{k:'amount',l:'Payroll Amount',req:true},
+  {k:'department',l:'Department'},{k:'date',l:'Date'},
+  {k:'qual_tag',l:'Qualification Tag',pref:true,note:'If your export already contains QE/NQ values, map that column'},
+  {k:'residency',l:'Residency Status',note:'Helpful for states that require resident labor tests'},
+];
+const AUTO_HINTS={
+  GL:{date:['date','transaction date','tran date','posting date','post date'],account_number:['account number','account no','account #','acct no','acct #','account_number'],account_name:['account name','account description','acct name'],vendor:['vendor','payee','supplier','vendor name','payee name'],memo:['memo','description','desc','narration','notes','reference'],amount:['amount','net amount','net','total','transaction amount'],debit:['debit','dr','debit amount'],credit:['credit','cr','credit amount'],department:['department','dept','cost center','division','cost_center'],qual_tag:['qual','qualification','qe/nq','qualifying','qual tag','qualify','qual_tag','q tag']},
+  Payroll:{employee_name:['employee','employee name','name','full name','emp name','worker'],amount:['amount','gross','pay','salary','payroll amount','total pay','wages','gross pay'],department:['department','dept','division'],date:['date','pay date','period','period end','check date'],qual_tag:['qual','qualification','qe/nq','qualifying','qual tag','qualify','qual_tag'],residency:['residency','resident','state','residence','tax state','home state']},
+};
+
+function MapStep({project,onUpdate}){
+  const [tab,setTab]=useState('GL');
+  const [maps,setMaps]=useState(project.mappings||{GL:{},Payroll:{}});
+  const [processed,setProcessed]=useState(false);
+  const [message,setMessage]=useState('');
+  const [error,setError]=useState('');
+  const glUploads=(project.uploads||[]).filter(u=>u.type==='GL');
+  const payUploads=(project.uploads||[]).filter(u=>u.type==='Payroll');
+  const activeUploads=tab==='GL'?glUploads:payUploads;
+  const [activeUploadIdx,setActiveUploadIdx]=useState(0);
+
+  useEffect(()=>{
+    setActiveUploadIdx(idx=>activeUploads.length===0?0:Math.min(idx,activeUploads.length-1));
+  },[tab,activeUploads.length]);
+
+  const activeUpload=activeUploads[activeUploadIdx];
+  const cols=activeUpload?.headers||[];
+  const fields=tab==='GL'?GL_FIELDS:PAY_FIELDS;
+  const mapKey=activeUpload?.id||tab;
+  const curMap=maps[mapKey]||(maps[tab]||{});
+  const previewRows=(activeUpload?.rows||[]).slice(0,5);
+
+  function autoMap(){
+    const hints=AUTO_HINTS[tab]||{};
+    const nm={};
+    const lc=s=>(s||'').toLowerCase().trim();
+    Object.entries(hints).forEach(([field,keywords])=>{
+      let match=null;
+      for(const kw of keywords){
+        match=cols.find(col=>lc(col)===kw);
+        if(match)break;
+      }
+      if(!match){
+        for(const kw of keywords){
+          match=cols.find(col=>lc(col).includes(kw));
+          if(match)break;
+        }
+      }
+      if(match)nm[field]=match;
+    });
+    setMaps(m=>({...m,[mapKey]:{...(m[mapKey]||{}),...nm}}));
+    setMessage('Best-guess mappings applied. Review them before processing.');
+  }
+
+  function getUploadIssues(type,upload,map){
+    const issues=[];
+    if(type==='GL'){
+      if(!map.date)issues.push('Map Date');
+      if(!(map.amount||(map.debit&&map.credit)))issues.push('Map Amount or both Debit + Credit');
+    }else if(type==='Payroll'){
+      if(!map.employee_name)issues.push('Map Employee Name');
+      if(!map.amount)issues.push('Map Payroll Amount');
+    }
+    if(!upload?.rows?.length)issues.push('File has no data rows');
+    return issues;
+  }
+
+  function processLines(){
+    const mappingIssues=[];
+    glUploads.forEach(up=>{
+      const m=maps[up.id]||maps.GL||{};
+      const issues=getUploadIssues('GL',up,m);
+      if(issues.length)mappingIssues.push(`${up.name}: ${issues.join(', ')}`);
+    });
+    payUploads.forEach(up=>{
+      const m=maps[up.id]||maps.Payroll||{};
+      const issues=getUploadIssues('Payroll',up,m);
+      if(issues.length)mappingIssues.push(`${up.name}: ${issues.join(', ')}`);
+    });
+
+    if(mappingIssues.length){
+      setError('Fix these mappings before processing: '+mappingIssues.join(' · '));
+      setMessage('');
+      return;
+    }
+
+    const lines=[];
+    glUploads.forEach(up=>{
+      const m=maps[up.id]||maps.GL||{};
+      (up.rows||[]).forEach((row,i)=>{
+        const rawTag=(row[m.qual_tag]||'').toString().trim();
+        const qs=normalizeQualTag(rawTag);
+        const qs_src=qs!=='Untagged'?'Imported from source file':'Pending AI classification';
+        const amount=m.amount&&row[m.amount]!==undefined&&row[m.amount]!==''
+          ? parseMoney(row[m.amount])
+          : (parseMoney(row[m.debit]||0)-parseMoney(row[m.credit]||0));
+        const warns=[];
+        if(!String(row[m.vendor]||'').trim())warns.push('Missing Vendor');
+        if(!String(row[m.memo]||'').trim()&&!String(row[m.account_name]||'').trim())warns.push('Missing Memo / Account Name');
+        if(!String(row[m.date]||'').trim())warns.push('Missing Date');
+        if(amount<0)warns.push('Negative Amount');
+        if(amount===0)warns.push('Zero Amount');
+        if(qs==='Untagged')warns.push('Pending AI classification');
+        lines.push({
+          id:`gl_${up.id}_${i}`,
+          src:'GL',
+          date:(row[m.date]||'').toString(),
+          acct:(row[m.account_number]||'').toString(),
+          acct_name:(row[m.account_name]||'').toString(),
+          vendor:(row[m.vendor]||'').toString(),
+          memo:(row[m.memo]||'').toString(),
+          amount,
+          dept:(row[m.department]||'').toString(),
+          qs,
+          qs_src,
+          cat:'',
+          warnings:warns,
+          raw_qual:rawTag,
+          ai_tag:null,
+          ai_confidence:null,
+          ai_reason:null,
+          ai_cat:null,
+          ai_failed:false,
+        });
+      });
+    });
+    payUploads.forEach(up=>{
+      const m=maps[up.id]||maps.Payroll||{};
+      (up.rows||[]).forEach((row,i)=>{
+        const rawTag=(row[m.qual_tag]||'').toString().trim();
+        const qs=normalizeQualTag(rawTag);
+        const qs_src=qs!=='Untagged'?'Imported from source file':'Pending AI classification';
+        const amount=parseMoney(row[m.amount]||0);
+        const residency=(row[m.residency]||'').toString();
+        const employee=(row[m.employee_name]||'').toString();
+        const warns=[];
+        if(!employee)warns.push('Missing Employee Name');
+        if(!residency)warns.push('Missing Employee Residency');
+        if(!String(row[m.date]||'').trim())warns.push('Missing Date');
+        if(qs==='Untagged')warns.push('Pending AI classification');
+        if(amount<0)warns.push('Negative Amount');
+        if(amount===0)warns.push('Zero Amount');
+        lines.push({
+          id:`pay_${up.id}_${i}`,
+          src:'Payroll',
+          date:(row[m.date]||'').toString(),
+          employee,
+          amount,
+          dept:(row[m.department]||'').toString(),
+          residency,
+          qs,
+          qs_src,
+          cat:'',
+          warnings:warns,
+          raw_qual:rawTag,
+          ai_tag:null,
+          ai_confidence:null,
+          ai_reason:null,
+          ai_cat:null,
+          ai_failed:false,
+        });
+      });
+    });
+    const vendors={};
+    lines.filter(l=>l.src==='GL'&&l.vendor).forEach(l=>{
+      if(!vendors[l.vendor]){
+        const existing=(project.vendors||{})[l.vendor];
+        vendors[l.vendor]={name:l.vendor,status:existing?.status||'',id:existing?.id||uid()};
+      }
+    });
+    onUpdate({...project,mappings:maps,lines,vendors});
+    setProcessed(true);
+    setError('');
+    setMessage(`${lines.length.toLocaleString()} lines processed successfully. Review them in Step 3.`);
+  }
+
+  return (
+    <div style={{flex:1,padding:32,maxWidth:980}}>
+      <PageHeader
+        eyebrow="Step 2 of 4"
+        title="Map columns"
+        subtitle="Map each uploaded file once. The app saves mappings per file so mixed exports do not stomp on each other."
+        badge={<Chip color="teal">{((project.uploads||[]).length)} uploads</Chip>}
+      />
+
+      <div style={{display:'flex',gap:8,marginBottom:18,flexWrap:'wrap'}}>
+        {['GL','Payroll'].map(t=><Btn key={t} variant={tab===t?'teal':'secondary'} onClick={()=>setTab(t)} small>{t==='GL'?'General Ledger':'Payroll'}</Btn>)}
+      </div>
+
+      {error&&<Alert type="error" style={{marginBottom:14}}>{error}</Alert>}
+      {message&&<Alert type="success" style={{marginBottom:14}}>{message}</Alert>}
+
+      {activeUploads.length===0?(
+        <EmptyState icon="🧭" title={`No ${tab} files yet`} text={`Upload at least one ${tab==='GL'?'general ledger':'payroll'} file in Step 1 to start mapping columns.`} />
+      ):(
+        <div style={{display:'grid',gridTemplateColumns:'minmax(0,1.3fr) minmax(320px,0.9fr)',gap:16,alignItems:'start'}}>
+          <Card>
+            <SectionHead
+              label={`${tab==='GL'?'General Ledger':'Payroll'} mapping`}
+              sub={activeUpload?.name||''}
+              action={<div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}>
+                {activeUploads.length>1&&<select value={activeUploadIdx} onChange={e=>setActiveUploadIdx(Number(e.target.value))} style={{background:'var(--bg-soft)',border:'1px solid var(--border-strong)',borderRadius:'10px',padding:'6px 10px'}}>{activeUploads.map((u,i)=><option key={u.id} value={i}>{u.name}</option>)}</select>}
+                <Btn variant="secondary" small onClick={autoMap}>Auto-detect</Btn>
+              </div>}
+            />
+            <div style={{padding:'16px 18px'}}>
+              <div style={{display:'grid',gap:12}}>
+                {fields.map(f=>{
+                  const mapped=!!curMap[f.k];
+                  return (
+                    <div key={f.k} style={{display:'grid',gridTemplateColumns:'230px 1fr',alignItems:'start',gap:12}}>
+                      <div style={{paddingTop:7}}>
+                        <div style={{fontSize:13,color:'var(--text)',display:'flex',alignItems:'center',gap:6,flexWrap:'wrap'}}>
+                          <span style={{fontWeight:700}}>{f.l}</span>
+                          {f.req&&<Chip color="red" small>Required</Chip>}
+                          {f.pref&&<Chip color="amber" small>Preferred</Chip>}
+                        </div>
+                        {f.note&&<div style={{fontSize:11,color:'var(--text-3)',marginTop:4,lineHeight:1.45}}>{f.note}</div>}
+                      </div>
+                      <select value={curMap[f.k]||''} onChange={e=>setMaps(m=>({...m,[mapKey]:{...(m[mapKey]||{}),[f.k]:e.target.value}}))} style={{background:'var(--bg-soft)',border:`1px solid ${mapped?'rgba(15,154,139,0.35)':'var(--border-strong)'}`,borderRadius:'12px',padding:'9px 11px',color:mapped?'var(--text)':'var(--text-3)',marginTop:2}}>
+                        <option value="">— not mapped —</option>
+                        {cols.map(c=><option key={c} value={c}>{c}</option>)}
+                      </select>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </Card>
+
+          <div style={{display:'grid',gap:16}}>
+            <Card>
+              <SectionHead label="Readiness check"/>
+              <div style={{padding:'16px 18px',display:'grid',gap:10,fontSize:13}}>
+                {getUploadIssues(tab,activeUpload,curMap).length===0
+                  ? <Alert type="success">This file has the required mappings and is ready to process.</Alert>
+                  : <Alert type="warning">{getUploadIssues(tab,activeUpload,curMap).join(' · ')}</Alert>}
+                <div style={{display:'flex',justifyContent:'space-between',color:'var(--text-2)'}}><span>Columns detected</span><strong>{cols.length}</strong></div>
+                <div style={{display:'flex',justifyContent:'space-between',color:'var(--text-2)'}}><span>Preview rows</span><strong>{(activeUpload?.rows||[]).length.toLocaleString()}</strong></div>
+                <div style={{display:'flex',justifyContent:'space-between',color:'var(--text-2)'}}><span>Mapped fields</span><strong>{Object.values(curMap).filter(Boolean).length}</strong></div>
+              </div>
+            </Card>
+
+            <Card>
+              <SectionHead label="Source preview" sub="First 5 rows from the selected file"/>
+              <div style={{overflowX:'auto'}}>
+                <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
+                  <thead>
+                    <tr style={{background:'var(--bg-soft)',borderBottom:'1px solid var(--border)'}}>
+                      {cols.slice(0,6).map(col=><th key={col} style={{padding:'8px 10px',textAlign:'left',fontSize:10,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.06em'}}>{col}</th>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {previewRows.length>0?previewRows.map((row,idx)=>(
+                      <tr key={idx} style={{borderBottom:'1px solid var(--border)'}}>
+                        {cols.slice(0,6).map(col=><td key={col} style={{padding:'8px 10px',maxWidth:180,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{String(row[col]??'')}</td>)}
+                      </tr>
+                    )):(<tr><td style={{padding:'12px 10px',color:'var(--text-3)'}} colSpan={6}>No preview rows available.</td></tr>)}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          </div>
+        </div>
+      )}
+
+      <div style={{display:'flex',alignItems:'center',gap:12,marginTop:18,flexWrap:'wrap'}}>
+        <Btn variant="teal" onClick={processLines} disabled={glUploads.length===0&&payUploads.length===0}>Apply mappings & process lines</Btn>
+        {processed&&<Chip color="green">Ready for Step 3</Chip>}
+      </div>
+    </div>
+  );
+}
+
+// ─── STEP 3: REVIEW ───────────────────────────────────────
+const PER_PAGE=100;
+
+function ReviewStep({project,onUpdate}){
+  const [tab,setTab]=useState('summary');
+  const [filter,setFilter]=useState({qs:'all',src:'all',dept:'all',warn:'all',cat:'all',aiConf:'all',query:''});
+  const [page,setPage]=useState(0);
+  const [aiRunning,setAiRunning]=useState(false);
+  const [aiProgress,setAiProgress]=useState(0);
+  const [aiStatus,setAiStatus]=useState('');
+  const [aiError,setAiError]=useState('');
+  const [liveRules,setLiveRules]=useState(project.liveRules||null);
+  const lines=project.lines||[];
+  const vendors=project.vendors||{};
+  const prog=getStateProgram(project.state);
+  const stateCats=getStateCats(project.state);
+
+  const totals=useMemo(()=>{
+    const t={QE:0,NQ:0,Untagged:0,'Not Required':0,gl:0,pay:0,total:0,warns:0,qeCount:0,nqCount:0,unCount:0,nrCount:0,aiHigh:0,aiMed:0,aiLow:0,aiPending:0};
+    lines.forEach(l=>{
+      const a=l.amount||0;t[l.qs]=(t[l.qs]||0)+a;
+      if(l.qs==='QE')t.qeCount++;if(l.qs==='NQ')t.nqCount++;if(l.qs==='Untagged')t.unCount++;if(l.qs==='Not Required')t.nrCount++;
+      if(l.src==='GL')t.gl+=a;if(l.src==='Payroll')t.pay+=a;t.total+=a;t.warns+=(l.warnings?.length||0);
+      if(l.ai_tag&&l.qs==='Untagged'){if(l.ai_confidence==='high')t.aiHigh++;else if(l.ai_confidence==='medium')t.aiMed++;else if(l.ai_confidence==='low')t.aiLow++;}
+      if(!l.ai_tag&&l.qs==='Untagged')t.aiPending++;
+    });
+    return t;
+  },[lines]);
+
+  const warnBreakdown=useMemo(()=>{const b={};lines.forEach(l=>(l.warnings||[]).forEach(w=>{b[w]=(b[w]||0)+1;}));return b;},[lines]);
+  const catTotals=useMemo(()=>{const b={};lines.forEach(l=>{if(!l.cat)return;if(!b[l.cat])b[l.cat]={total:0,count:0};b[l.cat].total+=(l.amount||0);b[l.cat].count++;});return b;},[lines]);
+  const depts=[...new Set(lines.map(l=>l.dept).filter(Boolean))].sort();
+  const aiFailedCount=lines.filter(l=>l.qs==='Untagged'&&l.ai_failed).length;
+
+  const filtered=useMemo(()=>lines.filter(l=>{
+    const haystack=[l.vendor,l.employee,l.memo,l.acct_name,l.dept,l.acct,l.residency].join(' ').toLowerCase();
+    if(filter.query&& !haystack.includes(filter.query.toLowerCase()))return false;
+    if(filter.qs!=='all'&&l.qs!==filter.qs)return false;
+    if(filter.src!=='all'&&l.src!==filter.src)return false;
+    if(filter.dept!=='all'&&l.dept!==filter.dept)return false;
+    if(filter.warn==='yes'&&(!l.warnings||l.warnings.length===0))return false;
+    if(filter.cat==='__none'&&l.cat)return false;
+    if(filter.cat&&filter.cat!=='all'&&filter.cat!=='__none'&&l.cat!==filter.cat)return false;
+    if(filter.aiConf==='pending'&&l.ai_tag)return false;
+    if(filter.aiConf==='high'&&l.ai_confidence!=='high')return false;
+    if(filter.aiConf==='medium'&&l.ai_confidence!=='medium')return false;
+    if(filter.aiConf==='low'&&l.ai_confidence!=='low')return false;
+    return true;
+  }),[lines,filter]);
+
+  function updateLine(id,patch){onUpdate({...project,lines:lines.map(l=>l.id===id?{...l,...patch}:l)});}
+  function updateVendor(name,patch){onUpdate({...project,vendors:{...vendors,[name]:{...(vendors[name]||{}),name,...patch}}});}
+
+  async function runAI(){
+    const apiKey=loadApiKey();
+    if(!apiKey){setAiError('No API key set. Go to AI Settings and enter your Anthropic API key.');return;}
+    const untagged=lines.filter(l=>l.qs==='Untagged');
+    if(!untagged.length){setAiError('No untagged lines to classify.');return;}
+    setAiRunning(true);setAiError('');setAiProgress(0);setAiStatus('');setLiveRules(null);
+    try{
+      // Step 1: fetch live rules
+      const fetched = await fetchLiveRules(project.state, apiKey, setAiStatus);
+      setLiveRules(fetched);
+      if(fetched.error){
+        setAiStatus('Web search unavailable — using built-in rules. Classifying lines…');
+      } else {
+        setAiStatus('Live rules retrieved. Classifying lines…');
+      }
+      // Step 2: classify with live rules injected
+      const results=await classifyLinesWithAI(
+        untagged, project.state, apiKey,
+        (pct)=>setAiProgress(pct),
+        setAiStatus,
+        fetched
+      );
+      const updated=lines.map(l=>{
+        if(results[l.id])return {...l,...results[l.id]};
+        return l;
+      });
+      onUpdate({...project,lines:updated,liveRules:fetched,lastAiRunAt:new Date().toISOString()});
+      setAiStatus('Done.');
+    }catch(e){setAiError('AI classification failed: '+e.message);}
+    setAiRunning(false);setAiProgress(100);
+  }
+
+  function approveHighConfidence(){
+    const updated=lines.map(l=>{
+      if(l.ai_tag&&l.ai_confidence==='high'&&l.qs==='Untagged'){
+        return {
+          ...l,
+          qs:l.ai_tag,
+          qs_src:'AI classified (approved)',
+          cat:l.ai_cat||l.cat,
+          warnings:(l.warnings||[]).filter(w=>w!=='Pending AI classification'),
+        };
+      }
+      return l;
+    });
+    onUpdate({...project,lines:updated});
+  }
+
+  function applyAISuggestion(id){
+    const l=lines.find(x=>x.id===id);
+    if(!l||!l.ai_tag)return;
+    updateLine(id,{qs:l.ai_tag,qs_src:'AI classified (approved)',cat:l.ai_cat||l.cat,warnings:(l.warnings||[]).filter(w=>w!=='Pending AI classification')});
+  }
+
+  const TABS=[{id:'summary',l:'Summary'},{id:'ai',l:`AI Review${totals.aiHigh+totals.aiMed+totals.aiLow>0?` (${totals.aiHigh+totals.aiMed+totals.aiLow})`:''}`,},{id:'lines',l:`All Lines (${lines.length.toLocaleString()})`},{id:'vendors',l:`Vendors (${Object.keys(vendors).length})`},{id:'warnings',l:`Warnings (${totals.warns})`}];
+
+  return (
+    <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden',minHeight:0}}>
+      <div style={{padding:'24px 32px 0',background:'var(--bg2)',borderBottom:'0.5px solid var(--border)',flexShrink:0}}>
+        <div style={{fontSize:11,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'0.1em',marginBottom:4}}>Step 3 of 4</div>
+        <h2 style={{fontSize:20,fontWeight:800,color:'var(--navy)',marginBottom:14}}>Review Lines — <span style={{color:'var(--teal)',fontSize:16}}>{prog.name}</span></h2>
+        <div style={{display:'flex',gap:0}}>
+          {TABS.map(t=>(
+            <button key={t.id} onClick={()=>setTab(t.id)} style={{padding:'8px 16px',background:'none',border:'none',borderBottom:tab===t.id?'2px solid var(--teal)':'2px solid transparent',color:tab===t.id?'var(--teal)':'var(--text2)',fontWeight:tab===t.id?600:400,fontSize:13,cursor:'pointer',marginBottom:-1}}>{t.l}</button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{flex:1,overflow:'auto',padding:24}}>
+
+        {/* SUMMARY TAB */}
+        {tab==='summary'&&(
+          <div>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:12,marginBottom:16}}>
+              <StatTile label="Qualifying (QE)" value={fmt(totals.QE)} color="var(--teal)" sub={`${totals.qeCount} lines`}/>
+              <StatTile label="Non-Qualifying (NQ)" value={fmt(totals.NQ)} color="var(--red)" sub={`${totals.nqCount} lines`}/>
+              <StatTile label="Untagged" value={fmt(totals.Untagged)} color="var(--amber)" sub={`${totals.unCount} lines`}/>
+              <StatTile label="Not Required" value={fmt(totals['Not Required'])} color="var(--text2)" sub={`${totals.nrCount} lines`}/>
+            </div>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:20}}>
+              <StatTile label="GL Total" value={fmt(totals.gl)}/>
+              <StatTile label="Payroll Total" value={fmt(totals.pay)}/>
+              <StatTile label="Grand Total" value={fmt(totals.total)}/>
+            </div>
+            {totals.warns>0&&<div style={{marginBottom:16}}><Alert type="warning">{totals.warns} validation warnings. Review the Warnings tab before export.</Alert></div>}
+            {totals.unCount>0&&(
+              <div style={{marginBottom:16}}><Alert type="info">{totals.unCount} untagged lines ({fmt(totals.Untagged)}). Go to the AI Review tab to run automatic classification.</Alert></div>
+            )}
+            {Object.keys(catTotals).length>0&&(
+              <Card>
+                <SectionHead label={`${prog.name} Category Breakdown`}/>
+                <div style={{overflowX:'auto'}}>
+                  <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
+                    <thead><tr style={{background:'var(--bg3)',borderBottom:'0.5px solid var(--border)'}}>{['Category','Qualified?','Amount','Lines'].map(h=><th key={h} style={{padding:'8px 14px',textAlign:'left',fontSize:11,fontWeight:600,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</th>)}</tr></thead>
+                    <tbody>
+                      {Object.entries(catTotals).sort((a,b)=>b[1].total-a[1].total).map(([cat,v])=>(
+                        <tr key={cat} style={{borderBottom:'0.5px solid var(--border)'}}>
+                          <td style={{padding:'9px 14px',fontWeight:500}}>{cat}</td>
+                          <td style={{padding:'9px 14px'}}><Chip color={stateCats[cat]?.q?'teal':'red'}>{stateCats[cat]?.q?'Qualified':'Non-Qualified'}</Chip></td>
+                          <td style={{padding:'9px 14px',fontVariantNumeric:'tabular-nums',fontWeight:600}}>{fmt(v.total)}</td>
+                          <td style={{padding:'9px 14px',color:'var(--text2)'}}>{v.count}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            )}
+          </div>
+        )}
+
+        {/* AI REVIEW TAB */}
+        {tab==='ai'&&(
+          <div>
+            <Card style={{marginBottom:16}}>
+              <SectionHead label="AI Auto-Classification"/>
+              <div style={{padding:'16px 20px'}}>
+                <p style={{color:'var(--text2)',fontSize:13,marginBottom:14}}>Claude will analyze each untagged line using <strong>{prog.name}</strong> qualification rules and suggest QE/NQ tags with confidence scores.</p>
+                <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:10,marginBottom:16}}>
+                  <StatTile label="Untagged Lines" value={totals.unCount} color="var(--amber)"/>
+                  <StatTile label="AI High Confidence" value={totals.aiHigh} color="var(--green)"/>
+                  <StatTile label="AI Medium Conf." value={totals.aiMed} color="var(--amber)"/>
+                  <StatTile label="AI Low Conf." value={totals.aiLow} color="var(--red)"/>
+                </div>
+                {aiError&&<div style={{marginBottom:12}}><Alert type="error">{aiError}</Alert></div>}
+                {aiRunning&&(
+                  <div style={{marginBottom:12}}>
+                    <div style={{display:'flex',justifyContent:'space-between',fontSize:12,color:'var(--text2)',marginBottom:6}}>
+                      <span className="ai-pulse">{aiStatus||'Working…'}</span>
+                      <span>{aiProgress}%</span>
+                    </div>
+                    <div style={{height:4,background:'var(--bg4)',borderRadius:2,overflow:'hidden'}}><div style={{height:'100%',background:'var(--teal)',borderRadius:2,width:aiProgress+'%',transition:'width 0.3s'}}/></div>
+                  </div>
+                )}
+                {/* Live rules findings panel */}
+                {liveRules&&!aiRunning&&(
+                  <div style={{marginBottom:14,background:'var(--bg3)',border:'0.5px solid var(--border2)',borderRadius:'var(--radius-lg)',padding:'12px 16px'}}>
+                    <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
+                      <span style={{fontSize:13,fontWeight:600,color:'var(--navy)'}}>🌐 Live Rule Check — {prog.name}</span>
+                      <Chip color={liveRules.error?'amber':'green'} small>{liveRules.error?'Fallback to built-in':'Web search complete'}</Chip>
+                      <span style={{marginLeft:'auto',fontSize:10,color:'var(--text3)'}}>{new Date().toLocaleDateString()}</span>
+                    </div>
+                    {liveRules.error&&<div style={{fontSize:12,color:'var(--amber)',marginBottom:6}}>Web search unavailable ({liveRules.error.slice(0,60)}). Built-in rules were used — results are still valid.</div>}
+                    {liveRules.summary&&<div style={{fontSize:12,color:'var(--text2)',lineHeight:1.6,maxHeight:120,overflow:'auto',whiteSpace:'pre-wrap'}}>{liveRules.summary.slice(0,600)}{liveRules.summary.length>600?'…':''}</div>}
+                    {liveRules.sources&&liveRules.sources.length>0&&(
+                      <div style={{marginTop:8,display:'flex',gap:6,flexWrap:'wrap'}}>
+                        {liveRules.sources.map((s,i)=><a key={i} href={s} target="_blank" rel="noopener noreferrer" style={{fontSize:10,color:'var(--teal)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',maxWidth:200}}>🔗 {s.replace('https://','').slice(0,40)}</a>)}
+                      </div>
+                    )}
+                  </div>
+                )}
+                <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+                  <Btn variant="purple" onClick={runAI} disabled={aiRunning||totals.unCount===0}>{aiRunning?aiStatus||'Working…':'🌐 Check Live Rules + Classify Lines'}</Btn>
+                  {totals.aiHigh>0&&<Btn variant="teal" onClick={approveHighConfidence}>✓ Approve All High-Confidence ({totals.aiHigh})</Btn>}
+                </div>
+                {aiFailedCount>0&&<div style={{marginTop:12}}><Alert type="warning">{aiFailedCount} lines could not be classified automatically. They remain untagged so you can review them manually.</Alert></div>}
+              </div>
+            </Card>
+
+            {/* AI suggestions table */}
+            {lines.filter(l=>l.ai_tag&&l.qs==='Untagged').length>0&&(
+              <Card>
+                <SectionHead label={`Pending AI Suggestions (${lines.filter(l=>l.ai_tag&&l.qs==='Untagged').length})`}/>
+                <div style={{overflowX:'auto'}}>
+                  <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
+                    <thead>
+                      <tr style={{background:'var(--bg3)',borderBottom:'0.5px solid var(--border)'}}>
+                        {['Src','Vendor / Employee','Memo','Amount','AI Tag','Confidence','Reason','Action'].map(h=><th key={h} style={{padding:'8px 10px',textAlign:'left',fontSize:10,fontWeight:600,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'0.05em',whiteSpace:'nowrap'}}>{h}</th>)}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {lines.filter(l=>l.ai_tag&&l.qs==='Untagged').map(l=>(
+                        <tr key={l.id} style={{borderBottom:'0.5px solid var(--border)',background:l.ai_confidence==='low'?'rgba(192,57,43,0.03)':l.ai_confidence==='high'?'rgba(13,148,136,0.03)':'transparent'}}>
+                          <td style={{padding:'7px 10px'}}><Chip color={l.src==='GL'?'navy':'teal'} small>{l.src}</Chip></td>
+                          <td style={{padding:'7px 10px',fontWeight:500,maxWidth:120,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{l.vendor||l.employee||'—'}</td>
+                          <td style={{padding:'7px 10px',maxWidth:140,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',color:'var(--text2)',fontSize:11}}>{l.memo||l.acct_name||'—'}</td>
+                          <td style={{padding:'7px 10px',fontVariantNumeric:'tabular-nums',fontWeight:600,whiteSpace:'nowrap'}}>{fmtd(l.amount)}</td>
+                          <td style={{padding:'7px 10px'}}><Pill val={l.ai_tag}/></td>
+                          <td style={{padding:'7px 10px'}}><ConfBadge conf={l.ai_confidence}/></td>
+                          <td style={{padding:'7px 10px',fontSize:11,color:'var(--text2)',maxWidth:160,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{l.ai_reason||'—'}</td>
+                          <td style={{padding:'7px 10px'}}>
+                            <div style={{display:'flex',gap:4}}>
+                              <Btn variant="teal" small onClick={()=>applyAISuggestion(l.id)}>Accept</Btn>
+                              <select value="" onChange={e=>{
+                                const v=e.target.value;
+                                if(!v)return;
+                                updateLine(l.id,{qs:v,qs_src:'Manual override',warnings:(l.warnings||[]).filter(w=>w!=='Pending AI classification')});
+                              }} style={{background:'var(--bg3)',border:'0.5px solid var(--border)',borderRadius:4,padding:'4px 6px',fontSize:11,color:'var(--text2)',marginLeft:4}}>
+                                <option value="">Override…</option>
+                                {QUAL_OPTS.map(o=><option key={o} value={o}>{o}</option>)}
+                              </select>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            )}
+
+            {totals.aiLow>0&&(
+              <div style={{marginTop:12}}><Alert type="warning">{totals.aiLow} lines have low AI confidence — these require manual review before export.</Alert></div>
+            )}
+          </div>
+        )}
+
+        {/* ALL LINES TAB */}
+        {tab==='lines'&&(
+          <div>
+            <div style={{display:'flex',gap:8,marginBottom:12,flexWrap:'wrap',alignItems:'center'}}>
+              <input value={filter.query} onChange={e=>{setFilter(f=>({...f,query:e.target.value}));setPage(0);}} placeholder="Search vendor, memo, employee…" style={{width:260,maxWidth:'100%',background:'var(--bg2)',border:'1px solid var(--border2)',borderRadius:'12px',padding:'7px 10px',color:'var(--text)',fontSize:12}}/>
+              <select value={filter.qs} onChange={e=>{setFilter(f=>({...f,qs:e.target.value}));setPage(0);}} style={{background:'var(--bg2)',border:'0.5px solid var(--border2)',borderRadius:'var(--radius)',padding:'6px 10px',color:'var(--text)',fontSize:12}}>
+                <option value="all">All Statuses</option>{QUAL_OPTS.map(o=><option key={o} value={o}>{o}</option>)}
+              </select>
+              <select value={filter.src} onChange={e=>{setFilter(f=>({...f,src:e.target.value}));setPage(0);}} style={{background:'var(--bg2)',border:'0.5px solid var(--border2)',borderRadius:'var(--radius)',padding:'6px 10px',color:'var(--text)',fontSize:12}}>
+                <option value="all">All Sources</option><option value="GL">GL</option><option value="Payroll">Payroll</option>
+              </select>
+              {depts.length>0&&<select value={filter.dept} onChange={e=>{setFilter(f=>({...f,dept:e.target.value}));setPage(0);}} style={{background:'var(--bg2)',border:'0.5px solid var(--border2)',borderRadius:'var(--radius)',padding:'6px 10px',color:'var(--text)',fontSize:12}}><option value="all">All Departments</option>{depts.map(d=><option key={d} value={d}>{d}</option>)}</select>}
+              <select value={filter.aiConf} onChange={e=>{setFilter(f=>({...f,aiConf:e.target.value}));setPage(0);}} style={{background:'var(--bg2)',border:'0.5px solid var(--border2)',borderRadius:'var(--radius)',padding:'6px 10px',color:'var(--text)',fontSize:12}}>
+                <option value="all">All AI Confidence</option><option value="high">AI High</option><option value="medium">AI Medium</option><option value="low">AI Low</option><option value="pending">No AI tag yet</option>
+              </select>
+              <span style={{marginLeft:'auto',fontSize:12,color:'var(--text3)'}}>{filtered.length.toLocaleString()} of {lines.length.toLocaleString()} lines</span>
+            </div>
+            {lines.length===0?(
+              <div style={{textAlign:'center',color:'var(--text3)',padding:'40px',background:'var(--bg3)',borderRadius:'var(--radius-lg)'}}>No lines yet. Complete Step 2 first.</div>
+            ):(
+              <Card>
+                <div style={{overflowX:'auto'}}>
+                  <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
+                    <thead>
+                      <tr style={{background:'var(--bg3)',borderBottom:'0.5px solid var(--border)'}}>
+                        {['Src','Date','Vendor / Employee','Memo','Amount','Qual Status','AI Suggestion','Category','Warn'].map(h=><th key={h} style={{padding:'8px 10px',textAlign:'left',fontSize:10,fontWeight:600,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'0.05em',whiteSpace:'nowrap'}}>{h}</th>)}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filtered.slice(page*PER_PAGE,(page+1)*PER_PAGE).map(l=>(
+                        <tr key={l.id} style={{borderBottom:'0.5px solid var(--border)'}} onMouseEnter={e=>e.currentTarget.style.background='var(--bg3)'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                          <td style={{padding:'7px 10px'}}><Chip color={l.src==='GL'?'navy':'teal'} small>{l.src}</Chip></td>
+                          <td style={{padding:'7px 10px',color:'var(--text2)',whiteSpace:'nowrap',fontSize:11}}>{l.date||'—'}</td>
+                          <td style={{padding:'7px 10px',maxWidth:120,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',fontWeight:500}}>{l.vendor||l.employee||'—'}</td>
+                          <td style={{padding:'7px 10px',maxWidth:130,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>
+                            <div style={{fontSize:11,color:'var(--text2)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{l.memo||l.acct_name||'—'}</div>
+                            {l.dept&&<div style={{fontSize:10,color:'var(--text3)'}}>{l.dept}</div>}
+                          </td>
+                          <td style={{padding:'7px 10px',textAlign:'right',fontVariantNumeric:'tabular-nums',fontWeight:600,color:l.amount<0?'var(--red)':'var(--text)',whiteSpace:'nowrap'}}>{fmtd(l.amount)}</td>
+                          <td style={{padding:'7px 10px'}}>
+                            <select value={l.qs} onChange={e=>updateLine(l.id,{qs:e.target.value,qs_src:'Manual override',warnings:(l.warnings||[]).filter(w=>w!=='Pending AI classification')})} style={{background:'var(--bg3)',border:'0.5px solid var(--border)',borderRadius:4,padding:'3px 6px',fontSize:11,color:l.qs==='QE'?'var(--teal)':l.qs==='NQ'?'var(--red)':l.qs==='Untagged'?'var(--amber)':'var(--text3)'}}>
+                              {QUAL_OPTS.map(o=><option key={o} value={o}>{o}</option>)}
+                            </select>
+                          </td>
+                          <td style={{padding:'7px 10px'}}>
+                            {l.ai_tag?<div><div style={{display:'flex',gap:3,alignItems:'center',marginBottom:2}}><Pill val={l.ai_tag}/><ConfBadge conf={l.ai_confidence}/></div><div style={{fontSize:10,color:'var(--text3)',marginTop:1,maxWidth:120,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{l.ai_reason}</div></div>:<span style={{color:'var(--text3)',fontSize:11}}>—</span>}
+                          </td>
+                          <td style={{padding:'7px 10px'}}>
+                            <select value={l.cat||''} onChange={e=>updateLine(l.id,{cat:e.target.value})} style={{background:'var(--bg3)',border:'0.5px solid var(--border)',borderRadius:4,padding:'3px 6px',fontSize:11,color:l.cat?'var(--text)':'var(--text3)',minWidth:130}}>
+                              <option value="">— assign —</option>
+                              {Object.keys(stateCats).map(c=><option key={c} value={c}>{c}</option>)}
+                            </select>
+                          </td>
+                          <td style={{padding:'7px 10px'}}>
+                            {l.warnings?.length>0?<span title={l.warnings.join('\n')} style={{cursor:'help'}}><Chip color="amber" small>{l.warnings.length}</Chip></span>:<span style={{color:'var(--text3)',fontSize:11}}>—</span>}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {filtered.length>PER_PAGE&&(
+                  <div style={{padding:'10px 16px',display:'flex',gap:10,alignItems:'center',borderTop:'0.5px solid var(--border)',fontSize:12}}>
+                    <Btn variant="secondary" small onClick={()=>setPage(p=>Math.max(0,p-1))} disabled={page===0}>← Prev</Btn>
+                    <span style={{color:'var(--text2)'}}>Page {page+1} of {Math.ceil(filtered.length/PER_PAGE)}</span>
+                    <Btn variant="secondary" small onClick={()=>setPage(p=>p+1)} disabled={(page+1)*PER_PAGE>=filtered.length}>Next →</Btn>
+                    <span style={{marginLeft:'auto',color:'var(--text3)'}}>{filtered.length.toLocaleString()} lines</span>
+                  </div>
+                )}
+              </Card>
+            )}
+          </div>
+        )}
+
+        {/* VENDORS TAB */}
+        {tab==='vendors'&&(
+          <div>
+            <div style={{marginBottom:14}}><Alert type="info">Assign vendor {prog.abbr} status. This informs qualification review but does not override explicit QE/NQ tags on individual lines.</Alert></div>
+            {Object.keys(vendors).length===0?(
+              <div style={{textAlign:'center',color:'var(--text3)',padding:'40px',background:'var(--bg3)',borderRadius:'var(--radius-lg)'}}>No vendors detected yet. Process GL lines in Step 2 first.</div>
+            ):(
+              <Card>
+                <SectionHead label={`Vendors (${Object.keys(vendors).length})`}/>
+                <div style={{overflowX:'auto'}}>
+                  <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
+                    <thead><tr style={{background:'var(--bg3)',borderBottom:'0.5px solid var(--border)'}}>{['Vendor Name',`${prog.abbr} Status`,'GL Lines','Total Spend','Status'].map(h=><th key={h} style={{padding:'8px 14px',textAlign:'left',fontSize:11,fontWeight:600,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</th>)}</tr></thead>
+                    <tbody>
+                      {Object.entries(vendors).sort((a,b)=>a[0].localeCompare(b[0])).map(([name,v])=>{
+                        const vlines=lines.filter(l=>l.vendor===name);
+                        const vtotal=sumAmt(vlines);
+                        return (
+                          <tr key={name} style={{borderBottom:'0.5px solid var(--border)'}}>
+                            <td style={{padding:'9px 14px',fontWeight:500,maxWidth:220,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{name}</td>
+                            <td style={{padding:'9px 14px'}}>
+                              <select value={v.status||''} onChange={e=>updateVendor(name,{status:e.target.value})} style={{background:'var(--bg3)',border:'0.5px solid var(--border2)',borderRadius:4,padding:'5px 8px',fontSize:12,color:v.status?'var(--text)':'var(--amber)'}}>
+                                <option value="">— unset —</option>
+                                <option value="IN">{prog.abbr} Vendor</option>
+                                <option value="OUT">Out-of-State Vendor</option>
+                                <option value="NA">Not Applicable</option>
+                              </select>
+                            </td>
+                            <td style={{padding:'9px 14px',color:'var(--text2)'}}>{vlines.length}</td>
+                            <td style={{padding:'9px 14px',fontWeight:600,fontVariantNumeric:'tabular-nums'}}>{fmt(vtotal)}</td>
+                            <td style={{padding:'9px 14px'}}>{!v.status?<Chip color="amber" small>Needs status</Chip>:<Chip color="green" small>✓ Set</Chip>}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            )}
+          </div>
+        )}
+
+        {/* WARNINGS TAB */}
+        {tab==='warnings'&&(
+          <div>
+            {Object.keys(warnBreakdown).length>0&&(
+              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(180px,1fr))',gap:10,marginBottom:20}}>
+                {Object.entries(warnBreakdown).map(([w,cnt])=>(
+                  <div key={w} style={{background:'var(--bg2)',border:'0.5px solid var(--border)',borderRadius:'var(--radius)',padding:'12px 16px'}}>
+                    <div style={{fontSize:11,color:'var(--text3)',marginBottom:4,lineHeight:1.3}}>{w}</div>
+                    <div style={{fontSize:22,fontWeight:700,color:'var(--amber)'}}>{cnt}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {totals.warns===0?<Alert type="success">No validation warnings. All lines are clean.</Alert>:(
+              <>
+                <div style={{marginBottom:12}}><Alert type="warning">Warnings do not block export. Resolve where possible before submitting to the state.</Alert></div>
+                <Card>
+                  <SectionHead label={`Lines with Warnings (${lines.filter(l=>l.warnings?.length>0).length})`}/>
+                  <div style={{overflowX:'auto'}}>
+                    <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
+                      <thead><tr style={{background:'var(--bg3)',borderBottom:'0.5px solid var(--border)'}}>{['Src','Date','Vendor / Employee','Amount','Qual Status','Warnings'].map(h=><th key={h} style={{padding:'8px 12px',textAlign:'left',fontSize:10,fontWeight:600,color:'var(--text3)',textTransform:'uppercase',letterSpacing:'0.05em'}}>{h}</th>)}</tr></thead>
+                      <tbody>
+                        {lines.filter(l=>l.warnings?.length>0).map(l=>(
+                          <tr key={l.id} style={{borderBottom:'0.5px solid var(--border)'}}>
+                            <td style={{padding:'7px 12px'}}><Chip color={l.src==='GL'?'navy':'teal'} small>{l.src}</Chip></td>
+                            <td style={{padding:'7px 12px',color:'var(--text2)',fontSize:11}}>{l.date||'—'}</td>
+                            <td style={{padding:'7px 12px',fontWeight:500,maxWidth:160,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{l.vendor||l.employee||'—'}</td>
+                            <td style={{padding:'7px 12px',fontVariantNumeric:'tabular-nums',fontWeight:600}}>{fmtd(l.amount)}</td>
+                            <td style={{padding:'7px 12px'}}><Pill val={l.qs}/></td>
+                            <td style={{padding:'7px 12px'}}><div style={{display:'flex',gap:4,flexWrap:'wrap'}}>{l.warnings.map(w=><Chip key={w} color="amber" small>{w}</Chip>)}</div></td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </Card>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── FORMULA INJECTION ESCAPE ────────────────────────────
+// Prefix cells starting with =, +, -, @ with a tab to prevent Excel/Sheets
+// from executing them as formulas. Only applied to string values.
+function esc(v){
+  if(typeof v!=='string')return v;
+  if(v.length>0&&'=+-@\t\r'.includes(v[0]))return '\t'+v;
+  return v;
+}
+function escRow(arr){return arr.map(esc);}
+function ExportStep({project,onUpdate}){
+  const [busy,setBusy]=useState(false);
+  const [lastFile,setLastFile]=useState(null);
+  const [error,setError]=useState('');
+  const lines=project.lines||[];
+  const vendors=project.vendors||{};
+  const prog=getStateProgram(project.state);
+  const stateCats=getStateCats(project.state);
+
+  const qeLines=lines.filter(l=>l.qs==='QE');
+  const nqLines=lines.filter(l=>l.qs==='NQ');
+  const untLines=lines.filter(l=>l.qs==='Untagged');
+  const nrLines=lines.filter(l=>l.qs==='Not Required');
+  const glLines=lines.filter(l=>l.src==='GL');
+  const payLines=lines.filter(l=>l.src==='Payroll');
+  const warns=lines.reduce((s,l)=>s+(l.warnings?.length||0),0);
+  const aiClassified=lines.filter(l=>l.qs_src&&l.qs_src.includes('AI classified')).length;
+  const liveRules=project.liveRules;
+
+  function doExport(){
+    if(!lines.length)return;
+    setBusy(true);setError('');
+    try{
+      const wb=XLSX.utils.book_new();
+      const today=new Date().toISOString().split('T')[0];
+      const catBreakdown={};
+      lines.forEach(l=>{if(!l.cat)return;if(!catBreakdown[l.cat])catBreakdown[l.cat]={total:0,count:0,qualified:stateCats[l.cat]?.q?'Yes':'No'};catBreakdown[l.cat].total+=(l.amount||0);catBreakdown[l.cat].count++;});
+
+      const summaryRows=[
+        [`${prog.name.toUpperCase()} FILM TAX CREDIT — PRODUCTION ACCOUNTING SUMMARY`],[''],
+        ['Project Name',project.name],['Production Entity',project.entity],
+        ['State Program',`${prog.name} (${prog.abbr})`],['Credit / Incentive Rate',prog.rate],
+        ['Budget Tier',project.tier],['Production Start',project.start||''],['Production End',project.end||''],
+        ['Export Date',today],['AI-Classified Lines Approved',aiClassified],['Live Rule Check Saved',liveRules?.summary?'Yes':'No'],[''],
+        ['QUALIFICATION SUMMARY','',''],['Status','Amount ($)','Line Count'],
+        ['Qualifying Expenses (QE)',sumAmt(qeLines),qeLines.length],
+        ['Non-Qualifying Expenses (NQ)',sumAmt(nqLines),nqLines.length],
+        ['Untagged',sumAmt(untLines),untLines.length],
+        ['Not Required',sumAmt(nrLines),nrLines.length],
+        ['Grand Total',sumAmt(lines),lines.length],[''],
+        ['SOURCE SUMMARY','',''],['GL Total',sumAmt(glLines),glLines.length],['Payroll Total',sumAmt(payLines),payLines.length],[''],
+        ['VALIDATION','',''],['Total Warnings',warns,''],[''],
+        ['CATEGORY BREAKDOWN','','',''],['Category','Qualified?','Amount ($)','Line Count'],
+        ...Object.entries(catBreakdown).sort((a,b)=>b[1].total-a[1].total).map(([cat,v])=>[cat,v.qualified,v.total,v.count]),
+      ];
+      XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(summaryRows),`${prog.abbr} Summary`);
+
+      const qvHeaders=['Date','Account #','Account Name','Vendor','Memo','Department','Amount','Category','Qual Source','AI Confidence','Vendor Status'];
+      const qvRows=qeLines.filter(l=>l.src==='GL').map(l=>escRow([l.date,l.acct,l.acct_name,l.vendor,l.memo,l.dept,l.amount,l.cat,l.qs_src,l.ai_confidence||'',vendors[l.vendor]?.status||'']));
+      XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([qvHeaders,...qvRows]),'Qualified Vendor List');
+
+      const nqRows=nqLines.filter(l=>l.src==='GL').map(l=>escRow([l.date,l.acct,l.acct_name,l.vendor,l.memo,l.dept,l.amount,l.cat,l.qs_src,l.ai_confidence||'',vendors[l.vendor]?.status||'']));
+      XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([qvHeaders,...nqRows]),'Non-Qualified Vendor List');
+
+      const payHeaders=['Employee','Date','Department','Amount','Residency','Qual Status','Qual Source','AI Confidence','AI Reason','Category'];
+      const payRows=payLines.map(l=>escRow([l.employee,l.date,l.dept,l.amount,l.residency||'',l.qs,l.qs_src,l.ai_confidence||'',l.ai_reason||'',l.cat]));
+      XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([payHeaders,...payRows]),'Payroll Summary');
+
+      if(liveRules?.summary){
+        const liveRows=[
+          ['Latest Rule Check Summary'],
+          ['State',prog.name],
+          ['Checked At',liveRules.checkedAt?new Date(liveRules.checkedAt).toLocaleString():''],
+          ['Model',liveRules.model||''],
+          [''],
+          ['Summary'],
+          [liveRules.summary],
+          [''],
+          ['Sources'],
+          ...(liveRules.sources||[]).map(url=>[url]),
+        ];
+        XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(liveRows),'Live Rules');
+      }
+
+      const fname=`${(project.name||'Project').replace(/[^a-zA-Z0-9]/g,'_')}_${prog.abbr}_Export_${today}.xlsx`;
+      XLSX.writeFile(wb,fname);
+      const run={id:uid(),date:today,filename:fname,lines:lines.length,qe:sumAmt(qeLines),nq:sumAmt(nqLines),warns,aiClassified};
+      onUpdate({...project,exports:[...(project.exports||[]),run]});
+      setLastFile(fname);
+    }catch(e){
+      setError('Export failed: '+e.message);
+    }
+    setBusy(false);
+  }
+
+  const readiness=[
+    {label:'Files processed',ok:lines.length>0,detail:`${lines.length.toLocaleString()} lines ready`},
+    {label:'Untagged lines reviewed',ok:untLines.length===0,detail:untLines.length?`${untLines.length} still untagged`:'All lines tagged'},
+    {label:'Warnings checked',ok:warns===0,detail:warns?`${warns} warnings remain`:'No warnings'},
+    {label:'Live rule check saved',ok:!!liveRules?.summary,detail:liveRules?.summary?'Included in export workbook':'Optional but recommended'},
+  ];
+
+  return (
+    <div style={{flex:1,padding:32,maxWidth:860}}>
+      <PageHeader
+        eyebrow="Step 4 of 4"
+        title="Export package"
+        subtitle={`Create the ${prog.name} workbook with clean tabs for summary, vendor lines, payroll, and the latest saved rule check.`}
+        badge={<Chip color="teal">{prog.abbr} export</Chip>}
+      />
+
+      {error&&<Alert type="error" style={{marginBottom:14}}>{error}</Alert>}
+      {lastFile&&<Alert type="success" style={{marginBottom:14}}>Downloaded: {lastFile}</Alert>}
+
+      <div className="grid-auto-wide" style={{marginBottom:18}}>
+        <Card>
+          <SectionHead label="Export readiness"/>
+          <div style={{padding:'16px 18px',display:'grid',gap:10}}>
+            {readiness.map(item=><div key={item.label} style={{display:'flex',justifyContent:'space-between',gap:12,alignItems:'center'}}><div><div style={{fontWeight:700,color:'var(--text)'}}>{item.label}</div><div style={{fontSize:11,color:'var(--text-3)',marginTop:2}}>{item.detail}</div></div><Chip color={item.ok?'green':'amber'}>{item.ok?'Ready':'Review'}</Chip></div>)}
+          </div>
+        </Card>
+        <Card>
+          <SectionHead label="Qualification summary"/>
+          <div style={{padding:'16px 18px',display:'grid',gap:10}}>
+            {[['Qualifying (QE)',fmt(sumAmt(qeLines)),`${qeLines.length} lines`,'var(--teal)'],['Non-Qualifying (NQ)',fmt(sumAmt(nqLines)),`${nqLines.length} lines`,'var(--red)'],['Untagged',fmt(sumAmt(untLines)),`${untLines.length} lines`,'var(--amber)'],['Not Required',fmt(sumAmt(nrLines)),`${nrLines.length} lines`,'var(--text-3)'],['Grand Total',fmt(sumAmt(lines)),`${lines.length} lines`,'var(--navy)']].map(([label,val,sub,col])=><div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'1px solid var(--border)',paddingBottom:8}}><span style={{fontSize:13,color:'var(--text)'}}>{label}</span><div style={{textAlign:'right'}}><div style={{fontWeight:800,color:col,fontSize:14}}>{val}</div><div style={{fontSize:11,color:'var(--text-3)'}}>{sub}</div></div></div>)}
+          </div>
+        </Card>
+      </div>
+
+      {aiClassified>0&&<div style={{marginBottom:14}}><Alert type="info">{aiClassified} lines were AI-classified and approved. Their confidence levels and reasons are included in the exported sheets.</Alert></div>}
+      {untLines.length>0&&<div style={{marginBottom:14}}><Alert type="warning">You still have {untLines.length} untagged lines. You can export now, but this is usually worth reviewing first.</Alert></div>}
+      {warns>0&&<div style={{marginBottom:18}}><Alert type="warning">{warns} validation warnings remain. Export is still allowed so you can keep moving.</Alert></div>}
+
+      <Card style={{marginBottom:18}}>
+        <SectionHead label="Workbook tabs"/>
+        <div style={{padding:'16px 18px',display:'grid',gap:10}}>
+          {[
+            `1. ${prog.abbr} Summary — project info, totals, category breakdown`,
+            '2. Qualified Vendor List — QE GL lines, vendor status, AI confidence',
+            '3. Non-Qualified Vendor List — NQ GL lines',
+            '4. Payroll Summary — all payroll lines with residency and AI details',
+            liveRules?.summary?'5. Live Rules — saved rule check summary and source links':null,
+          ].filter(Boolean).map(item=><div key={item} style={{display:'flex',gap:8,fontSize:13,color:'var(--text-2)'}}><span style={{color:'var(--teal)',fontWeight:800}}>✓</span><span>{item}</span></div>)}
+        </div>
+      </Card>
+
+      <Btn variant="teal" onClick={doExport} disabled={busy||lines.length===0}>{busy?'Generating workbook…':lines.length===0?'No lines to export':'⬇ Download workbook'}</Btn>
+
+      {(project.exports||[]).length>0&&(
+        <div style={{marginTop:28}}>
+          <div style={{fontSize:11,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:10,fontWeight:800}}>Export history</div>
+          {[...(project.exports||[])].reverse().map(e=>(
+            <div key={e.id} style={{background:'var(--bg-elevated)',border:`1px solid ${e.stale?'rgba(217,119,6,0.30)':'var(--border)'}`,borderRadius:'14px',padding:'12px 14px',marginBottom:8,display:'grid',gridTemplateColumns:'24px 1fr auto auto auto',gap:10,alignItems:'center',fontSize:12,boxShadow:'var(--shadow-sm)'}}>
+              <span style={{fontSize:18}}>📥</span>
+              <span style={{color:'var(--text-2)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{e.filename}</span>
+              <span style={{color:'var(--teal)',fontWeight:800,whiteSpace:'nowrap'}}>{fmt(e.qe)} QE</span>
+              {e.stale&&<Chip color="amber" small>stale</Chip>}
+              <span style={{color:'var(--text-3)',whiteSpace:'nowrap'}}>{e.date}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── ROOT APP ─────────────────────────────────────────────
+const LS_WELCOMED='filmtax_welcomed_v1';
+function App(){
+  const [projects,setProjects]=useState([]);
+  const [project,setProject]=useState(null);
+  const [view,setView]=useState('projects');
+  const [loadingProjects,setLoadingProjects]=useState(true);
+  const [storageMessage,setStorageMessage]=useState('');
+  const [saveState,setSaveState]=useState('idle');
+  const [storageMode,setStorageMode]=useState('indexeddb');
+  const [showWelcome,setShowWelcome]=useState(()=>!loadApiKey()&&!localStorage.getItem(LS_WELCOMED));
+
+  useEffect(()=>{
+    let mounted=true;
+    loadProjects()
+      .then(data=>{if(mounted)setProjects(Array.isArray(data)?data:[]);})
+      .catch(()=>{if(mounted)setStorageMessage('Could not load saved projects from browser storage.');})
+      .finally(()=>{if(mounted)setLoadingProjects(false);});
+    return ()=>{mounted=false;};
+  },[]);
+
+  useEffect(()=>{
+    if(loadingProjects)return;
+    let cancelled=false;
+    const t=setTimeout(()=>{
+      setSaveState('saving');
+      saveProjects(projects)
+        .then(()=>{if(cancelled)return;setSaveState('saved');setTimeout(()=>{if(!cancelled)setSaveState('idle');},1200);})
+        .catch(()=>{if(cancelled)return;setStorageMode('localStorage');setSaveState('saved');setStorageMessage('IndexedDB was unavailable, so the app fell back to basic browser storage. Your work is still being saved, but very large projects may be less reliable.');});
+    },250);
+    return ()=>{cancelled=true;clearTimeout(t);};
+  },[projects,loadingProjects]);
+
+  function dismissWelcome(){
+    localStorage.setItem(LS_WELCOMED,'1');
+    setShowWelcome(false);
+  }
+
+  function createProject(p){setProjects(prev=>[...prev,p]);setProject(p);setView('upload');}
+  function openProject(p){
+    const latest=projects.find(x=>x.id===p.id)||p;
+    const opened={...latest,lastOpenedAt:new Date().toISOString()};
+    setProject(opened);
+    setProjects(prev=>prev.map(item=>item.id===opened.id?opened:item));
+    setView(getProjectSuggestedView(opened));
+  }
+  function updateProject(updated){setProject(updated);setProjects(prev=>prev.map(p=>p.id===updated.id?updated:p));}
+  function deleteProject(id){
+    setProjects(prev=>{
+      const next=prev.filter(p=>p.id!==id);
+      if(next.length===0)clearProjectStore().catch(()=>{});
+      return next;
+    });
+    if(project?.id===id){setProject(null);setView('projects');}
+  }
+
+  function renderView(){
+    if(loadingProjects){
+      return <div style={{flex:1,padding:40,display:'flex',alignItems:'center',justifyContent:'center'}}><Card style={{padding:'34px 36px',maxWidth:420,textAlign:'center'}}><div style={{fontSize:34,marginBottom:12}}>🎬</div><div style={{fontWeight:900,fontSize:18,color:'var(--navy)',marginBottom:8}}>Loading your workspace…</div><div style={{fontSize:13,color:'var(--text-3)'}}>Reading saved projects from browser storage.</div></Card></div>;
+    }
+    if(view==='settings')return <SettingsPage onShowWelcome={()=>setShowWelcome(true)}/>;
+    if(!project||view==='projects')return <ProjectsPage projects={projects} onCreate={createProject} onOpen={openProject} onDelete={deleteProject}/>;
+    if(view==='upload')return <UploadStep project={project} onUpdate={updateProject}/>;
+    if(view==='map')return <MapStep project={project} onUpdate={updateProject}/>;
+    if(view==='review')return <ReviewStep project={project} onUpdate={updateProject}/>;
+    if(view==='export')return <ExportStep project={project} onUpdate={updateProject}/>;
+    return null;
+  }
+
+  const hasKey=!!loadApiKey();
+  const saveLabel=saveState==='saving'?'Saving…':saveState==='saved'?'Saved':'Ready';
+  const saveColor=saveState==='saving'?'navy':'green';
+
+  return (
+    <div style={{display:'flex',minHeight:'100vh',background:'var(--bg)'}}>
+      {showWelcome&&<WelcomeModal onDone={dismissWelcome}/>} 
+      <Sidebar view={view} setView={setView} project={project} setProject={p=>{setProject(p);if(!p)setView('projects');}} hasKey={hasKey}/>
+      <div style={{flex:1,overflow:'auto',display:'flex',flexDirection:'column'}}>
+        <div style={{padding:'14px 24px',borderBottom:'1px solid var(--border)',background:'rgba(255,255,255,0.82)',backdropFilter:'blur(10px)',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,position:'sticky',top:0,zIndex:20}}>
+          <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
+            <Chip color={saveColor}>{saveLabel}</Chip>
+            <Chip color={storageMode==='indexeddb'?'green':'amber'}>{storageMode==='indexeddb'?'IndexedDB storage':'Fallback storage'}</Chip>
+            {project&&<span style={{fontSize:12,color:'var(--text-3)'}}>Current project: <strong style={{color:'var(--navy)'}}>{project.name}</strong></span>}
+          </div>
+          <div style={{fontSize:12,color:'var(--text-3)'}}>Film Tax Credit Manager · Browser edition</div>
+        </div>
+        {storageMessage&&<div style={{padding:'12px 24px 0'}}><Alert type={storageMode==='indexeddb'?'error':'warning'}>{storageMessage}</Alert></div>}
+        {renderView()}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
