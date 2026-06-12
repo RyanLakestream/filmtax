@@ -12,65 +12,94 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  /* ── design system ── */
-  --navy:#0f1b2d;
-  --navy-2:#162236;
-  --navy-3:#1e3a5f;
-  --teal:#0d9488;
-  --teal-light:#ccfbf1;
-  --amber:#d97706;
-  --amber-light:#fef3c7;
-  --red:#dc2626;
-  --red-light:#fee2e2;
-  --green:#16a34a;
-  --green-light:#dcfce7;
+  /* ── Backgrounds ── */
+  --bg:#050d1a;
+  --bg-2:#0a1628;
+  --bg-3:#0f1f38;
+  --bg-4:#162540;
+  --bg-card:rgba(255,255,255,0.04);
+  --bg-card-hover:rgba(255,255,255,0.07);
+  --bg-glass:rgba(13,28,52,0.85);
+
+  /* ── Brand colors ── */
+  --navy:#050d1a;
+  --blue:#2D7FF9;
+  --blue-bright:#4d9fff;
+  --blue-dim:rgba(45,127,249,0.15);
+  --blue-glow:rgba(45,127,249,0.35);
+  --teal:#00d4b4;
+  --teal-dim:rgba(0,212,180,0.12);
+  --teal-glow:rgba(0,212,180,0.3);
   --purple:#7c3aed;
-  --purple-light:#ede9fe;
+  --purple-dim:rgba(124,58,237,0.15);
+  --amber:#f59e0b;
+  --amber-dim:rgba(245,158,11,0.12);
+  --red:#ef4444;
+  --red-dim:rgba(239,68,68,0.12);
+  --green:#10b981;
+  --green-dim:rgba(16,185,129,0.12);
 
-  --bg:#f8f7f4;
-  --bg-2:#ffffff;
-  --bg-3:#f1f0ec;
-  --bg-4:#e8e6e0;
+  /* ── Text ── */
+  --text:#ffffff;
+  --text-2:rgba(255,255,255,0.7);
+  --text-3:rgba(255,255,255,0.4);
+  --text-4:rgba(255,255,255,0.2);
 
-  --text:#111827;
-  --text-2:#374151;
-  --text-3:#6b7280;
-  --text-4:#9ca3af;
+  /* ── Borders ── */
+  --border:rgba(255,255,255,0.07);
+  --border-strong:rgba(255,255,255,0.14);
+  --border-blue:rgba(45,127,249,0.3);
+  --border-teal:rgba(0,212,180,0.3);
 
-  --border:rgba(0,0,0,0.07);
-  --border-strong:rgba(0,0,0,0.14);
-  --radius-sm:6px;
-  --radius:10px;
-  --radius-lg:16px;
-  --radius-xl:20px;
-  --shadow-sm:0 1px 3px rgba(0,0,0,0.08);
-  --shadow:0 4px 16px rgba(0,0,0,0.08);
-  --shadow-lg:0 12px 40px rgba(0,0,0,0.12);
+  /* ── Shadows & glows ── */
+  --shadow:0 8px 32px rgba(0,0,0,0.4);
+  --shadow-lg:0 20px 60px rgba(0,0,0,0.5);
+  --glow-blue:0 0 20px rgba(45,127,249,0.4), 0 0 60px rgba(45,127,249,0.15);
+  --glow-teal:0 0 20px rgba(0,212,180,0.4), 0 0 60px rgba(0,212,180,0.15);
+  --glow-sm:0 0 10px rgba(45,127,249,0.3);
 
-  /* ── legacy aliases (older component code references these) ── */
+  /* ── Radius ── */
+  --radius-sm:8px;
+  --radius:14px;
+  --radius-lg:20px;
+  --radius-xl:28px;
+
+  /* ── Legacy aliases (older component code references these) ── */
+  --navy-2:#0a1628;
+  --navy-3:#1e3a5f;
+  --teal-light:var(--teal-dim);
+  --amber-light:var(--amber-dim);
+  --red-light:var(--red-dim);
+  --green-light:var(--green-dim);
+  --purple-light:var(--purple-dim);
   --bg-elevated:var(--bg-2);
-  --bg-soft:var(--bg-3);
+  --bg-soft:var(--bg-card);
   --bg-muted:var(--bg-3);
-  --bg-strong:var(--bg-4);
+  --bg-strong:rgba(255,255,255,0.08);
   --bg2:var(--bg-2);
   --bg3:var(--bg-3);
   --bg4:var(--bg-4);
   --text2:var(--text-2);
   --text3:var(--text-3);
   --border2:var(--border-strong);
-  --teal-2:#0f766e;
-  --teal-bg:var(--teal-light);
-  --red-bg:var(--red-light);
-  --amber-bg:var(--amber-light);
-  --green-bg:var(--green-light);
-  --purple-bg:var(--purple-light);
-  --blue-bg:#e8edf6;
+  --teal-2:#00b89c;
+  --teal-bg:var(--teal-dim);
+  --red-bg:var(--red-dim);
+  --amber-bg:var(--amber-dim);
+  --green-bg:var(--green-dim);
+  --purple-bg:var(--purple-dim);
+  --blue-bg:var(--blue-dim);
+  --shadow-sm:0 2px 12px rgba(0,0,0,0.35);
   --shadow-md:var(--shadow);
 }
 html,body{min-height:100%}
 body{
   font-family:-apple-system,BlinkMacSystemFont,'Inter','SF Pro Text',sans-serif;
   background:var(--bg);
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(45,127,249,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(0,212,180,0.06) 0%, transparent 60%);
+  background-attachment:fixed;
   color:var(--text);
   min-height:100vh;
   font-size:13px;
@@ -81,25 +110,35 @@ body{
 #root{min-height:100vh}
 a{color:inherit}
 button{cursor:pointer;border:none;font-family:inherit;font-size:13px;transition:all .15s ease}
-button:hover:not(:disabled){filter:brightness(0.95)}
-button:active:not(:disabled){transform:scale(0.98)}
+button:active:not(:disabled){transform:scale(0.97)}
 button:disabled{cursor:not-allowed}
-input,select,textarea{font-family:inherit;font-size:13px;outline:none;transition:border-color .15s ease,box-shadow .15s ease}
+.btn-primary:hover:not(:disabled){box-shadow:0 0 30px rgba(45,127,249,0.6), 0 0 80px rgba(45,127,249,0.2)!important}
+.btn-teal:hover:not(:disabled){box-shadow:0 0 30px rgba(0,212,180,0.55), 0 0 80px rgba(0,212,180,0.2)!important}
+.btn-purple:hover:not(:disabled){box-shadow:0 0 30px rgba(124,58,237,0.6)!important}
+.btn-secondary:hover:not(:disabled){border-color:var(--border-blue)!important;color:var(--blue-bright)!important;background:var(--blue-dim)!important}
+.btn-ghost:hover:not(:disabled){background:rgba(255,255,255,0.05)}
+.btn-danger:hover:not(:disabled){background:rgba(239,68,68,0.2)!important}
+.nav-item:hover{background:rgba(255,255,255,0.05)!important}
+input,select,textarea{font-family:inherit;font-size:13px;outline:none;color-scheme:dark;transition:border-color .15s ease,box-shadow .15s ease}
 input::placeholder,textarea::placeholder{color:var(--text-4)}
-input:focus,select:focus,textarea:focus{border-color:rgba(13,148,136,0.55)!important;box-shadow:0 0 0 3px rgba(13,148,136,0.14)}
-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239ca3af'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px!important}
-::-webkit-scrollbar{width:8px;height:8px}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(45,127,249,0.15)}
+input[type=password]:focus{box-shadow:0 0 0 3px rgba(45,127,249,0.2), 0 0 20px rgba(45,127,249,0.1)}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23ffffff' fill-opacity='0.4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px!important}
+::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.16);border-radius:8px}
-::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,0.24)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:999px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2)}
 .ai-pulse{animation:pulse 1.5s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.38}}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.shimmer{position:relative;overflow:hidden}
+.shimmer::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:shimmer 1.4s infinite}
 .tnum{font-variant-numeric:tabular-nums}
 .mono{font-family:'SF Mono','Fira Code',ui-monospace,SFMono-Regular,Menlo,monospace}
-.sticky-th th{position:sticky;top:0;background:var(--bg-3);z-index:2;box-shadow:inset 0 -1px 0 var(--border)}
-tr.row-hover:hover{background:rgba(13,148,136,0.06)!important}
-.card-hover{transition:box-shadow .15s ease,transform .15s ease}
-.card-hover:hover{box-shadow:var(--shadow)}
+.sticky-th th{position:sticky;top:0;background:var(--bg-2);z-index:2;box-shadow:inset 0 -1px 0 var(--border)}
+tr.row-hover:hover{background:rgba(255,255,255,0.03)!important}
+.card-hover{transition:all .2s ease}
+.card-hover:hover{background:var(--bg-card-hover)!important;border-color:var(--border-strong)!important;transform:translateY(-1px);box-shadow:var(--shadow-lg)!important}
 .grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
 .grid-auto-wide{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
 @media (max-width:1100px){
@@ -921,16 +960,16 @@ ${lineDescriptions}`;
 // ─── UI ATOMS ────────────────────────────────────────────
 function Chip({color,children,small,style}){
   const palette={
-    green:{bg:'var(--green-light)',text:'var(--green)'},
-    red:{bg:'var(--red-light)',text:'var(--red)'},
-    amber:{bg:'var(--amber-light)',text:'var(--amber)'},
-    navy:{bg:'#e8edf6',text:'var(--navy-3)'},
-    teal:{bg:'var(--teal-light)',text:'var(--teal)'},
-    gray:{bg:'var(--bg-3)',text:'var(--text-3)'},
-    purple:{bg:'var(--purple-light)',text:'var(--purple)'},
+    green:{bg:'var(--green-dim)',text:'var(--green)',border:'rgba(16,185,129,0.2)'},
+    red:{bg:'var(--red-dim)',text:'var(--red)',border:'rgba(239,68,68,0.2)'},
+    amber:{bg:'var(--amber-dim)',text:'var(--amber)',border:'rgba(245,158,11,0.2)'},
+    navy:{bg:'var(--blue-dim)',text:'var(--blue-bright)',border:'var(--border-blue)'},
+    teal:{bg:'var(--teal-dim)',text:'var(--teal)',border:'var(--border-teal)'},
+    gray:{bg:'rgba(255,255,255,0.06)',text:'var(--text-3)',border:'var(--border)'},
+    purple:{bg:'var(--purple-dim)',text:'#a78bfa',border:'rgba(124,58,237,0.25)'},
   };
   const c=palette[color]||palette.gray;
-  return <span style={{background:c.bg,color:c.text,padding:small?'2px 8px':'3px 10px',borderRadius:999,fontSize:small?10:11,fontWeight:700,whiteSpace:'nowrap',display:'inline-flex',alignItems:'center',gap:5,letterSpacing:'0.01em',...style}}>{children}</span>;
+  return <span style={{background:c.bg,color:c.text,border:`1px solid ${c.border}`,padding:small?'2px 8px':'3px 10px',borderRadius:999,fontSize:small?10:11,fontWeight:700,whiteSpace:'nowrap',display:'inline-flex',alignItems:'center',gap:5,letterSpacing:'0.01em',...style}}>{children}</span>;
 }
 function Pill({val}){
   const map={QE:'teal',NQ:'red','Not Required':'gray','Untagged':'amber'};
@@ -946,9 +985,8 @@ function Btn({variant='primary',onClick,disabled,children,small,style,title,type
     fontWeight:700,
     fontSize:small?12:13,
     padding:small?'7px 12px':'10px 20px',
-    opacity:disabled?0.5:1,
+    opacity:disabled?0.45:1,
     cursor:disabled?'not-allowed':'pointer',
-    boxShadow:'var(--shadow-sm)',
     width:fullWidth?'100%':undefined,
     display:'inline-flex',
     alignItems:'center',
@@ -956,45 +994,46 @@ function Btn({variant='primary',onClick,disabled,children,small,style,title,type
     gap:8,
   };
   const variants={
-    primary:{background:'var(--navy)',color:'#fff'},
-    teal:{background:'var(--teal)',color:'#fff'},
-    secondary:{background:'var(--bg-2)',color:'var(--text-2)',border:'1px solid var(--border-strong)'},
-    ghost:{background:'transparent',color:'var(--text-3)',boxShadow:'none'},
-    danger:{background:'var(--red-light)',color:'var(--red)',border:'1px solid rgba(220,38,38,0.2)',boxShadow:'none'},
-    purple:{background:'var(--purple)',color:'#fff'},
+    primary:{background:'linear-gradient(135deg, #2D7FF9 0%, #1a6ce8 100%)',color:'#fff',boxShadow:disabled?'none':'var(--glow-blue)'},
+    teal:{background:'linear-gradient(135deg, #00d4b4 0%, #00b89c 100%)',color:'var(--bg)',boxShadow:disabled?'none':'var(--glow-teal)'},
+    secondary:{background:'transparent',color:'var(--text-2)',border:'1px solid var(--border-strong)'},
+    ghost:{background:'transparent',color:'var(--text-3)'},
+    danger:{background:'var(--red-dim)',color:'var(--red)',border:'1px solid rgba(239,68,68,0.25)'},
+    purple:{background:'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',color:'#fff',boxShadow:disabled?'none':'0 0 20px rgba(124,58,237,0.4)'},
   };
-  return <button type={type} title={title} onClick={disabled?undefined:onClick} style={{...base,...(variants[variant]||variants.primary),...style}} disabled={disabled} {...rest}>{children}</button>;
+  return <button type={type} title={title} className={'btn-'+variant} onClick={disabled?undefined:onClick} style={{...base,...(variants[variant]||variants.primary),...style}} disabled={disabled} {...rest}>{children}</button>;
 }
 function Card({children,style,soft}){
-  return <div style={{background:soft?'var(--bg-3)':'var(--bg-2)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',overflow:'hidden',boxShadow:'var(--shadow-sm)',...style}}>{children}</div>;
+  return <div style={{background:soft?'var(--bg-3)':'var(--bg-card)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',overflow:'hidden',boxShadow:'var(--shadow)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)',transition:'all 0.2s ease',...style}}>{children}</div>;
 }
 function SectionHead({label,action,sub}){
-  return <div style={{padding:'12px 18px',background:'var(--bg-3)',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12}}><div><div style={{fontSize:11,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.08em'}}>{label}</div>{sub&&<div style={{fontSize:12,color:'var(--text-3)',marginTop:3,textTransform:'none',letterSpacing:'normal',fontWeight:500}}>{sub}</div>}</div>{action}</div>;
+  return <div style={{padding:'12px 18px',background:'rgba(255,255,255,0.03)',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12}}><div><div style={{fontSize:10,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.08em'}}>{label}</div>{sub&&<div style={{fontSize:12,color:'var(--text-3)',marginTop:3,textTransform:'none',letterSpacing:'normal',fontWeight:500}}>{sub}</div>}</div>{action}</div>;
 }
-function StatTile({label,value,color,sub,icon,big}){
-  return <div style={{background:'var(--bg-2)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:big?'20px 22px':'16px 18px',minWidth:0,boxShadow:'var(--shadow-sm)'}}>
+function StatTile({label,value,color,sub,icon,big,glow}){
+  return <div style={{position:'relative',background:'var(--bg-card)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:big?'22px 22px':'16px 18px',minWidth:0,boxShadow:'var(--shadow)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)',overflow:'hidden'}}>
+    <div style={{position:'absolute',top:0,left:0,right:0,height:2,background:`linear-gradient(90deg, transparent, ${color||'var(--blue)'}, transparent)`}}/>
     <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:10,marginBottom:big?10:8}}>
-      <div style={{fontSize:11,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.08em',fontWeight:700}}>{label}</div>
+      <div style={{fontSize:10,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.08em',fontWeight:700}}>{label}</div>
       {icon&&<span style={{fontSize:15,opacity:0.8}}>{icon}</span>}
     </div>
-    <div className="tnum" style={{fontSize:big?28:22,fontWeight:800,color:color||'var(--text)',letterSpacing:'-0.03em',lineHeight:1.1}}>{value}</div>
+    <div className="tnum" style={{fontSize:big?32:22,fontWeight:800,color:color||'var(--text)',letterSpacing:'-0.03em',lineHeight:1.1,textShadow:glow?`0 0 24px ${glow}`:'none'}}>{value}</div>
     {sub&&<div style={{fontSize:11,color:'var(--text-3)',marginTop:6}}>{sub}</div>}
   </div>;
 }
 function Modal({title,onClose,children,wide}){
-  return <div style={{position:'fixed',inset:0,background:'rgba(15,27,45,0.55)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20}} onClick={e=>e.target===e.currentTarget&&onClose()}><div style={{background:'var(--bg-2)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-xl)',width:'100%',maxWidth:wide?880:560,maxHeight:'88vh',display:'flex',flexDirection:'column',boxShadow:'var(--shadow-lg)'}}><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 22px',borderBottom:'1px solid var(--border)',flexShrink:0}}><span style={{fontWeight:800,fontSize:16,color:'var(--text)',letterSpacing:'-0.01em'}}>{title}</span><button onClick={onClose} style={{background:'transparent',color:'var(--text-3)',fontSize:22,lineHeight:1,padding:'0 4px'}}>×</button></div><div style={{padding:22,overflow:'auto'}}>{children}</div></div></div>;
+  return <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.75)',backdropFilter:'blur(8px)',WebkitBackdropFilter:'blur(8px)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20}} onClick={e=>e.target===e.currentTarget&&onClose()}><div style={{background:'linear-gradient(135deg, #0a1628 0%, #0f1f38 100%)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-xl)',width:'100%',maxWidth:wide?880:560,maxHeight:'88vh',display:'flex',flexDirection:'column',boxShadow:'var(--shadow-lg)'}}><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 22px',borderBottom:'1px solid var(--border)',flexShrink:0}}><span style={{fontWeight:800,fontSize:16,color:'var(--text)',letterSpacing:'-0.01em'}}>{title}</span><button onClick={onClose} style={{background:'transparent',color:'var(--text-3)',fontSize:22,lineHeight:1,padding:'0 4px'}}>×</button></div><div style={{padding:22,overflow:'auto'}}>{children}</div></div></div>;
 }
 function Alert({type,children,style}){
   const s={
-    warning:{bg:'var(--amber-light)',border:'rgba(217,119,6,0.25)',text:'#92400e',icon:'⚠'},
-    success:{bg:'var(--green-light)',border:'rgba(22,163,74,0.25)',text:'#166534',icon:'✓'},
-    info:{bg:'#e8edf6',border:'rgba(15,27,45,0.12)',text:'var(--navy-3)',icon:'ℹ'},
-    error:{bg:'var(--red-light)',border:'rgba(220,38,38,0.25)',text:'#b91c1c',icon:'✗'},
-  }[type]||{bg:'#e8edf6',border:'rgba(15,27,45,0.12)',text:'var(--navy-3)',icon:'ℹ'};
+    warning:{bg:'var(--amber-dim)',border:'rgba(245,158,11,0.2)',text:'var(--amber)',icon:'⚠'},
+    success:{bg:'var(--green-dim)',border:'rgba(16,185,129,0.2)',text:'var(--green)',icon:'✓'},
+    info:{bg:'rgba(45,127,249,0.08)',border:'rgba(45,127,249,0.2)',text:'var(--blue-bright)',icon:'ℹ'},
+    error:{bg:'var(--red-dim)',border:'rgba(239,68,68,0.2)',text:'var(--red)',icon:'✗'},
+  }[type]||{bg:'rgba(45,127,249,0.08)',border:'rgba(45,127,249,0.2)',text:'var(--blue-bright)',icon:'ℹ'};
   return <div style={{background:s.bg,border:`1px solid ${s.border}`,borderRadius:'var(--radius)',padding:'12px 14px',fontSize:13,color:s.text,display:'flex',gap:10,alignItems:'flex-start',...style}}><span style={{flexShrink:0,fontWeight:800}}>{s.icon}</span><span style={{lineHeight:1.55}}>{children}</span></div>;
 }
 function EmptyState({icon,title,text,action}){
-  return <div style={{background:'var(--bg-2)',border:'1px dashed var(--border-strong)',borderRadius:'var(--radius-xl)',padding:'52px 34px',textAlign:'center',boxShadow:'var(--shadow-sm)'}}>
+  return <div style={{background:'var(--bg-card)',border:'1px dashed var(--border-strong)',borderRadius:'var(--radius-xl)',padding:'52px 34px',textAlign:'center',boxShadow:'var(--shadow)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)'}}>
     <div style={{marginBottom:16,display:'flex',justifyContent:'center'}}>{typeof icon==='string'?<span style={{fontSize:42}}>{icon}</span>:icon}</div>
     <div style={{fontSize:18,fontWeight:800,color:'var(--text)',marginBottom:8,letterSpacing:'-0.02em'}}>{title}</div>
     <div style={{color:'var(--text-2)',fontSize:13,marginBottom:18,maxWidth:480,marginInline:'auto'}}>{text}</div>
@@ -1021,13 +1060,13 @@ function Field({label,children,help,required}){
     {help&&<div style={{fontSize:11,color:'var(--text-3)',marginTop:6,lineHeight:1.5}}>{help}</div>}
   </div>;
 }
-function ProgressBar({pct,color='var(--teal)',height=6,style}){
+function ProgressBar({pct,color='linear-gradient(90deg, var(--blue), var(--teal))',height=6,animated,style}){
   const clamped=Math.max(0,Math.min(100,Number(pct)||0));
-  return <div style={{height,background:'var(--bg-4)',borderRadius:999,overflow:'hidden',...style}}>
-    <div style={{height:'100%',width:clamped+'%',background:color,borderRadius:999,transition:'width 0.4s ease'}}/>
+  return <div style={{height,background:'rgba(255,255,255,0.08)',borderRadius:999,overflow:'hidden',...style}}>
+    <div className={animated?'shimmer':undefined} style={{height:'100%',width:clamped+'%',background:color,borderRadius:999,transition:'width 0.4s ease'}}/>
   </div>;
 }
-function ClapperIcon({size=24,color='#2dd4bf'}){
+function ClapperIcon({size=24,color='var(--blue-bright)'}){
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
     <rect x="2.5" y="9.5" width="19" height="11" rx="2" stroke={color} strokeWidth="1.6"/>
     <path d="M3 6.2 20.8 3.4l.5 3.2L3.5 9.4 3 6.2Z" stroke={color} strokeWidth="1.6" strokeLinejoin="round"/>
@@ -1035,12 +1074,14 @@ function ClapperIcon({size=24,color='#2dd4bf'}){
   </svg>;
 }
 function ClapperEmpty(){
-  return <svg width="76" height="76" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-    <rect x="2.5" y="9.5" width="19" height="11" rx="2" stroke="var(--text-4)" strokeWidth="1.3"/>
-    <path d="M3 6.2 20.8 3.4l.5 3.2L3.5 9.4 3 6.2Z" stroke="var(--text-4)" strokeWidth="1.3" strokeLinejoin="round"/>
-    <path d="m7.2 5.6 2 2.6M11.6 4.9l2 2.6M16 4.2l2 2.6" stroke="var(--text-4)" strokeWidth="1.1"/>
-    <path d="M7 14h7M7 17h4" stroke="var(--text-4)" strokeWidth="1.3" strokeLinecap="round"/>
-  </svg>;
+  return <span style={{display:'inline-flex',filter:'drop-shadow(0 0 18px rgba(45,127,249,0.45))'}}>
+    <svg width="76" height="76" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="2.5" y="9.5" width="19" height="11" rx="2" stroke="var(--blue-bright)" strokeWidth="1.3"/>
+      <path d="M3 6.2 20.8 3.4l.5 3.2L3.5 9.4 3 6.2Z" stroke="var(--blue-bright)" strokeWidth="1.3" strokeLinejoin="round"/>
+      <path d="m7.2 5.6 2 2.6M11.6 4.9l2 2.6M16 4.2l2 2.6" stroke="var(--blue-bright)" strokeWidth="1.1"/>
+      <path d="M7 14h7M7 17h4" stroke="var(--blue-bright)" strokeWidth="1.3" strokeLinecap="round"/>
+    </svg>
+  </span>;
 }
 function CheckIcon({size=12,color='#fff'}){
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 12.5 10 18 19.5 6.5" stroke={color} strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
@@ -1051,7 +1092,7 @@ function Chevron({open}){
 function Segmented({options,value,onChange}){
   return <div style={{display:'flex',background:'var(--bg-3)',border:'1px solid var(--border)',borderRadius:'var(--radius)',padding:3,gap:3}}>
     {options.map(o=>(
-      <button key={o} type="button" onClick={()=>onChange(o)} style={{flex:1,padding:'8px 10px',borderRadius:'var(--radius-sm)',background:value===o?'var(--bg-2)':'transparent',color:value===o?'var(--text)':'var(--text-3)',fontWeight:value===o?700:500,fontSize:12,boxShadow:value===o?'var(--shadow-sm)':'none',border:'none'}}>{o}</button>
+      <button key={o} type="button" onClick={()=>onChange(o)} style={{flex:1,padding:'8px 10px',borderRadius:'var(--radius-sm)',background:value===o?'var(--blue-dim)':'transparent',color:value===o?'var(--blue-bright)':'var(--text-3)',fontWeight:value===o?700:500,fontSize:12,border:value===o?'1px solid var(--border-blue)':'1px solid transparent'}}>{o}</button>
     ))}
   </div>;
 }
@@ -1059,7 +1100,7 @@ function PillSelect({options,value,onChange}){
   return <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
     {options.map(o=>{
       const on=value===o;
-      return <button key={o} type="button" onClick={()=>onChange(on?'':o)} style={{padding:'7px 14px',borderRadius:999,border:`1px solid ${on?'var(--teal)':'var(--border-strong)'}`,background:on?'var(--teal-light)':'var(--bg-2)',color:on?'var(--teal)':'var(--text-2)',fontWeight:on?700:500,fontSize:12,boxShadow:'none'}}>{o}</button>;
+      return <button key={o} type="button" onClick={()=>onChange(on?'':o)} style={{padding:'7px 14px',borderRadius:999,border:`1px solid ${on?'var(--border-teal)':'var(--border-strong)'}`,background:on?'var(--teal-dim)':'transparent',color:on?'var(--teal)':'var(--text-2)',fontWeight:on?700:500,fontSize:12,boxShadow:on?'var(--glow-sm)':'none'}}>{o}</button>;
     })}
   </div>;
 }
@@ -1073,14 +1114,14 @@ function TabBar({tabs,active,onChange}){
   },[active,labelKey]);
   return <div style={{position:'relative',display:'flex',gap:2}}>
     {tabs.map(t=>(
-      <button key={t.id} ref={el=>{refs.current[t.id]=el;}} onClick={()=>onChange(t.id)} style={{padding:'10px 14px',background:'none',border:'none',color:active===t.id?'var(--teal)':'var(--text-3)',fontWeight:active===t.id?700:500,fontSize:13,whiteSpace:'nowrap'}}>{t.l}</button>
+      <button key={t.id} ref={el=>{refs.current[t.id]=el;}} onClick={()=>onChange(t.id)} style={{padding:'10px 14px',background:'none',border:'none',color:active===t.id?'var(--blue-bright)':'var(--text-3)',fontWeight:active===t.id?700:500,fontSize:13,whiteSpace:'nowrap'}}>{t.l}</button>
     ))}
-    <div style={{position:'absolute',bottom:-1,left:ind.left,width:ind.width,height:2,background:'var(--teal)',transition:'left 0.25s ease,width 0.25s ease',borderRadius:2}}/>
+    <div style={{position:'absolute',bottom:-1,left:ind.left,width:ind.width,height:2,background:'var(--blue)',boxShadow:'var(--glow-sm)',transition:'left 0.25s ease,width 0.25s ease',borderRadius:2}}/>
   </div>;
 }
 
 // ─── SHARED PROGRAM HELPERS ──────────────────────────────
-const PROGRAM_ACCENT={CA:'#d97706',NY:'#7c3aed',NY_COMMERCIAL:'#0d9488'};
+const PROGRAM_ACCENT={CA:'#f59e0b',NY:'#2D7FF9',NY_COMMERCIAL:'#00d4b4'};
 const TIERS=['Low-Budget (Under $1M)','Mid-Budget ($1M–$10M)','High-Budget (Over $10M)'];
 function stateBadgeLabel(state){return state==='NY_COMMERCIAL'?'NY-C':state;}
 // NY 40% rule: total ATL cannot exceed atlCap × all other qualified spend.
@@ -1111,40 +1152,40 @@ function Sidebar({view,setView,project,setProject,hasKey}){
     review:lines.length>0&&lines.every(l=>l.qs!=='Untagged'),
     export:(project?.exports||[]).length>0,
   };
-  const navItem=active=>({width:'100%',textAlign:'left',height:44,padding:'0 12px',borderRadius:'var(--radius)',background:active?'rgba(255,255,255,0.1)':'none',color:active?'#fff':'rgba(255,255,255,0.55)',fontSize:13,fontWeight:active?600:500,display:'flex',alignItems:'center',gap:10,border:'none',borderLeft:active?'3px solid var(--teal)':'3px solid transparent',marginBottom:2,boxShadow:'none'});
+  const navItem=active=>({width:'100%',textAlign:'left',height:42,padding:'0 12px',borderRadius:'var(--radius)',background:active?'var(--blue-dim)':'none',color:active?'var(--blue-bright)':'var(--text-3)',fontSize:13,fontWeight:active?600:500,display:'flex',alignItems:'center',gap:10,border:'none',borderLeft:active?'2px solid var(--blue)':'2px solid transparent',boxShadow:active?'inset 0 0 20px rgba(45,127,249,0.05)':'none',marginBottom:2});
   return (
-    <div style={{width:240,background:'var(--navy)',display:'flex',flexDirection:'column',minHeight:'100vh',flexShrink:0}}>
-      <div style={{padding:'20px 16px 16px',borderBottom:'1px solid rgba(255,255,255,0.08)',display:'flex',gap:12,alignItems:'center'}}>
-        <div style={{width:38,height:38,borderRadius:10,background:'var(--navy-3)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}><ClapperIcon/></div>
+    <div style={{width:240,background:'linear-gradient(180deg, #0a1628 0%, #050d1a 100%)',borderRight:'1px solid var(--border)',display:'flex',flexDirection:'column',minHeight:'100vh',flexShrink:0}}>
+      <div style={{padding:'20px 16px 16px',borderBottom:'1px solid var(--border)',display:'flex',gap:12,alignItems:'center'}}>
+        <div style={{width:38,height:38,borderRadius:10,background:'var(--blue-dim)',border:'1px solid var(--border-blue)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,boxShadow:'var(--glow-sm)'}}><ClapperIcon/></div>
         <div>
-          <div style={{fontSize:10,color:'rgba(255,255,255,0.45)',letterSpacing:'0.22em',fontWeight:700}}>INCENTIVE</div>
-          <div style={{fontSize:17,fontWeight:800,color:'#fff',letterSpacing:'-0.02em',lineHeight:1.15}}>Manager</div>
+          <div style={{fontSize:9,color:'var(--text-3)',letterSpacing:'0.22em',fontWeight:700}}>INCENTIVE</div>
+          <div style={{fontSize:18,fontWeight:800,color:'#fff',letterSpacing:'-0.02em',lineHeight:1.15}}>Manager</div>
         </div>
       </div>
       <div style={{padding:'12px 10px 4px'}}>
-        <button onClick={()=>{setView('projects');setProject(null);}} style={navItem(view==='projects'&&!project)}>
+        <button className="nav-item" onClick={()=>{setView('projects');setProject(null);}} style={navItem(view==='projects'&&!project)}>
           <span style={{opacity:0.6,fontSize:15}}>◈</span> All Projects
         </button>
-        <button onClick={()=>setView('settings')} style={navItem(view==='settings')}>
+        <button className="nav-item" onClick={()=>setView('settings')} style={navItem(view==='settings')}>
           <span style={{opacity:0.6,fontSize:14}}>⚙</span>
           <span style={{flex:1}}>AI Settings</span>
         </button>
       </div>
       {project?(
         <div style={{padding:'8px 10px',flex:1}}>
-          <div style={{margin:'6px 2px 12px',borderTop:'1px solid rgba(255,255,255,0.08)'}}/>
-          <div style={{padding:'0 12px 4px',fontSize:10,color:'rgba(255,255,255,0.35)',letterSpacing:'0.12em',textTransform:'uppercase',fontWeight:700}}>Current Project</div>
+          <div style={{margin:'6px 2px 12px',borderTop:'1px solid var(--border)'}}/>
+          <div style={{padding:'0 12px 4px',fontSize:10,color:'var(--text-3)',letterSpacing:'0.12em',textTransform:'uppercase',fontWeight:700}}>Current Project</div>
           <div style={{padding:'2px 12px 14px'}}>
-            <div style={{color:'#2dd4bf',fontSize:13,fontWeight:700,lineHeight:1.4,wordBreak:'break-word'}}>{project.name}</div>
-            <span style={{display:'inline-block',marginTop:6,background:PROGRAM_ACCENT[project.state]||'#64748b',color:'#fff',fontSize:10,padding:'2px 9px',borderRadius:999,fontWeight:700}}>{stateBadgeLabel(project.state)}</span>
+            <div style={{color:'var(--teal)',fontSize:13,fontWeight:700,lineHeight:1.4,wordBreak:'break-word'}}>{project.name}</div>
+            <span style={{display:'inline-block',marginTop:6,background:PROGRAM_ACCENT[project.state]||'#64748b',color:'#050d1a',fontSize:10,padding:'2px 9px',borderRadius:999,fontWeight:800}}>{stateBadgeLabel(project.state)}</span>
           </div>
           {steps.map(s=>{
             const active=view===s.id;
             const done=completed[s.id];
             return (
-              <button key={s.id} onClick={()=>setView(s.id)} style={navItem(active)}>
-                <span style={{width:22,height:22,borderRadius:'50%',background:done?'var(--teal)':active?'rgba(255,255,255,0.18)':'rgba(255,255,255,0.08)',color:done||active?'#fff':'rgba(255,255,255,0.45)',display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:800,flexShrink:0,border:active&&!done?'1.5px solid var(--teal)':'none'}}>
-                  {done?<CheckIcon size={10}/>:s.n}
+              <button key={s.id} className="nav-item" onClick={()=>setView(s.id)} style={navItem(active)}>
+                <span style={{width:20,height:20,borderRadius:'50%',background:done?'var(--teal)':active?'var(--blue)':'transparent',color:done?'var(--bg)':active?'#fff':'var(--text-3)',border:done||active?'none':'1.5px solid var(--border-strong)',display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:800,flexShrink:0,boxShadow:active&&!done?'var(--glow-sm)':'none'}}>
+                  {done?<CheckIcon size={10} color="var(--bg)"/>:s.n}
                 </span>
                 {s.label}
               </button>
@@ -1154,11 +1195,11 @@ function Sidebar({view,setView,project,setProject,hasKey}){
       ):(
         <div style={{flex:1}}/>
       )}
-      <div style={{padding:'14px 16px',borderTop:'1px solid rgba(255,255,255,0.08)',display:'grid',gap:8}}>
+      <div style={{padding:'14px 16px',borderTop:'1px solid var(--border)',display:'grid',gap:8}}>
         {hasKey
-          ?<span style={{fontSize:11,fontWeight:700,color:'#4ade80',background:'rgba(22,163,74,0.16)',borderRadius:999,padding:'4px 11px',display:'inline-flex',alignItems:'center',gap:6,width:'fit-content'}}>● Connected</span>
-          :<span style={{fontSize:11,fontWeight:700,color:'#fbbf24',background:'rgba(217,119,6,0.16)',borderRadius:999,padding:'4px 11px',display:'inline-flex',alignItems:'center',gap:6,width:'fit-content'}}>● Setup needed</span>}
-        <div style={{fontSize:10,color:'rgba(255,255,255,0.3)'}}>v4.0 · CA · NY · NY Commercial</div>
+          ?<span style={{fontSize:11,fontWeight:700,color:'var(--teal)',background:'var(--teal-dim)',border:'1px solid var(--border-teal)',borderRadius:999,padding:'4px 11px',display:'inline-flex',alignItems:'center',gap:6,width:'fit-content',textShadow:'0 0 12px rgba(0,212,180,0.5)'}}>● Connected</span>
+          :<span style={{fontSize:11,fontWeight:700,color:'var(--amber)',background:'var(--amber-dim)',border:'1px solid rgba(245,158,11,0.2)',borderRadius:999,padding:'4px 11px',display:'inline-flex',alignItems:'center',gap:6,width:'fit-content'}}>● Setup needed</span>}
+        <div style={{fontSize:10,color:'var(--text-4)'}}>v4.0 · CA · NY · NY Commercial</div>
       </div>
     </div>
   );
@@ -1206,7 +1247,7 @@ function WelcomeModal({onDone}){
               <div key={icon} style={{display:'flex',gap:14,alignItems:'flex-start',background:'var(--bg-soft)',border:'1px solid var(--border)',borderRadius:'16px',padding:'14px 16px'}}>
                 <span style={{fontSize:22,flexShrink:0,marginTop:2}}>{icon}</span>
                 <div>
-                  <div style={{fontWeight:800,fontSize:13,color:'var(--navy)'}}>{title}</div>
+                  <div style={{fontWeight:800,fontSize:13,color:'var(--text)'}}>{title}</div>
                   <div style={{fontSize:12,color:'var(--text-3)',marginTop:3,lineHeight:1.5}}>{sub}</div>
                 </div>
               </div>
@@ -1234,7 +1275,7 @@ function WelcomeModal({onDone}){
               {n:'5',jsx:<>Copy the code it gives you and come back here</>},
             ].map(s=>(
               <div key={s.n} style={{display:'flex',gap:12,alignItems:'center',padding:'11px 14px',background:'var(--bg-soft)',border:'1px solid var(--border)',borderRadius:'14px'}}>
-                <span style={{width:24,height:24,borderRadius:'999px',background:'var(--navy)',color:'#fff',display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,flexShrink:0}}>{s.n}</span>
+                <span style={{width:24,height:24,borderRadius:'999px',background:'var(--blue)',color:'#fff',boxShadow:'var(--glow-sm)',display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:800,flexShrink:0}}>{s.n}</span>
                 <span style={{fontSize:13,color:'var(--text)',lineHeight:1.45}}>{s.jsx}</span>
               </div>
             ))}
@@ -1259,7 +1300,7 @@ function WelcomeModal({onDone}){
               autoFocus
               style={{
                 width:'100%',
-                background:'var(--bg-soft)',
+                background:'var(--bg-3)',
                 border:`1.5px solid ${testResult==='ok'?'var(--teal)':testResult?'var(--red)':'var(--border-strong)'}`,
                 borderRadius:'16px',
                 padding:'16px 18px',textAlign:'center',
@@ -1271,7 +1312,7 @@ function WelcomeModal({onDone}){
           </div>
           {testResult&&testResult!=='ok'&&<div style={{marginBottom:12}}><Alert type="error">{testResult}</Alert></div>}
           {testResult==='ok'&&(
-            <div style={{marginBottom:12,background:'var(--green-bg)',border:'1px solid rgba(22,163,74,0.2)',borderRadius:'14px',padding:'14px 16px',display:'flex',alignItems:'center',gap:12}}>
+            <div style={{marginBottom:12,background:'linear-gradient(135deg, rgba(0,212,180,0.1), rgba(16,185,129,0.05))',border:'1px solid var(--border-teal)',borderRadius:'14px',padding:'14px 16px',display:'flex',alignItems:'center',gap:12}}>
               <span style={{fontSize:24,flexShrink:0}}>🎉</span>
               <div>
                 <div style={{fontWeight:800,fontSize:13,color:'var(--green)'}}>You're all set!</div>
@@ -1294,18 +1335,18 @@ function WelcomeModal({onDone}){
   const current=steps[step];
 
   return (
-    <div style={{position:'fixed',inset:0,background:'rgba(15,23,42,0.64)',zIndex:300,display:'flex',alignItems:'center',justifyContent:'center',padding:20}}>
-      <div style={{background:'var(--bg-elevated)',borderRadius:'var(--radius-xl)',width:'100%',maxWidth:560,boxShadow:'var(--shadow-lg)',display:'flex',flexDirection:'column',overflow:'hidden'}}>
-        <div style={{height:4,background:'var(--bg-strong)'}}><div style={{height:'100%',background:'var(--teal)',width:`${((step+1)/steps.length)*100}%`,transition:'width 0.35s ease'}}/></div>
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.75)',backdropFilter:'blur(8px)',WebkitBackdropFilter:'blur(8px)',zIndex:300,display:'flex',alignItems:'center',justifyContent:'center',padding:20}}>
+      <div style={{background:'linear-gradient(135deg, #0a1628 0%, #0f1f38 100%)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-xl)',width:'100%',maxWidth:560,boxShadow:'var(--shadow-lg), var(--glow-blue)',display:'flex',flexDirection:'column',overflow:'hidden'}}>
+        <div style={{height:3,background:'rgba(255,255,255,0.08)'}}><div style={{height:'100%',background:'linear-gradient(90deg, var(--blue), var(--teal))',width:`${((step+1)/steps.length)*100}%`,transition:'width 0.35s ease'}}/></div>
         <div style={{padding:'30px 30px 0',textAlign:'center'}}>
-          <div style={{fontSize:44,marginBottom:10,lineHeight:1}}>{current.emoji}</div>
-          <h2 style={{fontSize:24,fontWeight:800,color:'var(--navy)',marginBottom:6,letterSpacing:'-0.03em'}}>{current.title}</h2>
+          <div style={{fontSize:44,marginBottom:10,lineHeight:1,background:'radial-gradient(circle, rgba(45,127,249,0.15) 0%, transparent 70%)',padding:'12px 0'}}>{current.emoji}</div>
+          <h2 style={{fontSize:24,fontWeight:800,color:'var(--text)',marginBottom:6,letterSpacing:'-0.03em'}}>{current.title}</h2>
           <p style={{fontSize:13,color:'var(--text-3)',marginBottom:22}}>{current.subtitle}</p>
         </div>
         <div style={{padding:'0 30px 18px'}}>{current.content}</div>
         <div style={{padding:'16px 30px 22px',display:'flex',justifyContent:'space-between',alignItems:'center',gap:12}}>
           <div style={{display:'flex',gap:6}}>
-            {steps.map((_,i)=><div key={i} style={{width:i===step?22:7,height:7,borderRadius:999,background:i===step?'var(--teal)':i<step?'rgba(15,154,139,0.28)':'var(--border-strong)',transition:'all 0.3s'}}/>)}
+            {steps.map((_,i)=><div key={i} style={{width:i===step?22:7,height:7,borderRadius:999,background:i===step?'var(--blue)':i<step?'rgba(45,127,249,0.35)':'var(--border-strong)',transition:'all 0.3s'}}/>)}
           </div>
           <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap',justifyContent:'flex-end'}}>
             {step>0&&!saved&&<button onClick={()=>setStep(s=>s-1)} style={{background:'transparent',border:'none',color:'var(--text-3)',fontSize:13,padding:'6px 10px'}}>← Back</button>}
@@ -1356,12 +1397,12 @@ function SettingsPage({onShowWelcome}){
         <div style={{padding:'18px 20px',display:'grid',gap:14}}>
           <Alert type="warning">This browser-based version is ideal for internal speed, but a backend proxy is safer for a broader rollout because it keeps API keys off end-user devices.</Alert>
           <Field label="API key" help="Get a key from console.anthropic.com → API Keys. You can clear it at any time.">
-            <input type="password" className="mono" value={key} onChange={e=>{setKey(e.target.value);setTestResult(null);setSaved(false);}} placeholder="sk-ant-..." style={{width:'100%',background:'var(--bg-2)',border:`1px solid ${testResult==='ok'?'var(--teal)':testResult?'var(--red)':'var(--border-strong)'}`,borderRadius:'var(--radius)',padding:'11px 13px',color:'var(--text)',fontSize:12}}/>
+            <input type="password" className="mono" value={key} onChange={e=>{setKey(e.target.value);setTestResult(null);setSaved(false);}} placeholder="sk-ant-..." style={{width:'100%',background:'var(--bg-3)',border:`1px solid ${testResult==='ok'?'var(--teal)':testResult?'var(--red)':'var(--border-strong)'}`,borderRadius:'var(--radius)',padding:'11px 13px',color:'var(--text)',fontSize:12}}/>
           </Field>
           {testResult&&testResult!=='ok'&&<Alert type="error">{testResult}</Alert>}
           {testResult==='ok'&&<Alert type="success">Key verified. The app can reach Anthropic successfully.</Alert>}
           <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}>
-            <Btn variant="teal" onClick={testAndSave} disabled={!key.trim()||testing}>{testing?'Verifying…':'Verify & save key'}</Btn>
+            <Btn variant="primary" onClick={testAndSave} disabled={!key.trim()||testing}>{testing?'Verifying…':'Verify & save key'}</Btn>
             {key&&<Btn variant="danger" small onClick={()=>{setKey('');saveApiKey('');setTestResult(null);setSaved(false);}}>Clear key</Btn>}
             <Btn variant="secondary" small onClick={onShowWelcome}>Open setup guide</Btn>
           </div>
@@ -1386,7 +1427,7 @@ function SettingsPage({onShowWelcome}){
           <div style={{padding:'16px 18px',display:'grid',gap:10,fontSize:13,color:'var(--text-2)'}}>
             <div>1. Make sure you are online and your API key is active.</div>
             <div>2. Try serving the file from a tiny local web server instead of double-clicking it.</div>
-            <div className="mono" style={{background:'var(--bg-3)',border:'1px solid var(--border)',borderRadius:'var(--radius)',padding:'10px 12px',fontSize:12,color:'var(--navy-3)'}}>python -m http.server</div>
+            <div className="mono" style={{background:'var(--bg-3)',border:'1px solid var(--border)',borderRadius:'var(--radius)',padding:'10px 12px',fontSize:12,color:'var(--blue-bright)'}}>python -m http.server</div>
             <div>3. Then open the address your terminal shows, usually localhost:8000.</div>
           </div>
         </Card>
@@ -1396,7 +1437,7 @@ function SettingsPage({onShowWelcome}){
 }
 
 // ─── PROJECTS PAGE ────────────────────────────────────────
-const inputStyle={width:'100%',background:'var(--bg-2)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius)',padding:'10px 12px',color:'var(--text)'};
+const inputStyle={width:'100%',background:'var(--bg-3)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius)',padding:'10px 14px',color:'var(--text)',colorScheme:'dark'};
 
 function ProjectsPage({projects,onCreate,onOpen,onDelete}){
   const [showForm,setShowForm]=useState(false);
@@ -1434,19 +1475,19 @@ function ProjectsPage({projects,onCreate,onOpen,onDelete}){
         eyebrow="Workspace"
         title="Your Projects"
         subtitle="Create a project per production entity, import files, review the tax treatment, then export a workbook your team can actually use."
-        actions={<Btn variant="teal" onClick={()=>openForm()}>+ New Project</Btn>}
+        actions={<Btn variant="primary" onClick={()=>openForm()}>+ New Project</Btn>}
       />
 
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(230px,1fr))',gap:14,marginBottom:24}}>
         {Object.entries(STATE_PROGRAMS).map(([k,v])=>(
-          <div key={k} className="card-hover" onClick={()=>openForm(k)} style={{background:'var(--bg-2)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',overflow:'hidden',cursor:'pointer',boxShadow:'var(--shadow-sm)'}}>
+          <div key={k} className="card-hover" onClick={()=>openForm(k)} style={{background:'var(--bg-card)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',overflow:'hidden',cursor:'pointer',boxShadow:'var(--shadow)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)'}}>
             <div style={{height:4,background:PROGRAM_ACCENT[k]}}/>
             <div style={{padding:'16px 18px'}}>
               <div style={{fontWeight:800,fontSize:13,color:'var(--text)',marginBottom:8,lineHeight:1.4}}>{v.displayName||v.name}</div>
               <div className="tnum" style={{fontSize:24,fontWeight:800,color:PROGRAM_ACCENT[k],letterSpacing:'-0.02em',marginBottom:4}}>{v.rate}</div>
               <div style={{fontSize:11,color:'var(--text-3)',lineHeight:1.55,marginBottom:10}}>{v.rateNote}</div>
               <div style={{fontSize:11,color:'var(--text-3)'}}>Min spend {fmt(v.minSpend)} · {v.atl?'ATL eligible':'ATL excluded'}</div>
-              <div style={{marginTop:12,fontSize:12,fontWeight:700,color:'var(--teal)'}}>Start a project →</div>
+              <div style={{marginTop:12,fontSize:12,fontWeight:700,color:'var(--blue-bright)'}}>Start a project →</div>
             </div>
           </div>
         ))}
@@ -1469,7 +1510,7 @@ function ProjectsPage({projects,onCreate,onOpen,onDelete}){
 
       {filtered.length===0?(
         projects.length===0
-          ? <EmptyState icon={<ClapperEmpty/>} title="No projects yet" text="Create your first production project to start importing files and classifying spend. Pick a program card above to get going." action={<Btn variant="teal" onClick={()=>openForm()}>Create project</Btn>}/>
+          ? <EmptyState icon={<ClapperEmpty/>} title="No projects yet" text="Create your first production project to start importing files and classifying spend. Pick a program card above to get going." action={<Btn variant="primary" onClick={()=>openForm()}>Create project</Btn>}/>
           : <EmptyState icon="🔎" title="No matching projects" text="Try a different search term or clear the filter." action={<Btn variant="secondary" onClick={()=>setQuery('')}>Clear search</Btn>}/>
       ):(
         <div style={{display:'grid',gap:10}}>
@@ -1479,8 +1520,8 @@ function ProjectsPage({projects,onCreate,onOpen,onDelete}){
             const aiPending=(p.lines||[]).filter(l=>l.qs==='Untagged').length;
             const health=getProjectHealth(p);
             return (
-              <div key={p.id} className="card-hover" onClick={()=>onOpen(p)} style={{background:'var(--bg-2)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:'16px 20px',cursor:'pointer',display:'flex',alignItems:'center',gap:16,boxShadow:'var(--shadow-sm)'}}>
-                <span style={{background:PROGRAM_ACCENT[p.state]||'#64748b',color:'#fff',fontSize:10,padding:'3px 10px',borderRadius:999,fontWeight:800,flexShrink:0}}>{stateBadgeLabel(p.state)}</span>
+              <div key={p.id} className="card-hover" onClick={()=>onOpen(p)} style={{background:'var(--bg-card)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:'16px 20px',cursor:'pointer',display:'flex',alignItems:'center',gap:16,boxShadow:'var(--shadow)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)'}}>
+                <span style={{background:PROGRAM_ACCENT[p.state]||'#64748b',color:'#050d1a',fontSize:10,padding:'3px 10px',borderRadius:999,fontWeight:800,flexShrink:0}}>{stateBadgeLabel(p.state)}</span>
                 <div style={{minWidth:0,flex:1}}>
                   <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap',marginBottom:4}}>
                     <span style={{fontWeight:800,fontSize:15,color:'var(--text)',letterSpacing:'-0.01em'}}>{p.name}</span>
@@ -1515,8 +1556,8 @@ function ProjectsPage({projects,onCreate,onOpen,onDelete}){
                 {Object.entries(STATE_PROGRAMS).map(([k,v])=>{
                   const sel=form.state===k;
                   return (
-                    <div key={k} onClick={()=>setForm(f=>({...f,state:k,ptype:''}))} style={{border:`2px solid ${sel?'var(--teal)':'var(--border)'}`,background:sel?'rgba(13,148,136,0.05)':'var(--bg-2)',borderRadius:'var(--radius)',padding:'12px 14px',cursor:'pointer',position:'relative'}}>
-                      {sel&&<span style={{position:'absolute',top:10,right:10,width:18,height:18,borderRadius:'50%',background:'var(--teal)',display:'inline-flex',alignItems:'center',justifyContent:'center'}}><CheckIcon size={10}/></span>}
+                    <div key={k} onClick={()=>setForm(f=>({...f,state:k,ptype:''}))} style={{border:`2px solid ${sel?PROGRAM_ACCENT[k]:'var(--border)'}`,background:sel?'var(--bg-card-hover)':'var(--bg-card)',borderRadius:'var(--radius)',padding:'12px 14px',cursor:'pointer',position:'relative',boxShadow:sel?`0 0 20px ${PROGRAM_ACCENT[k]}40`:'none',transition:'all 0.2s ease'}}>
+                      {sel&&<span style={{position:'absolute',top:10,right:10,width:18,height:18,borderRadius:'50%',background:PROGRAM_ACCENT[k],display:'inline-flex',alignItems:'center',justifyContent:'center'}}><CheckIcon size={10} color="#050d1a"/></span>}
                       <div style={{fontWeight:800,fontSize:12.5,color:'var(--text)',marginBottom:6,paddingRight:22,lineHeight:1.4}}>{v.displayName||v.name}</div>
                       <div className="tnum" style={{fontSize:18,fontWeight:800,color:PROGRAM_ACCENT[k]}}>{v.rate}</div>
                       <div style={{fontSize:11,color:'var(--text-3)',marginTop:5,lineHeight:1.5}}>{v.atlNote}</div>
@@ -1549,7 +1590,7 @@ function ProjectsPage({projects,onCreate,onOpen,onDelete}){
             </div>
             <div style={{display:'flex',gap:10,justifyContent:'flex-end',paddingTop:12,borderTop:'1px solid var(--border)'}}>
               <Btn variant="secondary" onClick={()=>setShowForm(false)}>Cancel</Btn>
-              <Btn variant="teal" onClick={handleCreate} disabled={!form.name.trim()||!form.entity.trim()}>Create project</Btn>
+              <Btn variant="primary" onClick={handleCreate} disabled={!form.name.trim()||!form.entity.trim()}>Create project</Btn>
             </div>
           </div>
         </Modal>
@@ -1655,8 +1696,8 @@ function UploadStep({project,onUpdate}){
         </div>
       </Card>
 
-      <Card style={{marginBottom:20}}>
-        <button onClick={()=>setRulesOpen(o=>!o)} style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',gap:10,padding:'13px 18px',background:'var(--bg-3)',border:'none',color:'var(--text-2)',boxShadow:'none'}}>
+      <Card style={{marginBottom:20,borderLeft:'3px solid var(--border-blue)'}}>
+        <button onClick={()=>setRulesOpen(o=>!o)} style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between',gap:10,padding:'13px 18px',background:'rgba(255,255,255,0.03)',border:'none',color:'var(--text-2)',boxShadow:'none'}}>
           <span style={{fontSize:11,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.08em',color:'var(--text-3)'}}>Program Rules Summary — {prog.displayName||prog.name}</span>
           <span style={{display:'inline-flex',alignItems:'center',gap:8,fontSize:11,color:'var(--text-3)'}}>{(prog.keyRules||[]).length} rules <Chevron open={rulesOpen}/></span>
         </button>
@@ -1676,7 +1717,7 @@ function UploadStep({project,onUpdate}){
           const active=dragging===type;
           return (
             <div key={type} onDragOver={e=>{e.preventDefault();setDragging(type);}} onDragLeave={()=>setDragging(null)} onDrop={e=>handleDrop(e,type)} onClick={()=>{setPendingType(type);fileInputRef.current.click();}}
-              style={{minHeight:120,display:'flex',alignItems:'center',gap:20,padding:'20px 26px',border:active?'2px solid var(--teal)':'2px dashed var(--border-strong)',borderRadius:'var(--radius-lg)',cursor:'pointer',background:active?'var(--teal-light)':'var(--bg-2)',boxShadow:'var(--shadow-sm)',transition:'all 0.15s ease'}}>
+              style={{minHeight:120,display:'flex',alignItems:'center',gap:20,padding:'20px 26px',border:active?'2px solid var(--blue)':'2px dashed var(--border-strong)',borderRadius:'var(--radius-lg)',cursor:'pointer',background:active?'var(--blue-dim)':'var(--bg-card)',boxShadow:active?'var(--glow-blue)':'var(--shadow)',transition:'all 0.2s ease'}}>
               <span style={{fontSize:34,flexShrink:0}}>{icon}</span>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:3,flexWrap:'wrap'}}>
@@ -1702,13 +1743,13 @@ function UploadStep({project,onUpdate}){
           <SectionHead label={`Uploaded files (${uploads.length} / 20)`} sub="You can remove and replace files at any time. Removing a file also marks prior exports as stale."/>
           <div>
             {uploads.map(u=>(
-              <div key={u.id} style={{display:'flex',alignItems:'center',gap:14,padding:'13px 18px',borderBottom:'1px solid var(--border)'}}>
+              <div key={u.id} style={{display:'flex',alignItems:'center',gap:14,padding:'13px 18px',borderBottom:'1px solid var(--border)',borderLeft:'3px solid rgba(16,185,129,0.35)'}}>
                 <span style={{fontSize:20}}>{u.type==='GL'?'📒':u.type==='Payroll'?'👥':'⚖️'}</span>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontWeight:700,fontSize:13,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{u.name}</div>
                   <div className="tnum" style={{color:'var(--text-3)',fontSize:11,marginTop:2}}>{(u.rows||[]).length.toLocaleString()} rows · {(u.headers||[]).length} columns · added {formatDate(u.date)}</div>
                 </div>
-                <Chip color="green" small>✓ Ready</Chip>
+                <Chip color="teal" small>✓ Ready</Chip>
                 <Chip color={u.type==='GL'?'navy':u.type==='Payroll'?'teal':'gray'} small>{u.type}</Chip>
                 <Btn variant="danger" small onClick={()=>removeUpload(u.id)}>Remove</Btn>
               </div>
@@ -1922,7 +1963,7 @@ function MapStep({project,onUpdate}){
       />
 
       <div style={{display:'flex',gap:8,marginBottom:18,flexWrap:'wrap'}}>
-        {['GL','Payroll'].map(t=><Btn key={t} variant={tab===t?'teal':'secondary'} onClick={()=>setTab(t)} small>{t==='GL'?'General Ledger':'Payroll'}</Btn>)}
+        {['GL','Payroll'].map(t=><Btn key={t} variant={tab===t?'primary':'secondary'} onClick={()=>setTab(t)} small>{t==='GL'?'General Ledger':'Payroll'}</Btn>)}
       </div>
 
       {error&&<Alert type="error" style={{marginBottom:14}}>{error}</Alert>}
@@ -1937,7 +1978,7 @@ function MapStep({project,onUpdate}){
               label={`${tab==='GL'?'General Ledger':'Payroll'} mapping`}
               sub={activeUpload?.name||''}
               action={<div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}>
-                {activeUploads.length>1&&<select value={activeUploadIdx} onChange={e=>setActiveUploadIdx(Number(e.target.value))} style={{background:'var(--bg-2)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius)',padding:'6px 10px'}}>{activeUploads.map((u,i)=><option key={u.id} value={i}>{u.name}</option>)}</select>}
+                {activeUploads.length>1&&<select value={activeUploadIdx} onChange={e=>setActiveUploadIdx(Number(e.target.value))} style={{background:'var(--bg-3)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius)',padding:'6px 10px'}}>{activeUploads.map((u,i)=><option key={u.id} value={i}>{u.name}</option>)}</select>}
                 <Btn variant="teal" small onClick={autoMap}>✦ Auto-detect columns</Btn>
               </div>}
             />
@@ -1962,7 +2003,7 @@ function MapStep({project,onUpdate}){
                         {f.note&&<div style={{fontSize:11,color:'var(--text-3)',marginTop:3,lineHeight:1.45}}>{f.note}</div>}
                       </div>
                       <div style={{position:'relative'}}>
-                        <select value={curMap[f.k]||''} onChange={e=>setMaps(m=>({...m,[mapKey]:{...(m[mapKey]||{}),[f.k]:e.target.value}}))} style={{width:'100%',background:'var(--bg-2)',border:`1px solid ${mapped?'rgba(13,148,136,0.45)':'var(--border-strong)'}`,borderRadius:'var(--radius)',padding:mapped?'9px 30px 9px 11px':'9px 11px',color:mapped?'var(--text)':'var(--text-3)',marginTop:2}}>
+                        <select value={curMap[f.k]||''} onChange={e=>setMaps(m=>({...m,[mapKey]:{...(m[mapKey]||{}),[f.k]:e.target.value}}))} style={{width:'100%',background:'var(--bg-3)',border:`1px solid ${mapped?'var(--border-teal)':'var(--border-strong)'}`,borderRadius:'var(--radius)',padding:mapped?'9px 30px 9px 11px':'9px 11px',color:mapped?'var(--text)':'var(--text-3)',marginTop:2}}>
                           <option value="">— not mapped —</option>
                           {cols.map(c=><option key={c} value={c}>{c}</option>)}
                         </select>
@@ -1998,7 +2039,7 @@ function MapStep({project,onUpdate}){
                 ):(
                   <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
                     <thead>
-                      <tr style={{background:'var(--bg-3)',borderBottom:'1px solid var(--border)'}}>
+                      <tr style={{background:'rgba(255,255,255,0.03)',borderBottom:'1px solid var(--border)'}}>
                         {mappedFields.slice(0,5).map(f=>(
                           <th key={f.k} style={{padding:'8px 10px',textAlign:'left'}}>
                             <div style={{fontSize:10,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.06em'}}>{f.l}</div>
@@ -2023,7 +2064,7 @@ function MapStep({project,onUpdate}){
       )}
 
       <div style={{display:'flex',alignItems:'center',gap:12,marginTop:18,flexWrap:'wrap'}}>
-        <Btn variant="teal" onClick={processLines} disabled={glUploads.length===0&&payUploads.length===0}>Apply mappings & process lines</Btn>
+        <Btn variant="primary" onClick={processLines} disabled={glUploads.length===0&&payUploads.length===0}>Apply mappings & process lines</Btn>
         {processed&&<Chip color="green">Ready for Step 3</Chip>}
       </div>
     </div>
@@ -2168,7 +2209,7 @@ function ReviewStep({project,onUpdate}){
 
   return (
     <div style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden',minHeight:0}}>
-      <div style={{padding:'24px 32px 0',background:'var(--bg-2)',borderBottom:'1px solid var(--border)',flexShrink:0}}>
+      <div style={{padding:'24px 32px 0',background:'rgba(255,255,255,0.02)',borderBottom:'1px solid var(--border)',flexShrink:0}}>
         <div style={{fontSize:11,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:4,fontWeight:700}}>Step 3 of 4</div>
         <h2 style={{fontSize:22,fontWeight:800,color:'var(--text)',marginBottom:12,letterSpacing:'-0.02em'}}>Review lines <span style={{color:'var(--teal)',fontSize:15,fontWeight:700}}>· {prog.name}</span></h2>
         <TabBar tabs={TABS} active={tab} onChange={setTab}/>
@@ -2180,10 +2221,10 @@ function ReviewStep({project,onUpdate}){
         {tab==='summary'&&(
           <div style={{maxWidth:1020}}>
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:12,marginBottom:12}}>
-              <StatTile big label="Qualifying (QE)" value={fmt(totals.QE)} color="var(--teal)" sub={`${totals.qeCount} lines`}/>
-              <StatTile big label="Non-Qualifying (NQ)" value={fmt(totals.NQ)} color="var(--red)" sub={`${totals.nqCount} lines`}/>
-              <StatTile big label="Untagged" value={fmt(totals.Untagged)} color="var(--amber)" sub={`${totals.unCount} lines`}/>
-              <StatTile big label="Grand Total" value={fmt(totals.total)} color="var(--navy-3)" sub={`${lines.length.toLocaleString()} lines`}/>
+              <StatTile big label="Qualifying (QE)" value={fmt(totals.QE)} color="var(--teal)" glow="rgba(0,212,180,0.35)" sub={`${totals.qeCount} lines`}/>
+              <StatTile big label="Non-Qualifying (NQ)" value={fmt(totals.NQ)} color="var(--red)" glow="rgba(239,68,68,0.3)" sub={`${totals.nqCount} lines`}/>
+              <StatTile big label="Untagged" value={fmt(totals.Untagged)} color="var(--amber)" glow="rgba(245,158,11,0.3)" sub={`${totals.unCount} lines`}/>
+              <StatTile big label="Grand Total" value={fmt(totals.total)} color="var(--blue-bright)" glow="rgba(45,127,249,0.35)" sub={`${lines.length.toLocaleString()} lines`}/>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:12,marginBottom:18}}>
               <StatTile label="GL Total" value={fmt(totals.gl)}/>
@@ -2258,7 +2299,7 @@ function ReviewStep({project,onUpdate}){
                 <SectionHead label={`${prog.name} Category Breakdown`}/>
                 <div style={{overflowX:'auto'}}>
                   <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
-                    <thead><tr style={{background:'var(--bg-3)',borderBottom:'1px solid var(--border)'}}>{['Category','Qualified?','Amount','Lines'].map(h=><th key={h} style={{padding:'8px 14px',textAlign:'left',fontSize:10,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.06em'}}>{h}</th>)}</tr></thead>
+                    <thead><tr style={{background:'rgba(255,255,255,0.03)',borderBottom:'1px solid var(--border)'}}>{['Category','Qualified?','Amount','Lines'].map(h=><th key={h} style={{padding:'8px 14px',textAlign:'left',fontSize:10,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.06em'}}>{h}</th>)}</tr></thead>
                     <tbody>
                       {Object.entries(catTotals).sort((a,b)=>b[1].total-a[1].total).map(([cat,v])=>(
                         <tr key={cat} style={{borderBottom:'1px solid var(--border)'}} className="row-hover">
@@ -2289,7 +2330,7 @@ function ReviewStep({project,onUpdate}){
             {aiError&&<div style={{marginBottom:12}}><Alert type="error">{aiError}</Alert></div>}
 
             {!aiRunning&&!hasAiResults&&(
-              <div style={{background:'linear-gradient(160deg,var(--purple-light),#faf9ff)',border:'1px solid rgba(124,58,237,0.18)',borderRadius:'var(--radius-lg)',padding:'34px 30px',marginBottom:16,textAlign:'center'}}>
+              <div style={{background:'linear-gradient(160deg, rgba(124,58,237,0.18), rgba(45,127,249,0.08))',border:'1px solid rgba(124,58,237,0.3)',borderRadius:'var(--radius-lg)',padding:'34px 30px',marginBottom:16,textAlign:'center'}}>
                 <div style={{fontSize:36,marginBottom:10}}>✨</div>
                 <div style={{fontSize:20,fontWeight:800,color:'var(--text)',letterSpacing:'-0.02em',marginBottom:8}}>Let Claude read every untagged line</div>
                 <p style={{fontSize:13,color:'var(--text-2)',maxWidth:560,margin:'0 auto 8px',lineHeight:1.7}}>
@@ -2308,20 +2349,20 @@ function ReviewStep({project,onUpdate}){
                     <span className="ai-pulse" style={{fontWeight:600}}>{aiStatus||'Working…'}</span>
                     <span className="tnum" style={{fontWeight:700}}>{aiProgress}%</span>
                   </div>
-                  <ProgressBar pct={aiProgress} color="var(--purple)" height={6}/>
+                  <ProgressBar pct={aiProgress} height={6} animated/>
                 </div>
               </Card>
             )}
 
             {liveRules&&!aiRunning&&(
-              <Card style={{marginBottom:16}}>
-                <SectionHead label={`Live Rule Check — ${prog.name}`} action={<Chip color={liveRules.error?'amber':'green'} small>{liveRules.error?'Fallback to built-in':'Web search complete'}</Chip>}/>
+              <Card style={{marginBottom:16,borderLeft:'3px solid var(--blue)'}}>
+                <SectionHead label={`Live Rule Check — ${prog.name}`} action={<Chip color={liveRules.error?'amber':'teal'} small>{liveRules.error?'Fallback to built-in':'Web search complete'}</Chip>}/>
                 <div style={{padding:'14px 18px'}}>
                   {liveRules.error&&<div style={{fontSize:12,color:'var(--amber)',marginBottom:8}}>Web search unavailable ({liveRules.error.slice(0,60)}). Built-in rules were used — results are still valid.</div>}
                   {liveRules.summary&&<div style={{fontSize:12.5,color:'var(--text-2)',lineHeight:1.65,maxHeight:140,overflow:'auto',whiteSpace:'pre-wrap'}}>{liveRules.summary.slice(0,700)}{liveRules.summary.length>700?'…':''}</div>}
                   {liveRules.sources&&liveRules.sources.length>0&&(
                     <div style={{marginTop:10,display:'flex',gap:8,flexWrap:'wrap'}}>
-                      {liveRules.sources.map((s,i)=><a key={i} href={s} target="_blank" rel="noopener noreferrer" style={{fontSize:11,color:'var(--teal)',fontWeight:600,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',maxWidth:220,textDecoration:'none'}}>🔗 {s.replace('https://','').slice(0,42)}</a>)}
+                      {liveRules.sources.map((s,i)=><a key={i} href={s} target="_blank" rel="noopener noreferrer" style={{fontSize:11,color:'var(--blue-bright)',fontWeight:600,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',maxWidth:220,textDecoration:'none'}}>🔗 {s.replace('https://','').slice(0,42)}</a>)}
                     </div>
                   )}
                 </div>
@@ -2343,13 +2384,13 @@ function ReviewStep({project,onUpdate}){
                 <div style={{overflowX:'auto'}}>
                   <table style={{width:'100%',borderCollapse:'collapse',fontSize:12}}>
                     <thead>
-                      <tr style={{background:'var(--bg-3)',borderBottom:'1px solid var(--border)'}}>
+                      <tr style={{background:'rgba(255,255,255,0.03)',borderBottom:'1px solid var(--border)'}}>
                         {['Src','Vendor / Employee','Memo','Amount','AI Tag','Confidence','Reason','Action'].map(h=><th key={h} style={{padding:'8px 10px',textAlign:'left',fontSize:10,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.06em',whiteSpace:'nowrap'}}>{h}</th>)}
                       </tr>
                     </thead>
                     <tbody>
                       {lines.filter(l=>l.ai_tag&&l.qs==='Untagged').map((l,idx)=>(
-                        <tr key={l.id} className="row-hover" style={{borderBottom:'1px solid var(--border)',background:idx%2===1?'var(--bg-3)':'transparent'}}>
+                        <tr key={l.id} className="row-hover" style={{borderBottom:'1px solid var(--border)',background:idx%2===1?'rgba(255,255,255,0.02)':'transparent'}}>
                           <td style={{padding:'7px 10px'}}><Chip color={l.src==='GL'?'navy':'teal'} small>{l.src}</Chip></td>
                           <td style={{padding:'7px 10px',fontWeight:500,maxWidth:130,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{l.vendor||l.employee||'—'}</td>
                           <td style={{padding:'7px 10px',maxWidth:150,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',color:'var(--text-2)',fontSize:11}}>{l.memo||l.acct_name||'—'}</td>
@@ -2364,7 +2405,7 @@ function ReviewStep({project,onUpdate}){
                                 const v=e.target.value;
                                 if(!v)return;
                                 updateLine(l.id,{qs:v,qs_src:'Manual override',warnings:(l.warnings||[]).filter(w=>w!=='Pending AI classification')});
-                              }} style={{background:'var(--bg-2)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-sm)',padding:'5px 7px',fontSize:11,color:'var(--text-2)'}}>
+                              }} style={{background:'var(--bg-3)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-sm)',padding:'5px 7px',fontSize:11,color:'var(--text-2)'}}>
                                 <option value="">Override…</option>
                                 {QUAL_OPTS.map(o=><option key={o} value={o}>{o}</option>)}
                               </select>
@@ -2389,14 +2430,14 @@ function ReviewStep({project,onUpdate}){
           <div>
             <div style={{display:'flex',gap:8,marginBottom:12,flexWrap:'wrap',alignItems:'center'}}>
               <input value={filter.query} onChange={e=>{setFilter(f=>({...f,query:e.target.value}));setPage(0);}} placeholder="Search vendor, memo, employee…" style={{...inputStyle,width:260,maxWidth:'100%',padding:'8px 11px',fontSize:12}}/>
-              <select value={filter.qs} onChange={e=>{setFilter(f=>({...f,qs:e.target.value}));setPage(0);}} style={{background:'var(--bg-2)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius)',padding:'7px 10px',color:'var(--text)',fontSize:12}}>
+              <select value={filter.qs} onChange={e=>{setFilter(f=>({...f,qs:e.target.value}));setPage(0);}} style={{background:'var(--bg-3)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius)',padding:'7px 10px',color:'var(--text)',fontSize:12}}>
                 <option value="all">All Statuses</option>{QUAL_OPTS.map(o=><option key={o} value={o}>{o}</option>)}
               </select>
-              <select value={filter.src} onChange={e=>{setFilter(f=>({...f,src:e.target.value}));setPage(0);}} style={{background:'var(--bg-2)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius)',padding:'7px 10px',color:'var(--text)',fontSize:12}}>
+              <select value={filter.src} onChange={e=>{setFilter(f=>({...f,src:e.target.value}));setPage(0);}} style={{background:'var(--bg-3)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius)',padding:'7px 10px',color:'var(--text)',fontSize:12}}>
                 <option value="all">All Sources</option><option value="GL">GL</option><option value="Payroll">Payroll</option>
               </select>
-              {depts.length>0&&<select value={filter.dept} onChange={e=>{setFilter(f=>({...f,dept:e.target.value}));setPage(0);}} style={{background:'var(--bg-2)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius)',padding:'7px 10px',color:'var(--text)',fontSize:12}}><option value="all">All Departments</option>{depts.map(d=><option key={d} value={d}>{d}</option>)}</select>}
-              <select value={filter.aiConf} onChange={e=>{setFilter(f=>({...f,aiConf:e.target.value}));setPage(0);}} style={{background:'var(--bg-2)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius)',padding:'7px 10px',color:'var(--text)',fontSize:12}}>
+              {depts.length>0&&<select value={filter.dept} onChange={e=>{setFilter(f=>({...f,dept:e.target.value}));setPage(0);}} style={{background:'var(--bg-3)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius)',padding:'7px 10px',color:'var(--text)',fontSize:12}}><option value="all">All Departments</option>{depts.map(d=><option key={d} value={d}>{d}</option>)}</select>}
+              <select value={filter.aiConf} onChange={e=>{setFilter(f=>({...f,aiConf:e.target.value}));setPage(0);}} style={{background:'var(--bg-3)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius)',padding:'7px 10px',color:'var(--text)',fontSize:12}}>
                 <option value="all">All AI Confidence</option><option value="high">AI High</option><option value="medium">AI Medium</option><option value="low">AI Low</option><option value="pending">No AI tag yet</option>
               </select>
               <span className="tnum" style={{marginLeft:'auto',fontSize:12,color:'var(--text-3)'}}>{filtered.length.toLocaleString()} of {lines.length.toLocaleString()} lines</span>
@@ -2417,7 +2458,7 @@ function ReviewStep({project,onUpdate}){
                         const sugg=catSuggest===l.id?getCatSuggestions(l):null;
                         return (
                           <React.Fragment key={l.id}>
-                            <tr className="row-hover" style={{borderBottom:'1px solid var(--border)',background:idx%2===1?'var(--bg-3)':'transparent'}}>
+                            <tr className="row-hover" style={{borderBottom:'1px solid var(--border)',background:idx%2===1?'rgba(255,255,255,0.02)':'transparent'}}>
                               <td style={{padding:'7px 10px'}}><Chip color={l.src==='GL'?'navy':'teal'} small>{l.src}</Chip></td>
                               <td className="tnum" style={{padding:'7px 10px',color:'var(--text-2)',whiteSpace:'nowrap',fontSize:11}}>{l.date||'—'}</td>
                               <td style={{padding:'7px 10px',maxWidth:130,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',fontWeight:500}}>{l.vendor||l.employee||'—'}</td>
@@ -2427,7 +2468,7 @@ function ReviewStep({project,onUpdate}){
                               </td>
                               <td className="tnum" style={{padding:'7px 10px',textAlign:'right',fontWeight:600,color:l.amount<0?'var(--red)':'var(--text)',whiteSpace:'nowrap'}}>{fmtd(l.amount)}</td>
                               <td style={{padding:'7px 10px'}}>
-                                <select value={l.qs} onChange={e=>updateLine(l.id,{qs:e.target.value,qs_src:'Manual override',warnings:(l.warnings||[]).filter(w=>w!=='Pending AI classification')})} style={{background:'var(--bg-2)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-sm)',padding:'4px 6px',fontSize:11,fontWeight:600,color:l.qs==='QE'?'var(--teal)':l.qs==='NQ'?'var(--red)':l.qs==='Untagged'?'var(--amber)':'var(--text-3)'}}>
+                                <select value={l.qs} onChange={e=>updateLine(l.id,{qs:e.target.value,qs_src:'Manual override',warnings:(l.warnings||[]).filter(w=>w!=='Pending AI classification')})} style={{background:'var(--bg-3)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-sm)',padding:'4px 6px',fontSize:11,fontWeight:600,color:l.qs==='QE'?'var(--teal)':l.qs==='NQ'?'var(--red)':l.qs==='Untagged'?'var(--amber)':'var(--text-3)'}}>
                                   {QUAL_OPTS.map(o=><option key={o} value={o}>{o}</option>)}
                                 </select>
                               </td>
@@ -2435,7 +2476,7 @@ function ReviewStep({project,onUpdate}){
                                 {l.ai_tag?<div><div style={{display:'flex',gap:3,alignItems:'center',marginBottom:2}}><Pill val={l.ai_tag}/><ConfBadge conf={l.ai_confidence}/></div><div style={{fontSize:10,color:'var(--text-3)',marginTop:1,maxWidth:130,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{l.ai_reason}</div></div>:<span style={{color:'var(--text-3)',fontSize:11}}>—</span>}
                               </td>
                               <td style={{padding:'7px 10px'}}>
-                                <select value={l.cat||''} onFocus={()=>setCatSuggest(l.id)} onChange={e=>updateLine(l.id,{cat:e.target.value})} style={{background:'var(--bg-2)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-sm)',padding:'4px 6px',fontSize:11,color:l.cat?'var(--text)':'var(--text-3)',minWidth:140,maxWidth:180}}>
+                                <select value={l.cat||''} onFocus={()=>setCatSuggest(l.id)} onChange={e=>updateLine(l.id,{cat:e.target.value})} style={{background:'var(--bg-3)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-sm)',padding:'4px 6px',fontSize:11,color:l.cat?'var(--text)':'var(--text-3)',minWidth:140,maxWidth:180}}>
                                   <option value="">— assign —</option>
                                   {Object.keys(stateCats).map(c=><option key={c} value={c}>{c}</option>)}
                                 </select>
@@ -2446,12 +2487,12 @@ function ReviewStep({project,onUpdate}){
                             </tr>
                             {sugg&&sugg.length>0&&(
                               <tr>
-                                <td colSpan={9} style={{padding:'8px 14px',background:'var(--purple-light)',borderBottom:'1px solid var(--border)'}}>
+                                <td colSpan={9} style={{padding:'8px 14px',background:'rgba(124,58,237,0.12)',borderBottom:'1px solid var(--border)'}}>
                                   <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap',fontSize:12}}>
-                                    <span style={{fontWeight:700,color:'var(--purple)'}}>Suggested categories</span>
+                                    <span style={{fontWeight:700,color:'#a78bfa'}}>Suggested categories</span>
                                     <span style={{color:'var(--text-3)'}}>most common on similar lines in this project:</span>
                                     {sugg.map(([cat,n])=>(
-                                      <button key={cat} onClick={()=>{updateLine(l.id,{cat});setCatSuggest(null);}} style={{padding:'4px 11px',borderRadius:999,border:'1px solid rgba(124,58,237,0.3)',background:'var(--bg-2)',color:'var(--purple)',fontWeight:700,fontSize:11,boxShadow:'none'}}>{cat} <span style={{opacity:0.55,fontWeight:600}}>×{n}</span></button>
+                                      <button key={cat} onClick={()=>{updateLine(l.id,{cat});setCatSuggest(null);}} style={{padding:'4px 11px',borderRadius:999,border:'1px solid rgba(124,58,237,0.35)',background:'var(--bg-3)',color:'#a78bfa',fontWeight:700,fontSize:11,boxShadow:'none'}}>{cat} <span style={{opacity:0.55,fontWeight:600}}>×{n}</span></button>
                                     ))}
                                     <button onClick={()=>setCatSuggest(null)} style={{marginLeft:'auto',background:'none',border:'none',color:'var(--text-3)',fontSize:13,boxShadow:'none'}}>✕</button>
                                   </div>
@@ -2488,16 +2529,16 @@ function ReviewStep({project,onUpdate}){
                 <SectionHead label={`Vendors (${Object.keys(vendors).length})`}/>
                 <div style={{overflowX:'auto'}}>
                   <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
-                    <thead><tr style={{background:'var(--bg-3)',borderBottom:'1px solid var(--border)'}}>{['Vendor Name',`${prog.abbr} Status`,'GL Lines','Total Spend','Status'].map(h=><th key={h} style={{padding:'8px 14px',textAlign:'left',fontSize:10,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.06em'}}>{h}</th>)}</tr></thead>
+                    <thead><tr style={{background:'rgba(255,255,255,0.03)',borderBottom:'1px solid var(--border)'}}>{['Vendor Name',`${prog.abbr} Status`,'GL Lines','Total Spend','Status'].map(h=><th key={h} style={{padding:'8px 14px',textAlign:'left',fontSize:10,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.06em'}}>{h}</th>)}</tr></thead>
                     <tbody>
                       {Object.entries(vendors).sort((a,b)=>a[0].localeCompare(b[0])).map(([name,v],idx)=>{
                         const vlines=lines.filter(l=>l.vendor===name);
                         const vtotal=sumAmt(vlines);
                         return (
-                          <tr key={name} className="row-hover" style={{borderBottom:'1px solid var(--border)',background:idx%2===1?'var(--bg-3)':'transparent'}}>
+                          <tr key={name} className="row-hover" style={{borderBottom:'1px solid var(--border)',background:idx%2===1?'rgba(255,255,255,0.02)':'transparent'}}>
                             <td style={{padding:'9px 14px',fontWeight:500,maxWidth:220,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{name}</td>
                             <td style={{padding:'9px 14px'}}>
-                              <select value={v.status||''} onChange={e=>updateVendor(name,{status:e.target.value})} style={{background:'var(--bg-2)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-sm)',padding:'5px 8px',fontSize:12,color:v.status?'var(--text)':'var(--amber)'}}>
+                              <select value={v.status||''} onChange={e=>updateVendor(name,{status:e.target.value})} style={{background:'var(--bg-3)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-sm)',padding:'5px 8px',fontSize:12,color:v.status?'var(--text)':'var(--amber)'}}>
                                 <option value="">— unset —</option>
                                 <option value="IN">{prog.abbr} Vendor</option>
                                 <option value="OUT">Out-of-State Vendor</option>
@@ -2767,7 +2808,7 @@ function ExportStep({project,onUpdate}){
         <Card>
           <SectionHead label="Qualification summary"/>
           <div style={{padding:'16px 18px',display:'grid',gap:10}}>
-            {[['Qualifying (QE)',fmt(sumAmt(qeLines)),`${qeLines.length} lines`,'var(--teal)'],['Non-Qualifying (NQ)',fmt(sumAmt(nqLines)),`${nqLines.length} lines`,'var(--red)'],['Untagged',fmt(sumAmt(untLines)),`${untLines.length} lines`,'var(--amber)'],['Not Required',fmt(sumAmt(nrLines)),`${nrLines.length} lines`,'var(--text-3)'],['Grand Total',fmt(sumAmt(lines)),`${lines.length} lines`,'var(--navy-3)']].map(([label,val,sub,col])=><div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'1px solid var(--border)',paddingBottom:8}}><span style={{fontSize:13,color:'var(--text)'}}>{label}</span><div style={{textAlign:'right'}}><div className="tnum" style={{fontWeight:800,color:col,fontSize:14}}>{val}</div><div style={{fontSize:11,color:'var(--text-3)'}}>{sub}</div></div></div>)}
+            {[['Qualifying (QE)',fmt(sumAmt(qeLines)),`${qeLines.length} lines`,'var(--teal)'],['Non-Qualifying (NQ)',fmt(sumAmt(nqLines)),`${nqLines.length} lines`,'var(--red)'],['Untagged',fmt(sumAmt(untLines)),`${untLines.length} lines`,'var(--amber)'],['Not Required',fmt(sumAmt(nrLines)),`${nrLines.length} lines`,'var(--text-3)'],['Grand Total',fmt(sumAmt(lines)),`${lines.length} lines`,'var(--blue-bright)']].map(([label,val,sub,col])=><div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:'1px solid var(--border)',paddingBottom:8}}><span style={{fontSize:13,color:'var(--text)'}}>{label}</span><div style={{textAlign:'right'}}><div className="tnum" style={{fontWeight:800,color:col,fontSize:14}}>{val}</div><div style={{fontSize:11,color:'var(--text-3)'}}>{sub}</div></div></div>)}
           </div>
         </Card>
       </div>
@@ -2780,7 +2821,7 @@ function ExportStep({project,onUpdate}){
             const on=!!checklist[doc];
             return (
               <button key={doc} onClick={()=>toggleDoc(doc)} style={{display:'flex',width:'100%',textAlign:'left',alignItems:'flex-start',gap:12,padding:'10px 18px',background:'none',border:'none',borderBottom:'1px solid var(--border)',cursor:'pointer',boxShadow:'none'}}>
-                <span style={{width:18,height:18,borderRadius:'var(--radius-sm)',border:on?'none':'1.5px solid var(--border-strong)',background:on?'var(--teal)':'var(--bg-2)',display:'inline-flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:1}}>{on&&<CheckIcon size={10}/>}</span>
+                <span style={{width:18,height:18,borderRadius:'var(--radius-sm)',border:on?'none':'1.5px solid var(--border-strong)',background:on?'var(--teal)':'transparent',display:'inline-flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:1}}>{on&&<CheckIcon size={10} color="#050d1a"/>}</span>
                 <span style={{fontSize:13,color:on?'var(--text-3)':'var(--text-2)',textDecoration:on?'line-through':'none',lineHeight:1.5}}>{doc}</span>
               </button>
             );
@@ -2807,13 +2848,13 @@ function ExportStep({project,onUpdate}){
       {untLines.length>0&&<div style={{marginBottom:14}}><Alert type="warning">You still have {untLines.length} untagged lines. You can export now, but this is usually worth reviewing first.</Alert></div>}
       {warns>0&&<div style={{marginBottom:18}}><Alert type="warning">{warns} validation warnings remain. Export is still allowed so you can keep moving.</Alert></div>}
 
-      <Btn variant="teal" onClick={doExport} disabled={busy||lines.length===0} style={{padding:'14px 28px',fontSize:14}}>{busy?'Generating workbook…':lines.length===0?'No lines to export':'⬇ Download workbook'}</Btn>
+      <Btn variant="primary" onClick={doExport} disabled={busy||lines.length===0} style={{padding:'14px 28px',fontSize:14}}>{busy?'Generating workbook…':lines.length===0?'No lines to export':'⬇ Download workbook'}</Btn>
 
       {(project.exports||[]).length>0&&(
         <div style={{marginTop:28}}>
           <div style={{fontSize:11,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:10,fontWeight:700}}>Export history</div>
           {[...(project.exports||[])].reverse().map(e=>(
-            <div key={e.id} style={{background:'var(--bg-2)',border:`1px solid ${e.stale?'rgba(217,119,6,0.35)':'var(--border)'}`,borderRadius:'var(--radius)',padding:'12px 14px',marginBottom:8,display:'grid',gridTemplateColumns:'24px 1fr auto auto auto',gap:10,alignItems:'center',fontSize:12,boxShadow:'var(--shadow-sm)'}}>
+            <div key={e.id} style={{background:'var(--bg-card)',border:`1px solid ${e.stale?'rgba(245,158,11,0.35)':'var(--border)'}`,borderRadius:'var(--radius)',padding:'12px 14px',marginBottom:8,display:'grid',gridTemplateColumns:'24px 1fr auto auto auto',gap:10,alignItems:'center',fontSize:12,boxShadow:'var(--shadow-sm)'}}>
               <span style={{fontSize:18}}>📥</span>
               <span style={{color:'var(--text-2)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{e.filename}</span>
               <span className="tnum" style={{color:'var(--teal)',fontWeight:800,whiteSpace:'nowrap'}}>{fmt(e.qe)} QE</span>
@@ -2905,7 +2946,7 @@ function App(){
       {showWelcome&&<WelcomeModal onDone={dismissWelcome}/>}
       <Sidebar view={view} setView={setView} project={project} setProject={p=>{setProject(p);if(!p)setView('projects');}} hasKey={hasKey}/>
       <div style={{flex:1,overflow:'auto',display:'flex',flexDirection:'column'}}>
-        <div style={{padding:'12px 24px',borderBottom:'1px solid var(--border)',background:'var(--bg-2)',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,position:'sticky',top:0,zIndex:20}}>
+        <div style={{padding:'12px 24px',borderBottom:'1px solid var(--border)',background:'var(--bg-glass)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,position:'sticky',top:0,zIndex:20}}>
           <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
             <Chip color={saveColor} small>{saveLabel}</Chip>
             <Chip color={storageMode==='indexeddb'?'green':'amber'} small>{storageMode==='indexeddb'?'IndexedDB storage':'Fallback storage'}</Chip>
