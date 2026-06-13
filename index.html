@@ -12,137 +12,155 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  /* ── Backgrounds ── */
-  --bg:#050d1a;
-  --bg-2:#0a1628;
-  --bg-3:#0f1f38;
-  --bg-4:#162540;
-  --bg-card:rgba(255,255,255,0.04);
-  --bg-card-hover:rgba(255,255,255,0.07);
-  --bg-glass:rgba(13,28,52,0.85);
+  /* ── Base ── */
+  --bg:#080c14;
+  --bg-2:#0d1420;
+  --bg-3:#111a2c;
+  --bg-4:#172035;
+  --bg-glass:rgba(13,20,32,0.85);
+  --bg-card:rgba(255,255,255,0.035);
+  --bg-hover:rgba(255,255,255,0.055);
 
-  /* ── Brand colors ── */
-  --navy:#050d1a;
-  --blue:#2D7FF9;
-  --blue-bright:#4d9fff;
-  --blue-dim:rgba(45,127,249,0.15);
-  --blue-glow:rgba(45,127,249,0.35);
-  --teal:#00d4b4;
-  --teal-dim:rgba(0,212,180,0.12);
-  --teal-glow:rgba(0,212,180,0.3);
-  --purple:#7c3aed;
-  --purple-dim:rgba(124,58,237,0.15);
+  /* ── Brand ── */
+  --blue:#3b82f6;
+  --blue-bright:#60a5fa;
+  --blue-dim:rgba(59,130,246,0.12);
+  --blue-glow:rgba(59,130,246,0.25);
+  --teal:#06b6d4;
+  --teal-bright:#22d3ee;
+  --teal-dim:rgba(6,182,212,0.10);
+  --teal-glow:rgba(6,182,212,0.25);
+  --violet:#8b5cf6;
+  --violet-dim:rgba(139,92,246,0.12);
+  --violet-glow:rgba(139,92,246,0.25);
+  --emerald:#10b981;
+  --emerald-dim:rgba(16,185,129,0.10);
   --amber:#f59e0b;
-  --amber-dim:rgba(245,158,11,0.12);
-  --red:#ef4444;
-  --red-dim:rgba(239,68,68,0.12);
-  --green:#10b981;
-  --green-dim:rgba(16,185,129,0.12);
+  --amber-dim:rgba(245,158,11,0.10);
+  --rose:#f43f5e;
+  --rose-dim:rgba(244,63,94,0.10);
 
   /* ── Text ── */
-  --text:#ffffff;
-  --text-2:rgba(255,255,255,0.7);
-  --text-3:rgba(255,255,255,0.4);
-  --text-4:rgba(255,255,255,0.2);
+  --text:#f1f5f9;
+  --text-2:rgba(241,245,249,0.65);
+  --text-3:rgba(241,245,249,0.38);
+  --text-4:rgba(241,245,249,0.18);
 
   /* ── Borders ── */
-  --border:rgba(255,255,255,0.07);
-  --border-strong:rgba(255,255,255,0.14);
-  --border-blue:rgba(45,127,249,0.3);
-  --border-teal:rgba(0,212,180,0.3);
+  --border:rgba(255,255,255,0.06);
+  --border-2:rgba(255,255,255,0.10);
+  --border-blue:rgba(59,130,246,0.35);
+  --border-teal:rgba(6,182,212,0.35);
 
-  /* ── Shadows & glows ── */
-  --shadow:0 8px 32px rgba(0,0,0,0.4);
-  --shadow-lg:0 20px 60px rgba(0,0,0,0.5);
-  --glow-blue:0 0 20px rgba(45,127,249,0.4), 0 0 60px rgba(45,127,249,0.15);
-  --glow-teal:0 0 20px rgba(0,212,180,0.4), 0 0 60px rgba(0,212,180,0.15);
-  --glow-sm:0 0 10px rgba(45,127,249,0.3);
+  /* ── Effects ── */
+  --shadow:0 4px 24px rgba(0,0,0,0.35);
+  --shadow-lg:0 16px 64px rgba(0,0,0,0.5);
+  --shadow-xl:0 32px 96px rgba(0,0,0,0.6);
+  --glow-blue:0 0 24px rgba(59,130,246,0.35), 0 0 64px rgba(59,130,246,0.12);
+  --glow-teal:0 0 24px rgba(6,182,212,0.35), 0 0 64px rgba(6,182,212,0.12);
+  --glow-violet:0 0 24px rgba(139,92,246,0.35), 0 0 64px rgba(139,92,246,0.12);
 
-  /* ── Radius ── */
-  --radius-sm:8px;
-  --radius:14px;
-  --radius-lg:20px;
-  --radius-xl:28px;
+  /* ── Geometry ── */
+  --r-sm:6px;
+  --r:12px;
+  --r-lg:18px;
+  --r-xl:24px;
+  --r-2xl:32px;
 
   /* ── Legacy aliases (older component code references these) ── */
-  --navy-2:#0a1628;
-  --navy-3:#1e3a5f;
-  --teal-light:var(--teal-dim);
+  --navy:#080c14;
+  --navy-2:#0d1420;
+  --navy-3:#172035;
+  --purple:var(--violet);
+  --purple-dim:var(--violet-dim);
+  --purple-light:var(--violet-dim);
+  --purple-bg:var(--violet-dim);
+  --red:var(--rose);
+  --red-dim:var(--rose-dim);
+  --red-light:var(--rose-dim);
+  --red-bg:var(--rose-dim);
+  --green:var(--emerald);
+  --green-dim:var(--emerald-dim);
+  --green-light:var(--emerald-dim);
+  --green-bg:var(--emerald-dim);
   --amber-light:var(--amber-dim);
-  --red-light:var(--red-dim);
-  --green-light:var(--green-dim);
-  --purple-light:var(--purple-dim);
+  --amber-bg:var(--amber-dim);
+  --teal-light:var(--teal-dim);
+  --teal-bg:var(--teal-dim);
+  --teal-2:#0891b2;
+  --blue-bg:var(--blue-dim);
   --bg-elevated:var(--bg-2);
   --bg-soft:var(--bg-card);
   --bg-muted:var(--bg-3);
   --bg-strong:rgba(255,255,255,0.08);
+  --bg-card-hover:var(--bg-hover);
   --bg2:var(--bg-2);
   --bg3:var(--bg-3);
   --bg4:var(--bg-4);
   --text2:var(--text-2);
   --text3:var(--text-3);
-  --border2:var(--border-strong);
-  --teal-2:#00b89c;
-  --teal-bg:var(--teal-dim);
-  --red-bg:var(--red-dim);
-  --amber-bg:var(--amber-dim);
-  --green-bg:var(--green-dim);
-  --purple-bg:var(--purple-dim);
-  --blue-bg:var(--blue-dim);
-  --shadow-sm:0 2px 12px rgba(0,0,0,0.35);
+  --border-strong:var(--border-2);
+  --border2:var(--border-2);
+  --radius-sm:var(--r-sm);
+  --radius:var(--r);
+  --radius-lg:var(--r-lg);
+  --radius-xl:var(--r-xl);
+  --shadow-sm:0 2px 10px rgba(0,0,0,0.3);
   --shadow-md:var(--shadow);
+  --glow-sm:0 0 12px var(--blue-glow);
 }
 html,body{min-height:100%}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,'Inter','SF Pro Text',sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,'Inter','SF Pro Display',system-ui,sans-serif;
   background:var(--bg);
   background-image:
-    radial-gradient(ellipse at 20% 20%, rgba(45,127,249,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 80%, rgba(0,212,180,0.06) 0%, transparent 60%);
+    radial-gradient(ellipse 80% 50% at 15% 10%, rgba(59,130,246,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 85% 85%, rgba(6,182,212,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(139,92,246,0.03) 0%, transparent 70%);
   background-attachment:fixed;
   color:var(--text);
   min-height:100vh;
-  font-size:13px;
+  font-size:14px;
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
 #root{min-height:100vh}
 a{color:inherit}
-button{cursor:pointer;border:none;font-family:inherit;font-size:13px;transition:all .15s ease}
+button{cursor:pointer;border:none;font-family:inherit;font-size:13px;transition:all .15s ease;white-space:nowrap}
 button:active:not(:disabled){transform:scale(0.97)}
 button:disabled{cursor:not-allowed}
-.btn-primary:hover:not(:disabled){box-shadow:0 0 30px rgba(45,127,249,0.6), 0 0 80px rgba(45,127,249,0.2)!important}
-.btn-teal:hover:not(:disabled){box-shadow:0 0 30px rgba(0,212,180,0.55), 0 0 80px rgba(0,212,180,0.2)!important}
-.btn-purple:hover:not(:disabled){box-shadow:0 0 30px rgba(124,58,237,0.6)!important}
+.btn-primary:hover:not(:disabled){filter:brightness(1.1);box-shadow:0 1px 2px rgba(0,0,0,0.3), 0 0 32px rgba(59,130,246,0.5), 0 0 80px rgba(59,130,246,0.2)!important}
+.btn-teal:hover:not(:disabled){filter:brightness(1.1);box-shadow:0 1px 2px rgba(0,0,0,0.3), 0 0 32px rgba(6,182,212,0.5), 0 0 80px rgba(6,182,212,0.2)!important}
+.btn-purple:hover:not(:disabled){filter:brightness(1.1);box-shadow:0 1px 2px rgba(0,0,0,0.3), 0 0 32px rgba(139,92,246,0.5), 0 0 80px rgba(139,92,246,0.2)!important}
 .btn-secondary:hover:not(:disabled){border-color:var(--border-blue)!important;color:var(--blue-bright)!important;background:var(--blue-dim)!important}
-.btn-ghost:hover:not(:disabled){background:rgba(255,255,255,0.05)}
-.btn-danger:hover:not(:disabled){background:rgba(239,68,68,0.2)!important}
-.nav-item:hover{background:rgba(255,255,255,0.05)!important}
+.btn-ghost:hover:not(:disabled){background:rgba(255,255,255,0.05);color:var(--text-2)!important}
+.btn-danger:hover:not(:disabled){border-color:rgba(244,63,94,0.4)!important}
+.nav-item:hover{background:rgba(255,255,255,0.04)!important;color:var(--text-2)!important}
 input,select,textarea{font-family:inherit;font-size:13px;outline:none;color-scheme:dark;transition:border-color .15s ease,box-shadow .15s ease}
 input::placeholder,textarea::placeholder{color:var(--text-4)}
-input:focus,select:focus,textarea:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(45,127,249,0.15)}
-input[type=password]:focus{box-shadow:0 0 0 3px rgba(45,127,249,0.2), 0 0 20px rgba(45,127,249,0.1)}
-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23ffffff' fill-opacity='0.4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px!important}
+input:disabled,select:disabled{opacity:0.4;cursor:not-allowed}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)!important;box-shadow:0 0 0 3px rgba(59,130,246,0.15)}
+input[type=password]:focus{border-color:var(--teal)!important;box-shadow:0 0 0 3px rgba(6,182,212,0.15), 0 0 20px rgba(6,182,212,0.08)}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23f1f5f9' stroke-opacity='0.38' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px!important}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:999px}
-::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:999px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.15)}
 .ai-pulse{animation:pulse 1.5s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.38}}
-@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
-.shimmer{position:relative;overflow:hidden}
-.shimmer::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent);animation:shimmer 1.4s infinite}
+@keyframes shimmer{0%{background-position:200% center}100%{background-position:-200% center}}
+.ai-progress{background:linear-gradient(90deg, var(--violet) 0%, var(--blue) 50%, var(--teal) 100%);background-size:200% 100%;animation:shimmer 2s linear infinite}
 .tnum{font-variant-numeric:tabular-nums}
-.mono{font-family:'SF Mono','Fira Code',ui-monospace,SFMono-Regular,Menlo,monospace}
+.mono{font-family:'SF Mono','Fira Code','Cascadia Code',ui-monospace,SFMono-Regular,Menlo,monospace}
 .sticky-th th{position:sticky;top:0;background:var(--bg-2);z-index:2;box-shadow:inset 0 -1px 0 var(--border)}
-tr.row-hover:hover{background:rgba(255,255,255,0.03)!important}
+tr.row-hover:hover{background:rgba(255,255,255,0.025)!important}
 .card-hover{transition:all .2s ease}
-.card-hover:hover{background:var(--bg-card-hover)!important;border-color:var(--border-strong)!important;transform:translateY(-1px);box-shadow:var(--shadow-lg)!important}
+.card-hover:hover{background:var(--bg-hover)!important;border-color:var(--border-2)!important;transform:translateY(-1px);box-shadow:var(--shadow-lg)!important}
 .grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
 .grid-auto-wide{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
 @media (max-width:1100px){
-  body{font-size:12.5px}
+  body{font-size:13px}
 }
 @media (max-width:960px){
   #root>div{flex-direction:column}
@@ -154,6 +172,77 @@ tr.row-hover:hover{background:rgba(255,255,255,0.03)!important}
 </head>
 <body>
 <div id="root"></div>
+<script>
+// Startup chime — Web Audio API only, no external files, fails silently.
+(function(){
+  var KEY='filmtax_chime_played';
+  function playChime(){
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC)return;
+      var ctx=new AC();
+      var master=ctx.createGain();
+      master.gain.value=0.12;
+      // Subtle reverb: convolver fed a decaying white-noise impulse response.
+      var convolver=ctx.createConvolver();
+      var rate=ctx.sampleRate,len=Math.floor(rate*1.2);
+      var impulse=ctx.createBuffer(2,len,rate);
+      for(var ch=0;ch<2;ch++){
+        var data=impulse.getChannelData(ch);
+        for(var i=0;i<len;i++)data[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.8);
+      }
+      convolver.buffer=impulse;
+      var wet=ctx.createGain();wet.gain.value=0.25;
+      master.connect(ctx.destination);
+      master.connect(convolver);convolver.connect(wet);wet.connect(ctx.destination);
+      // Rising C-major triad: C4, E4, G4 staggered 80ms apart.
+      var notes=[[261.63,0],[329.63,0.08],[392.0,0.16]];
+      notes.forEach(function(n){
+        var freq=n[0],start=ctx.currentTime+n[1];
+        // sine body + quiet triangle layer for warmth
+        [['sine',1],['triangle',0.35]].forEach(function(layer){
+          var osc=ctx.createOscillator(),g=ctx.createGain();
+          osc.type=layer[0];osc.frequency.value=freq;
+          var peak=0.5*layer[1];
+          g.gain.setValueAtTime(0,start);
+          g.gain.linearRampToValueAtTime(peak,start+0.01);          // attack 0.01s
+          g.gain.linearRampToValueAtTime(peak*0.6,start+0.31);      // decay 0.3s → sustain 0.6
+          g.gain.setValueAtTime(peak*0.6,start+0.8);
+          g.gain.linearRampToValueAtTime(0.0001,start+1.2);         // release 0.4s
+          osc.connect(g);g.connect(master);
+          osc.start(start);osc.stop(start+1.25);
+        });
+      });
+      try{sessionStorage.setItem(KEY,'1');}catch(e){}
+      setTimeout(function(){try{ctx.close();}catch(e){}},2400);
+    }catch(e){/* never surface audio errors */}
+  }
+  function init(){
+    try{if(sessionStorage.getItem(KEY))return;}catch(e){return;}
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC)return;
+      var probe=new AC();
+      var state=probe.state;
+      probe.close();
+      if(state==='running'){
+        playChime();
+      }else{
+        // Autoplay policy: wait for the first interaction, then chime once.
+        var once=function(){
+          window.removeEventListener('pointerdown',once);
+          window.removeEventListener('keydown',once);
+          playChime();
+        };
+        window.addEventListener('pointerdown',once);
+        window.addEventListener('keydown',once);
+      }
+    }catch(e){}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+  else init();
+})();
+</script>
 <script type="text/babel">
 const {useState,useEffect,useRef,useCallback,useMemo}=React;
 
@@ -981,25 +1070,25 @@ function ConfBadge({conf}){
 }
 function Btn({variant='primary',onClick,disabled,children,small,style,title,type='button',fullWidth,...rest}){
   const base={
-    borderRadius:'var(--radius)',
-    fontWeight:700,
+    borderRadius:'var(--r)',
+    fontWeight:600,
     fontSize:small?12:13,
-    padding:small?'7px 12px':'10px 20px',
+    padding:small?'7px 12px':'9px 18px',
     opacity:disabled?0.45:1,
     cursor:disabled?'not-allowed':'pointer',
     width:fullWidth?'100%':undefined,
     display:'inline-flex',
     alignItems:'center',
     justifyContent:'center',
-    gap:8,
+    gap:6,
   };
   const variants={
-    primary:{background:'linear-gradient(135deg, #2D7FF9 0%, #1a6ce8 100%)',color:'#fff',boxShadow:disabled?'none':'var(--glow-blue)'},
-    teal:{background:'linear-gradient(135deg, #00d4b4 0%, #00b89c 100%)',color:'var(--bg)',boxShadow:disabled?'none':'var(--glow-teal)'},
-    secondary:{background:'transparent',color:'var(--text-2)',border:'1px solid var(--border-strong)'},
+    primary:{background:'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',color:'#fff',boxShadow:disabled?'none':'0 1px 2px rgba(0,0,0,0.3), var(--glow-blue)'},
+    teal:{background:'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',color:'#fff',boxShadow:disabled?'none':'0 1px 2px rgba(0,0,0,0.3), var(--glow-teal)'},
+    secondary:{background:'transparent',color:'var(--text-2)',border:'1px solid var(--border-2)'},
     ghost:{background:'transparent',color:'var(--text-3)'},
-    danger:{background:'var(--red-dim)',color:'var(--red)',border:'1px solid rgba(239,68,68,0.25)'},
-    purple:{background:'linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)',color:'#fff',boxShadow:disabled?'none':'0 0 20px rgba(124,58,237,0.4)'},
+    danger:{background:'var(--rose-dim)',color:'var(--rose)',border:'1px solid rgba(244,63,94,0.2)'},
+    purple:{background:'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',color:'#fff',boxShadow:disabled?'none':'0 1px 2px rgba(0,0,0,0.3), var(--glow-violet)'},
   };
   return <button type={type} title={title} className={'btn-'+variant} onClick={disabled?undefined:onClick} style={{...base,...(variants[variant]||variants.primary),...style}} disabled={disabled} {...rest}>{children}</button>;
 }
@@ -1009,28 +1098,35 @@ function Card({children,style,soft}){
 function SectionHead({label,action,sub}){
   return <div style={{padding:'12px 18px',background:'rgba(255,255,255,0.03)',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12}}><div><div style={{fontSize:10,fontWeight:700,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.08em'}}>{label}</div>{sub&&<div style={{fontSize:12,color:'var(--text-3)',marginTop:3,textTransform:'none',letterSpacing:'normal',fontWeight:500}}>{sub}</div>}</div>{action}</div>;
 }
-function StatTile({label,value,color,sub,icon,big,glow}){
-  return <div style={{position:'relative',background:'var(--bg-card)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:big?'22px 22px':'16px 18px',minWidth:0,boxShadow:'var(--shadow)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)',overflow:'hidden'}}>
+function StatTile({label,value,color,sub,big,glow}){
+  return <div style={{position:'relative',background:'var(--bg-card)',border:'1px solid var(--border)',borderRadius:'var(--r-lg)',padding:big?'22px 22px':'16px 18px',minWidth:0,boxShadow:'var(--shadow)',backdropFilter:'blur(16px)',WebkitBackdropFilter:'blur(16px)',overflow:'hidden'}}>
     <div style={{position:'absolute',top:0,left:0,right:0,height:2,background:`linear-gradient(90deg, transparent, ${color||'var(--blue)'}, transparent)`}}/>
+    {glow&&<div aria-hidden="true" style={{position:'absolute',top:-20,right:-20,width:80,height:80,borderRadius:'50%',background:glow,filter:'blur(24px)',opacity:0.3,pointerEvents:'none'}}/>}
     <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:10,marginBottom:big?10:8}}>
       <div style={{fontSize:10,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.08em',fontWeight:700}}>{label}</div>
-      {icon&&<span style={{fontSize:15,opacity:0.8}}>{icon}</span>}
     </div>
-    <div className="tnum" style={{fontSize:big?32:22,fontWeight:800,color:color||'var(--text)',letterSpacing:'-0.03em',lineHeight:1.1,textShadow:glow?`0 0 24px ${glow}`:'none'}}>{value}</div>
+    <div className="tnum" style={{fontSize:big?28:22,fontWeight:800,color:color||'var(--text)',letterSpacing:'-0.02em',lineHeight:1.1}}>{value}</div>
     {sub&&<div style={{fontSize:11,color:'var(--text-3)',marginTop:6}}>{sub}</div>}
   </div>;
 }
 function Modal({title,onClose,children,wide}){
   return <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.75)',backdropFilter:'blur(8px)',WebkitBackdropFilter:'blur(8px)',zIndex:200,display:'flex',alignItems:'center',justifyContent:'center',padding:20}} onClick={e=>e.target===e.currentTarget&&onClose()}><div style={{background:'linear-gradient(135deg, #0a1628 0%, #0f1f38 100%)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-xl)',width:'100%',maxWidth:wide?880:560,maxHeight:'88vh',display:'flex',flexDirection:'column',boxShadow:'var(--shadow-lg)'}}><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'18px 22px',borderBottom:'1px solid var(--border)',flexShrink:0}}><span style={{fontWeight:800,fontSize:16,color:'var(--text)',letterSpacing:'-0.01em'}}>{title}</span><button onClick={onClose} style={{background:'transparent',color:'var(--text-3)',fontSize:22,lineHeight:1,padding:'0 4px'}}>×</button></div><div style={{padding:22,overflow:'auto'}}>{children}</div></div></div>;
 }
+function AlertIcon({type,color}){
+  const common={width:16,height:16,viewBox:'0 0 24 24',fill:'none','aria-hidden':'true',style:{flexShrink:0,marginTop:1}};
+  if(type==='success')return <svg {...common}><circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.8"/><path d="M7.5 12.5 10.5 15.5 16.5 9" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  if(type==='warning')return <svg {...common}><path d="M12 3.4 21 19.5H3L12 3.4Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round"/><path d="M12 9.6v4" stroke={color} strokeWidth="1.8" strokeLinecap="round"/><circle cx="12" cy="16.6" r="0.95" fill={color}/></svg>;
+  if(type==='error')return <svg {...common}><circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.8"/><path d="M9 9l6 6M15 9l-6 6" stroke={color} strokeWidth="1.8" strokeLinecap="round"/></svg>;
+  return <svg {...common}><circle cx="12" cy="12" r="9" stroke={color} strokeWidth="1.8"/><path d="M12 11v5" stroke={color} strokeWidth="1.8" strokeLinecap="round"/><circle cx="12" cy="7.6" r="1" fill={color}/></svg>;
+}
 function Alert({type,children,style}){
   const s={
-    warning:{bg:'var(--amber-dim)',border:'rgba(245,158,11,0.2)',text:'var(--amber)',icon:'⚠'},
-    success:{bg:'var(--green-dim)',border:'rgba(16,185,129,0.2)',text:'var(--green)',icon:'✓'},
-    info:{bg:'rgba(45,127,249,0.08)',border:'rgba(45,127,249,0.2)',text:'var(--blue-bright)',icon:'ℹ'},
-    error:{bg:'var(--red-dim)',border:'rgba(239,68,68,0.2)',text:'var(--red)',icon:'✗'},
-  }[type]||{bg:'rgba(45,127,249,0.08)',border:'rgba(45,127,249,0.2)',text:'var(--blue-bright)',icon:'ℹ'};
-  return <div style={{background:s.bg,border:`1px solid ${s.border}`,borderRadius:'var(--radius)',padding:'12px 14px',fontSize:13,color:s.text,display:'flex',gap:10,alignItems:'flex-start',...style}}><span style={{flexShrink:0,fontWeight:800}}>{s.icon}</span><span style={{lineHeight:1.55}}>{children}</span></div>;
+    warning:{bg:'var(--amber-dim)',border:'rgba(245,158,11,0.18)',text:'var(--amber)'},
+    success:{bg:'var(--emerald-dim)',border:'rgba(16,185,129,0.18)',text:'var(--emerald)'},
+    info:{bg:'rgba(59,130,246,0.06)',border:'rgba(59,130,246,0.18)',text:'var(--blue-bright)'},
+    error:{bg:'var(--rose-dim)',border:'rgba(244,63,94,0.18)',text:'var(--rose)'},
+  }[type]||{bg:'rgba(59,130,246,0.06)',border:'rgba(59,130,246,0.18)',text:'var(--blue-bright)'};
+  return <div style={{background:s.bg,border:`1px solid ${s.border}`,borderRadius:'var(--r)',padding:'12px 16px',fontSize:13,color:s.text,display:'flex',gap:10,alignItems:'flex-start',lineHeight:1.5,...style}}><AlertIcon type={type} color={s.text}/><span style={{lineHeight:1.55}}>{children}</span></div>;
 }
 function EmptyState({icon,title,text,action}){
   return <div style={{background:'var(--bg-card)',border:'1px dashed var(--border-strong)',borderRadius:'var(--radius-xl)',padding:'52px 34px',textAlign:'center',boxShadow:'var(--shadow)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)'}}>
@@ -1074,17 +1170,39 @@ function ClapperIcon({size=24,color='var(--blue-bright)'}){
   </svg>;
 }
 function ClapperEmpty(){
-  return <span style={{display:'inline-flex',filter:'drop-shadow(0 0 18px rgba(45,127,249,0.45))'}}>
-    <svg width="76" height="76" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="2.5" y="9.5" width="19" height="11" rx="2" stroke="var(--blue-bright)" strokeWidth="1.3"/>
-      <path d="M3 6.2 20.8 3.4l.5 3.2L3.5 9.4 3 6.2Z" stroke="var(--blue-bright)" strokeWidth="1.3" strokeLinejoin="round"/>
-      <path d="m7.2 5.6 2 2.6M11.6 4.9l2 2.6M16 4.2l2 2.6" stroke="var(--blue-bright)" strokeWidth="1.1"/>
-      <path d="M7 14h7M7 17h4" stroke="var(--blue-bright)" strokeWidth="1.3" strokeLinecap="round"/>
+  return <span style={{display:'inline-flex',opacity:0.5}}>
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="2.5" y="9.5" width="19" height="11" rx="2" stroke="var(--blue)" strokeWidth="1.3"/>
+      <path d="M3 6.2 20.8 3.4l.5 3.2L3.5 9.4 3 6.2Z" stroke="var(--blue)" strokeWidth="1.3" strokeLinejoin="round"/>
+      <path d="m7.2 5.6 2 2.6M11.6 4.9l2 2.6M16 4.2l2 2.6" stroke="var(--blue)" strokeWidth="1.1"/>
+      <path d="M7 14h7M7 17h4" stroke="var(--blue)" strokeWidth="1.3" strokeLinecap="round"/>
     </svg>
   </span>;
 }
+function GridIcon(){
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <rect x="3" y="3" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+    <rect x="13" y="3" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+    <rect x="3" y="13" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+    <rect x="13" y="13" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
+  </svg>;
+}
+function SparkIcon(){
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+  </svg>;
+}
 function CheckIcon({size=12,color='#fff'}){
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 12.5 10 18 19.5 6.5" stroke={color} strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+}
+function GlobeIcon({size=14}){
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6"/><path d="M3 12h18M12 3c2.5 2.5 4 5.8 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.8-4-9s1.5-6.5 4-9Z" stroke="currentColor" strokeWidth="1.6"/></svg>;
+}
+function LinkIcon({size=11}){
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{flexShrink:0}}><path d="M9 6H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-4M14 4h6v6M20 4 11 13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+}
+function DownloadIcon({size=14}){
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 }
 function Chevron({open}){
   return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{transform:open?'rotate(180deg)':'rotate(0deg)',transition:'transform 0.2s ease'}}><path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>;
@@ -1121,7 +1239,7 @@ function TabBar({tabs,active,onChange}){
 }
 
 // ─── SHARED PROGRAM HELPERS ──────────────────────────────
-const PROGRAM_ACCENT={CA:'#f59e0b',NY:'#2D7FF9',NY_COMMERCIAL:'#00d4b4'};
+const PROGRAM_ACCENT={CA:'#fbbf24',NY:'#3b82f6',NY_COMMERCIAL:'#06b6d4'};
 const TIERS=['Low-Budget (Under $1M)','Mid-Budget ($1M–$10M)','High-Budget (Over $10M)'];
 function stateBadgeLabel(state){return state==='NY_COMMERCIAL'?'NY-C':state;}
 // NY 40% rule: total ATL cannot exceed atlCap × all other qualified spend.
@@ -1152,40 +1270,43 @@ function Sidebar({view,setView,project,setProject,hasKey}){
     review:lines.length>0&&lines.every(l=>l.qs!=='Untagged'),
     export:(project?.exports||[]).length>0,
   };
-  const navItem=active=>({width:'100%',textAlign:'left',height:42,padding:'0 12px',borderRadius:'var(--radius)',background:active?'var(--blue-dim)':'none',color:active?'var(--blue-bright)':'var(--text-3)',fontSize:13,fontWeight:active?600:500,display:'flex',alignItems:'center',gap:10,border:'none',borderLeft:active?'2px solid var(--blue)':'2px solid transparent',boxShadow:active?'inset 0 0 20px rgba(45,127,249,0.05)':'none',marginBottom:2});
+  const navItem=active=>({width:'100%',textAlign:'left',height:40,padding:active?'0 12px 0 10px':'0 12px',borderRadius:'var(--r)',background:active?'var(--blue-dim)':'none',color:active?'var(--blue-bright)':'var(--text-3)',fontSize:13,fontWeight:active?600:500,display:'flex',alignItems:'center',gap:10,border:'none',borderLeft:active?'2px solid var(--blue)':'2px solid transparent',marginBottom:2,transition:'all 0.15s ease'});
   return (
-    <div style={{width:240,background:'linear-gradient(180deg, #0a1628 0%, #050d1a 100%)',borderRight:'1px solid var(--border)',display:'flex',flexDirection:'column',minHeight:'100vh',flexShrink:0}}>
-      <div style={{padding:'20px 16px 16px',borderBottom:'1px solid var(--border)',display:'flex',gap:12,alignItems:'center'}}>
-        <div style={{width:38,height:38,borderRadius:10,background:'var(--blue-dim)',border:'1px solid var(--border-blue)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,boxShadow:'var(--glow-sm)'}}><ClapperIcon/></div>
-        <div>
-          <div style={{fontSize:9,color:'var(--text-3)',letterSpacing:'0.22em',fontWeight:700}}>INCENTIVE</div>
-          <div style={{fontSize:18,fontWeight:800,color:'#fff',letterSpacing:'-0.02em',lineHeight:1.15}}>Manager</div>
-        </div>
+    <div style={{width:232,background:'linear-gradient(180deg, rgba(13,20,32,0.95) 0%, rgba(8,12,20,0.98) 100%)',borderRight:'1px solid var(--border)',backdropFilter:'blur(20px)',WebkitBackdropFilter:'blur(20px)',display:'flex',flexDirection:'column',minHeight:'100vh',flexShrink:0}}>
+      <div style={{padding:'24px 20px 20px'}}>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{filter:'drop-shadow(0 0 8px var(--blue-glow))'}}>
+          <rect x="2.5" y="9.5" width="19" height="11" rx="2" stroke="var(--blue)" strokeWidth="1.6"/>
+          <path d="M3 6.2 20.8 3.4l.5 3.2L3.5 9.4 3 6.2Z" stroke="var(--blue)" strokeWidth="1.6" strokeLinejoin="round"/>
+          <path d="m7.2 5.6 2 2.6M11.6 4.9l2 2.6M16 4.2l2 2.6" stroke="var(--blue)" strokeWidth="1.4"/>
+        </svg>
+        <div style={{fontSize:9,color:'var(--text-3)',letterSpacing:'0.12em',fontWeight:700,textTransform:'uppercase',marginTop:12}}>INCENTIVE</div>
+        <div style={{fontSize:18,fontWeight:800,color:'var(--text)',letterSpacing:'-0.02em',lineHeight:1}}>Manager</div>
       </div>
-      <div style={{padding:'12px 10px 4px'}}>
+      <div style={{borderTop:'1px solid var(--border)',margin:'0 20px 0'}}/>
+      <div style={{padding:'16px 10px 4px'}}>
         <button className="nav-item" onClick={()=>{setView('projects');setProject(null);}} style={navItem(view==='projects'&&!project)}>
-          <span style={{opacity:0.6,fontSize:15}}>◈</span> All Projects
+          <GridIcon/> All Projects
         </button>
         <button className="nav-item" onClick={()=>setView('settings')} style={navItem(view==='settings')}>
-          <span style={{opacity:0.6,fontSize:14}}>⚙</span>
+          <SparkIcon/>
           <span style={{flex:1}}>AI Settings</span>
         </button>
       </div>
       {project?(
         <div style={{padding:'8px 10px',flex:1}}>
-          <div style={{margin:'6px 2px 12px',borderTop:'1px solid var(--border)'}}/>
-          <div style={{padding:'0 12px 4px',fontSize:10,color:'var(--text-3)',letterSpacing:'0.12em',textTransform:'uppercase',fontWeight:700}}>Current Project</div>
+          <div style={{margin:'6px 10px 12px',borderTop:'1px solid var(--border)'}}/>
+          <div style={{padding:'0 12px 8px',fontSize:10,color:'var(--text-4)',letterSpacing:'0.1em',textTransform:'uppercase',fontWeight:700}}>Current Project</div>
           <div style={{padding:'2px 12px 14px'}}>
-            <div style={{color:'var(--teal)',fontSize:13,fontWeight:700,lineHeight:1.4,wordBreak:'break-word'}}>{project.name}</div>
-            <span style={{display:'inline-block',marginTop:6,background:PROGRAM_ACCENT[project.state]||'#64748b',color:'#050d1a',fontSize:10,padding:'2px 9px',borderRadius:999,fontWeight:800}}>{stateBadgeLabel(project.state)}</span>
+            <div style={{color:'var(--text)',fontSize:13,fontWeight:700,lineHeight:1.4,wordBreak:'break-word'}}>{project.name}</div>
+            <span style={{display:'inline-block',marginTop:6,background:PROGRAM_ACCENT[project.state]||'#64748b',color:'var(--bg)',fontSize:10,padding:'2px 9px',borderRadius:999,fontWeight:800}}>{stateBadgeLabel(project.state)}</span>
           </div>
           {steps.map(s=>{
             const active=view===s.id;
             const done=completed[s.id];
             return (
-              <button key={s.id} className="nav-item" onClick={()=>setView(s.id)} style={navItem(active)}>
-                <span style={{width:20,height:20,borderRadius:'50%',background:done?'var(--teal)':active?'var(--blue)':'transparent',color:done?'var(--bg)':active?'#fff':'var(--text-3)',border:done||active?'none':'1.5px solid var(--border-strong)',display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:800,flexShrink:0,boxShadow:active&&!done?'var(--glow-sm)':'none'}}>
-                  {done?<CheckIcon size={10} color="var(--bg)"/>:s.n}
+              <button key={s.id} className="nav-item" onClick={()=>setView(s.id)} style={{...navItem(active),height:38}}>
+                <span style={{width:18,height:18,borderRadius:'50%',background:done?'var(--emerald)':active?'var(--blue)':'transparent',color:done?'var(--bg)':active?'#fff':'var(--text-3)',border:done||active?'none':'1.5px solid var(--border-2)',display:'inline-flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:700,flexShrink:0,boxShadow:active&&!done?'0 0 12px var(--blue-glow)':'none'}}>
+                  {done?<CheckIcon size={11} color="var(--bg)"/>:s.n}
                 </span>
                 {s.label}
               </button>
@@ -1197,9 +1318,9 @@ function Sidebar({view,setView,project,setProject,hasKey}){
       )}
       <div style={{padding:'14px 16px',borderTop:'1px solid var(--border)',display:'grid',gap:8}}>
         {hasKey
-          ?<span style={{fontSize:11,fontWeight:700,color:'var(--teal)',background:'var(--teal-dim)',border:'1px solid var(--border-teal)',borderRadius:999,padding:'4px 11px',display:'inline-flex',alignItems:'center',gap:6,width:'fit-content',textShadow:'0 0 12px rgba(0,212,180,0.5)'}}>● Connected</span>
-          :<span style={{fontSize:11,fontWeight:700,color:'var(--amber)',background:'var(--amber-dim)',border:'1px solid rgba(245,158,11,0.2)',borderRadius:999,padding:'4px 11px',display:'inline-flex',alignItems:'center',gap:6,width:'fit-content'}}>● Setup needed</span>}
-        <div style={{fontSize:10,color:'var(--text-4)'}}>v4.0 · CA · NY · NY Commercial</div>
+          ?<span style={{fontSize:11,fontWeight:600,color:'var(--emerald)',background:'var(--emerald-dim)',borderRadius:999,padding:'4px 10px',display:'inline-flex',alignItems:'center',gap:6,width:'fit-content'}}><span style={{width:8,height:8,borderRadius:'50%',background:'var(--emerald)',flexShrink:0}}/>Connected</span>
+          :<span style={{fontSize:11,fontWeight:600,color:'var(--amber)',background:'var(--amber-dim)',borderRadius:999,padding:'4px 10px',display:'inline-flex',alignItems:'center',gap:6,width:'fit-content'}}><span style={{width:8,height:8,borderRadius:'50%',background:'var(--amber)',flexShrink:0}}/>Setup needed</span>}
+        <div style={{fontSize:10,color:'var(--text-4)'}}>v2.0 — CA · NY · NY-C</div>
       </div>
     </div>
   );
@@ -1312,7 +1433,7 @@ function WelcomeModal({onDone}){
           </div>
           {testResult&&testResult!=='ok'&&<div style={{marginBottom:12}}><Alert type="error">{testResult}</Alert></div>}
           {testResult==='ok'&&(
-            <div style={{marginBottom:12,background:'linear-gradient(135deg, rgba(0,212,180,0.1), rgba(16,185,129,0.05))',border:'1px solid var(--border-teal)',borderRadius:'14px',padding:'14px 16px',display:'flex',alignItems:'center',gap:12}}>
+            <div style={{marginBottom:12,background:'linear-gradient(135deg, var(--teal-dim), var(--emerald-dim))',border:'1px solid var(--border-teal)',borderRadius:'14px',padding:'14px 16px',display:'flex',alignItems:'center',gap:12}}>
               <span style={{fontSize:24,flexShrink:0}}>🎉</span>
               <div>
                 <div style={{fontWeight:800,fontSize:13,color:'var(--green)'}}>You're all set!</div>
@@ -1336,17 +1457,17 @@ function WelcomeModal({onDone}){
 
   return (
     <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.75)',backdropFilter:'blur(8px)',WebkitBackdropFilter:'blur(8px)',zIndex:300,display:'flex',alignItems:'center',justifyContent:'center',padding:20}}>
-      <div style={{background:'linear-gradient(135deg, #0a1628 0%, #0f1f38 100%)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-xl)',width:'100%',maxWidth:560,boxShadow:'var(--shadow-lg), var(--glow-blue)',display:'flex',flexDirection:'column',overflow:'hidden'}}>
+      <div style={{background:'linear-gradient(160deg, #0a1628 0%, #0d1f3c 50%, #0a1628 100%)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius-xl)',width:'100%',maxWidth:560,boxShadow:'var(--shadow-xl), var(--glow-blue)',display:'flex',flexDirection:'column',overflow:'hidden'}}>
         <div style={{height:3,background:'rgba(255,255,255,0.08)'}}><div style={{height:'100%',background:'linear-gradient(90deg, var(--blue), var(--teal))',width:`${((step+1)/steps.length)*100}%`,transition:'width 0.35s ease'}}/></div>
         <div style={{padding:'30px 30px 0',textAlign:'center'}}>
-          <div style={{fontSize:44,marginBottom:10,lineHeight:1,background:'radial-gradient(circle, rgba(45,127,249,0.15) 0%, transparent 70%)',padding:'12px 0'}}>{current.emoji}</div>
+          <div style={{fontSize:44,marginBottom:10,lineHeight:1,background:step===0?'radial-gradient(circle, var(--blue-glow) 0%, transparent 70%)':step===1?'radial-gradient(circle, rgba(245,158,11,0.25) 0%, transparent 70%)':'radial-gradient(circle, var(--teal-glow) 0%, var(--emerald-dim) 40%, transparent 70%)',padding:'12px 0'}}>{current.emoji}</div>
           <h2 style={{fontSize:24,fontWeight:800,color:'var(--text)',marginBottom:6,letterSpacing:'-0.03em'}}>{current.title}</h2>
           <p style={{fontSize:13,color:'var(--text-3)',marginBottom:22}}>{current.subtitle}</p>
         </div>
         <div style={{padding:'0 30px 18px'}}>{current.content}</div>
         <div style={{padding:'16px 30px 22px',display:'flex',justifyContent:'space-between',alignItems:'center',gap:12}}>
           <div style={{display:'flex',gap:6}}>
-            {steps.map((_,i)=><div key={i} style={{width:i===step?22:7,height:7,borderRadius:999,background:i===step?'var(--blue)':i<step?'rgba(45,127,249,0.35)':'var(--border-strong)',transition:'all 0.3s'}}/>)}
+            {steps.map((_,i)=><div key={i} style={{width:i===step?22:7,height:7,borderRadius:999,background:i===step?'var(--blue)':i<step?'var(--blue-dim)':'var(--border-strong)',transition:'all 0.3s'}}/>)}
           </div>
           <div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap',justifyContent:'flex-end'}}>
             {step>0&&!saved&&<button onClick={()=>setStep(s=>s-1)} style={{background:'transparent',border:'none',color:'var(--text-3)',fontSize:13,padding:'6px 10px'}}>← Back</button>}
@@ -1474,7 +1595,7 @@ function ProjectsPage({projects,onCreate,onOpen,onDelete}){
       <PageHeader
         eyebrow="Workspace"
         title="Your Projects"
-        subtitle="Create a project per production entity, import files, review the tax treatment, then export a workbook your team can actually use."
+        subtitle="Film & TV production incentives for CA and NY."
         actions={<Btn variant="primary" onClick={()=>openForm()}>+ New Project</Btn>}
       />
 
@@ -1494,10 +1615,10 @@ function ProjectsPage({projects,onCreate,onOpen,onDelete}){
       </div>
 
       <div className="grid-auto" style={{marginBottom:20}}>
-        <StatTile label="Projects" value={stats.projects} icon="🎬"/>
-        <StatTile label="Potential QE tracked" value={fmt(stats.qe)} color="var(--teal)" icon="💸"/>
-        <StatTile label="Untagged lines" value={stats.review} color="var(--amber)" icon="🤖"/>
-        <StatTile label="Warnings" value={stats.warnings} color="var(--amber)" icon="⚠️"/>
+        <StatTile label="Projects" value={stats.projects} color="var(--blue-bright)" glow="var(--blue)"/>
+        <StatTile label="Potential QE tracked" value={fmt(stats.qe)} color="var(--emerald)" glow="var(--emerald)"/>
+        <StatTile label="Untagged lines" value={stats.review} color="var(--amber)" glow="var(--amber)"/>
+        <StatTile label="Warnings" value={stats.warnings} color="var(--amber)" glow="var(--amber)"/>
       </div>
 
       <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap',marginBottom:14}}>
@@ -1511,7 +1632,7 @@ function ProjectsPage({projects,onCreate,onOpen,onDelete}){
       {filtered.length===0?(
         projects.length===0
           ? <EmptyState icon={<ClapperEmpty/>} title="No projects yet" text="Create your first production project to start importing files and classifying spend. Pick a program card above to get going." action={<Btn variant="primary" onClick={()=>openForm()}>Create project</Btn>}/>
-          : <EmptyState icon="🔎" title="No matching projects" text="Try a different search term or clear the filter." action={<Btn variant="secondary" onClick={()=>setQuery('')}>Clear search</Btn>}/>
+          : <EmptyState icon={<svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{opacity:0.5}}><circle cx="10.5" cy="10.5" r="6.5" stroke="var(--blue)" strokeWidth="1.6"/><path d="M15.5 15.5 21 21" stroke="var(--blue)" strokeWidth="1.6" strokeLinecap="round"/></svg>} title="No matching projects" text="Try a different search term or clear the filter." action={<Btn variant="secondary" onClick={()=>setQuery('')}>Clear search</Btn>}/>
       ):(
         <div style={{display:'grid',gap:10}}>
           {filtered.map(p=>{
@@ -1521,7 +1642,7 @@ function ProjectsPage({projects,onCreate,onOpen,onDelete}){
             const health=getProjectHealth(p);
             return (
               <div key={p.id} className="card-hover" onClick={()=>onOpen(p)} style={{background:'var(--bg-card)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:'16px 20px',cursor:'pointer',display:'flex',alignItems:'center',gap:16,boxShadow:'var(--shadow)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)'}}>
-                <span style={{background:PROGRAM_ACCENT[p.state]||'#64748b',color:'#050d1a',fontSize:10,padding:'3px 10px',borderRadius:999,fontWeight:800,flexShrink:0}}>{stateBadgeLabel(p.state)}</span>
+                <span style={{background:PROGRAM_ACCENT[p.state]||'#64748b',color:'var(--bg)',fontSize:10,padding:'3px 10px',borderRadius:999,fontWeight:800,flexShrink:0}}>{stateBadgeLabel(p.state)}</span>
                 <div style={{minWidth:0,flex:1}}>
                   <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap',marginBottom:4}}>
                     <span style={{fontWeight:800,fontSize:15,color:'var(--text)',letterSpacing:'-0.01em'}}>{p.name}</span>
@@ -1557,7 +1678,7 @@ function ProjectsPage({projects,onCreate,onOpen,onDelete}){
                   const sel=form.state===k;
                   return (
                     <div key={k} onClick={()=>setForm(f=>({...f,state:k,ptype:''}))} style={{border:`2px solid ${sel?PROGRAM_ACCENT[k]:'var(--border)'}`,background:sel?'var(--bg-card-hover)':'var(--bg-card)',borderRadius:'var(--radius)',padding:'12px 14px',cursor:'pointer',position:'relative',boxShadow:sel?`0 0 20px ${PROGRAM_ACCENT[k]}40`:'none',transition:'all 0.2s ease'}}>
-                      {sel&&<span style={{position:'absolute',top:10,right:10,width:18,height:18,borderRadius:'50%',background:PROGRAM_ACCENT[k],display:'inline-flex',alignItems:'center',justifyContent:'center'}}><CheckIcon size={10} color="#050d1a"/></span>}
+                      {sel&&<span style={{position:'absolute',top:10,right:10,width:18,height:18,borderRadius:'50%',background:PROGRAM_ACCENT[k],display:'inline-flex',alignItems:'center',justifyContent:'center'}}><CheckIcon size={10} color="var(--bg)"/></span>}
                       <div style={{fontWeight:800,fontSize:12.5,color:'var(--text)',marginBottom:6,paddingRight:22,lineHeight:1.4}}>{v.displayName||v.name}</div>
                       <div className="tnum" style={{fontSize:18,fontWeight:800,color:PROGRAM_ACCENT[k]}}>{v.rate}</div>
                       <div style={{fontSize:11,color:'var(--text-3)',marginTop:5,lineHeight:1.5}}>{v.atlNote}</div>
@@ -1600,6 +1721,12 @@ function ProjectsPage({projects,onCreate,onOpen,onDelete}){
 }
 
 // ─── STEP 1: UPLOAD ───────────────────────────────────────
+function FileTypeIcon({type,size=28,color='var(--text-3)'}){
+  const common={width:size,height:size,viewBox:'0 0 24 24',fill:'none','aria-hidden':'true',style:{flexShrink:0}};
+  if(type==='Payroll')return <svg {...common}><circle cx="9" cy="8" r="3" stroke={color} strokeWidth="1.6"/><circle cx="17" cy="9.5" r="2.4" stroke={color} strokeWidth="1.6"/><path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5" stroke={color} strokeWidth="1.6" strokeLinecap="round"/><path d="M15.3 14.9c2.3.3 4 1.9 4.2 4.4" stroke={color} strokeWidth="1.6" strokeLinecap="round"/></svg>;
+  if(type==='Trial Balance')return <svg {...common}><path d="M12 3v15" stroke={color} strokeWidth="1.6" strokeLinecap="round"/><path d="M4 6h16" stroke={color} strokeWidth="1.6" strokeLinecap="round"/><path d="M4 6 1.5 11h5L4 6Z" stroke={color} strokeWidth="1.4" strokeLinejoin="round"/><path d="M20 6 17.5 11h5L20 6Z" stroke={color} strokeWidth="1.4" strokeLinejoin="round"/><path d="M8 21h8" stroke={color} strokeWidth="1.6" strokeLinecap="round"/></svg>;
+  return <svg {...common}><rect x="4.5" y="2.5" width="15" height="19" rx="1.5" stroke={color} strokeWidth="1.6"/><path d="M8 7.5h8M8 11.5h8M8 15.5h5" stroke={color} strokeWidth="1.6" strokeLinecap="round"/></svg>;
+}
 function UploadStep({project,onUpdate}){
   const [dragging,setDragging]=useState(null);
   const [parsing,setParsing]=useState(false);
@@ -1663,9 +1790,9 @@ function UploadStep({project,onUpdate}){
 
   const prog=getStateProgram(project.state);
   const FILE_TYPES=[
-    {type:'GL',label:'General ledger',icon:'📒',desc:'Vendor, memo, account, amount, department'},
-    {type:'Payroll',label:'Payroll',icon:'👥',desc:'Employee, amount, date, department, residency'},
-    {type:'Trial Balance',label:'Trial balance',icon:'⚖️',desc:'Optional reference file for tie-out work'},
+    {type:'GL',label:'General ledger',desc:'Vendor, memo, account, amount, department'},
+    {type:'Payroll',label:'Payroll',desc:'Employee, amount, date, department, residency'},
+    {type:'Trial Balance',label:'Trial balance',desc:'Optional reference file for tie-out work'},
   ];
 
   return (
@@ -1713,12 +1840,13 @@ function UploadStep({project,onUpdate}){
       </Card>
 
       <div style={{display:'grid',gap:12,marginBottom:18}}>
-        {FILE_TYPES.map(({type,label,icon,desc})=>{
+        {FILE_TYPES.map(({type,label,desc})=>{
           const active=dragging===type;
+          const done=uploads.some(u=>u.type===type);
           return (
             <div key={type} onDragOver={e=>{e.preventDefault();setDragging(type);}} onDragLeave={()=>setDragging(null)} onDrop={e=>handleDrop(e,type)} onClick={()=>{setPendingType(type);fileInputRef.current.click();}}
-              style={{minHeight:120,display:'flex',alignItems:'center',gap:20,padding:'20px 26px',border:active?'2px solid var(--blue)':'2px dashed var(--border-strong)',borderRadius:'var(--radius-lg)',cursor:'pointer',background:active?'var(--blue-dim)':'var(--bg-card)',boxShadow:active?'var(--glow-blue)':'var(--shadow)',transition:'all 0.2s ease'}}>
-              <span style={{fontSize:34,flexShrink:0}}>{icon}</span>
+              style={{minHeight:100,display:'flex',alignItems:'center',gap:20,padding:'18px 26px',border:active?'1.5px solid var(--blue)':done?'1.5px solid rgba(16,185,129,0.3)':'1.5px dashed var(--border-2)',borderRadius:'var(--r-lg)',cursor:'pointer',background:active?'var(--blue-dim)':done?'var(--emerald-dim)':'var(--bg-card)',boxShadow:active?'var(--glow-blue)':'var(--shadow)',transition:'all 0.2s ease'}}>
+              <FileTypeIcon type={type} color={active?'var(--blue-bright)':done?'var(--emerald)':'var(--text-3)'}/>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:3,flexWrap:'wrap'}}>
                   <span style={{fontWeight:800,fontSize:15,color:'var(--text)',letterSpacing:'-0.01em'}}>{label}</span>
@@ -1744,12 +1872,12 @@ function UploadStep({project,onUpdate}){
           <div>
             {uploads.map(u=>(
               <div key={u.id} style={{display:'flex',alignItems:'center',gap:14,padding:'13px 18px',borderBottom:'1px solid var(--border)',borderLeft:'3px solid rgba(16,185,129,0.35)'}}>
-                <span style={{fontSize:20}}>{u.type==='GL'?'📒':u.type==='Payroll'?'👥':'⚖️'}</span>
+                <FileTypeIcon type={u.type} size={20} color="var(--text-3)"/>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontWeight:700,fontSize:13,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{u.name}</div>
                   <div className="tnum" style={{color:'var(--text-3)',fontSize:11,marginTop:2}}>{(u.rows||[]).length.toLocaleString()} rows · {(u.headers||[]).length} columns · added {formatDate(u.date)}</div>
                 </div>
-                <Chip color="teal" small>✓ Ready</Chip>
+                <Chip color="teal" small><CheckIcon size={9} color="var(--teal)"/> Ready</Chip>
                 <Chip color={u.type==='GL'?'navy':u.type==='Payroll'?'teal':'gray'} small>{u.type}</Chip>
                 <Btn variant="danger" small onClick={()=>removeUpload(u.id)}>Remove</Btn>
               </div>
@@ -1757,7 +1885,7 @@ function UploadStep({project,onUpdate}){
           </div>
         </Card>
       ):(
-        <EmptyState icon="📤" title="Nothing uploaded yet" text="Start with your GL and payroll files. The mapping step becomes much easier once the files are in." />
+        <EmptyState icon={<svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{opacity:0.5}}><path d="M12 16V4M12 4 7 9M12 4l5 5" stroke="var(--blue)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/><path d="M4 16v2.5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V16" stroke="var(--blue)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>} title="Nothing uploaded yet" text="Start with your GL and payroll files. The mapping step becomes much easier once the files are in." />
       )}
 
       <Alert type="info"><strong>Tip:</strong> If your exports already include a qualification field such as QE / NQ, map that column in Step 2. The AI will only work on the lines that remain untagged.</Alert>
@@ -1970,7 +2098,7 @@ function MapStep({project,onUpdate}){
       {message&&<Alert type="success" style={{marginBottom:14}}>{message}</Alert>}
 
       {activeUploads.length===0?(
-        <EmptyState icon="🧭" title={`No ${tab} files yet`} text={`Upload at least one ${tab==='GL'?'general ledger':'payroll'} file in Step 1 to start mapping columns.`} />
+        <EmptyState icon={<FileTypeIcon type={tab} size={40} color="var(--blue)"/>} title={`No ${tab} files yet`} text={`Upload at least one ${tab==='GL'?'general ledger':'payroll'} file in Step 1 to start mapping columns.`} />
       ):(
         <div style={{display:'grid',gridTemplateColumns:'minmax(0,1.25fr) minmax(330px,0.95fr)',gap:16,alignItems:'start'}}>
           <Card>
@@ -1979,7 +2107,7 @@ function MapStep({project,onUpdate}){
               sub={activeUpload?.name||''}
               action={<div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}>
                 {activeUploads.length>1&&<select value={activeUploadIdx} onChange={e=>setActiveUploadIdx(Number(e.target.value))} style={{background:'var(--bg-3)',border:'1px solid var(--border-strong)',borderRadius:'var(--radius)',padding:'6px 10px'}}>{activeUploads.map((u,i)=><option key={u.id} value={i}>{u.name}</option>)}</select>}
-                <Btn variant="teal" small onClick={autoMap}>✦ Auto-detect columns</Btn>
+                <Btn variant="teal" small onClick={autoMap}><SparkIcon/> Auto-detect columns</Btn>
               </div>}
             />
             <div style={{padding:'14px 18px 6px'}}>
@@ -2221,10 +2349,10 @@ function ReviewStep({project,onUpdate}){
         {tab==='summary'&&(
           <div style={{maxWidth:1020}}>
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:12,marginBottom:12}}>
-              <StatTile big label="Qualifying (QE)" value={fmt(totals.QE)} color="var(--teal)" glow="rgba(0,212,180,0.35)" sub={`${totals.qeCount} lines`}/>
-              <StatTile big label="Non-Qualifying (NQ)" value={fmt(totals.NQ)} color="var(--red)" glow="rgba(239,68,68,0.3)" sub={`${totals.nqCount} lines`}/>
-              <StatTile big label="Untagged" value={fmt(totals.Untagged)} color="var(--amber)" glow="rgba(245,158,11,0.3)" sub={`${totals.unCount} lines`}/>
-              <StatTile big label="Grand Total" value={fmt(totals.total)} color="var(--blue-bright)" glow="rgba(45,127,249,0.35)" sub={`${lines.length.toLocaleString()} lines`}/>
+              <StatTile big label="Qualifying (QE)" value={fmt(totals.QE)} color="var(--emerald)" glow="var(--emerald)" sub={`${totals.qeCount} lines`}/>
+              <StatTile big label="Non-Qualifying (NQ)" value={fmt(totals.NQ)} color="var(--rose)" glow="var(--rose)" sub={`${totals.nqCount} lines`}/>
+              <StatTile big label="Untagged" value={fmt(totals.Untagged)} color="var(--amber)" glow="var(--amber)" sub={`${totals.unCount} lines`}/>
+              <StatTile big label="Grand Total" value={fmt(totals.total)} color="var(--blue-bright)" glow="var(--blue)" sub={`${lines.length.toLocaleString()} lines`}/>
             </div>
             <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:12,marginBottom:18}}>
               <StatTile label="GL Total" value={fmt(totals.gl)}/>
@@ -2272,19 +2400,21 @@ function ReviewStep({project,onUpdate}){
               <Card style={{marginBottom:16}}>
                 <SectionHead label="ATL Cap Calculator — 40% Rule" sub="NY: total ATL cannot exceed 40% of all other qualified spend. Updates live as lines are tagged."/>
                 <div style={{padding:'16px 18px'}}>
-                  <div style={{display:'grid',gap:0}}>
+                  <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',border:'1px solid var(--border)',borderRadius:'var(--r)',overflow:'hidden'}}>
                     {[
-                      ['Qualified BTL / other spend','atl_btl',fmt(atlStats.btlAmt),'var(--text)'],
-                      ['Qualified ATL spend','atl_atl',fmt(atlStats.atlAmt),'var(--text)'],
-                      ['ATL cap limit (40% of BTL)','atl_cap',fmt(atlStats.cap),'var(--text-2)'],
-                      ['ATL overage above cap','atl_over',atlStats.overage>0?fmt(atlStats.overage):'—',atlStats.overage>0?'var(--red)':'var(--green)'],
-                      ['Adjusted qualified total','atl_adj',fmt(atlStats.adjusted),'var(--teal)'],
-                    ].map(([label,key,val,color])=>(
-                      <div key={key} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'9px 0',borderBottom:'1px solid var(--border)'}}>
-                        <span style={{fontSize:13,color:'var(--text-2)'}}>{label}</span>
-                        <span className="tnum" style={{fontSize:14,fontWeight:800,color}}>{val}</span>
+                      ['BTL Qualified',fmt(atlStats.btlAmt),'var(--text)',false],
+                      ['ATL Spend',fmt(atlStats.atlAmt),atlStats.overage>0?'var(--rose)':'var(--text)',atlStats.overage>0],
+                      ['Cap Limit (40%)',fmt(atlStats.cap),'var(--text-2)',false],
+                    ].map(([label,val,color,hot],i)=>(
+                      <div key={label} style={{padding:'16px 18px',borderRight:i<2?'1px solid var(--border)':'none',background:hot?'var(--rose-dim)':'transparent'}}>
+                        <div style={{fontSize:10,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.08em',fontWeight:700,marginBottom:8}}>{label}</div>
+                        <div className="tnum" style={{fontSize:22,fontWeight:800,color,letterSpacing:'-0.02em'}}>{val}</div>
                       </div>
                     ))}
+                  </div>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'14px 2px 0',flexWrap:'wrap',gap:10}}>
+                    <span style={{fontSize:13,color:'var(--text-2)'}}>Adjusted qualified total <span className="tnum" style={{color:'var(--teal)',fontWeight:800}}>{fmt(atlStats.adjusted)}</span></span>
+                    {atlStats.overage>0&&<span className="tnum" style={{fontSize:13,fontWeight:700,color:'var(--rose)'}}>Overage: {fmt(atlStats.overage)}</span>}
                   </div>
                   {atlStats.overage>0
                     ?<div style={{marginTop:12}}><Alert type="error">ATL spend exceeds the 40% cap by {fmt(atlStats.overage)}. The overage will not earn credit — the adjusted qualified total above reflects the capped amount.</Alert></div>
@@ -2330,14 +2460,14 @@ function ReviewStep({project,onUpdate}){
             {aiError&&<div style={{marginBottom:12}}><Alert type="error">{aiError}</Alert></div>}
 
             {!aiRunning&&!hasAiResults&&(
-              <div style={{background:'linear-gradient(160deg, rgba(124,58,237,0.18), rgba(45,127,249,0.08))',border:'1px solid rgba(124,58,237,0.3)',borderRadius:'var(--radius-lg)',padding:'34px 30px',marginBottom:16,textAlign:'center'}}>
-                <div style={{fontSize:36,marginBottom:10}}>✨</div>
+              <div style={{background:'var(--bg-card)',border:'1px solid var(--border)',borderLeft:'3px solid var(--violet)',borderRadius:'var(--r-lg)',padding:'34px 30px',marginBottom:16,textAlign:'center',backdropFilter:'blur(16px)',WebkitBackdropFilter:'blur(16px)',boxShadow:'var(--shadow)'}}>
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{margin:'0 auto 10px',display:'block'}}><path d="M12 3 14 10 21 12 14 14 12 21 10 14 3 12 10 10 12 3Z" stroke="var(--violet)" strokeWidth="1.4" strokeLinejoin="round" fill="var(--violet-dim)"/></svg>
                 <div style={{fontSize:20,fontWeight:800,color:'var(--text)',letterSpacing:'-0.02em',marginBottom:8}}>Let Claude read every untagged line</div>
                 <p style={{fontSize:13,color:'var(--text-2)',maxWidth:560,margin:'0 auto 8px',lineHeight:1.7}}>
                   Two steps, fully automatic: first it checks the web for the latest <strong>{prog.name}</strong> rule changes, then it classifies each untagged line as QE / NQ / Not Required with a confidence score and a short reason.
                 </p>
                 <p style={{fontSize:12,color:'var(--text-3)',marginBottom:18}}>Nothing is final until you approve it — every suggestion stays pending below.</p>
-                <Btn variant="purple" onClick={runAI} disabled={totals.unCount===0} style={{padding:'14px 28px',fontSize:14}}>🌐 Check Live Rules + Classify Lines</Btn>
+                <Btn variant="purple" onClick={runAI} disabled={totals.unCount===0} style={{padding:'14px 28px',fontSize:14}}><GlobeIcon/> Check Live Rules + Classify Lines</Btn>
                 {totals.unCount===0&&<div style={{fontSize:12,color:'var(--text-3)',marginTop:10}}>No untagged lines right now — process files in Step 2 or untag a line to re-run.</div>}
               </div>
             )}
@@ -2362,7 +2492,7 @@ function ReviewStep({project,onUpdate}){
                   {liveRules.summary&&<div style={{fontSize:12.5,color:'var(--text-2)',lineHeight:1.65,maxHeight:140,overflow:'auto',whiteSpace:'pre-wrap'}}>{liveRules.summary.slice(0,700)}{liveRules.summary.length>700?'…':''}</div>}
                   {liveRules.sources&&liveRules.sources.length>0&&(
                     <div style={{marginTop:10,display:'flex',gap:8,flexWrap:'wrap'}}>
-                      {liveRules.sources.map((s,i)=><a key={i} href={s} target="_blank" rel="noopener noreferrer" style={{fontSize:11,color:'var(--blue-bright)',fontWeight:600,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',maxWidth:220,textDecoration:'none'}}>🔗 {s.replace('https://','').slice(0,42)}</a>)}
+                      {liveRules.sources.map((s,i)=><a key={i} href={s} target="_blank" rel="noopener noreferrer" style={{fontSize:11,color:'var(--blue-bright)',fontWeight:600,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',maxWidth:220,textDecoration:'none',display:'inline-flex',alignItems:'center',gap:5}}><LinkIcon/> {s.replace('https://','').slice(0,42)}</a>)}
                     </div>
                   )}
                 </div>
@@ -2371,8 +2501,8 @@ function ReviewStep({project,onUpdate}){
 
             {!aiRunning&&hasAiResults&&(
               <div style={{display:'flex',gap:10,flexWrap:'wrap',marginBottom:16}}>
-                <Btn variant="purple" onClick={runAI} disabled={totals.unCount===0}>🌐 Re-run Live Rules + Classification</Btn>
-                {totals.aiHigh>0&&<Btn variant="teal" onClick={approveHighConfidence}>✓ Approve All High-Confidence ({totals.aiHigh})</Btn>}
+                <Btn variant="purple" onClick={runAI} disabled={totals.unCount===0}><GlobeIcon/> Re-run Live Rules + Classification</Btn>
+                {totals.aiHigh>0&&<Btn variant="teal" onClick={approveHighConfidence}><CheckIcon size={12} color="#fff"/> Approve All High-Confidence ({totals.aiHigh})</Btn>}
               </div>
             )}
 
@@ -2487,12 +2617,12 @@ function ReviewStep({project,onUpdate}){
                             </tr>
                             {sugg&&sugg.length>0&&(
                               <tr>
-                                <td colSpan={9} style={{padding:'8px 14px',background:'rgba(124,58,237,0.12)',borderBottom:'1px solid var(--border)'}}>
+                                <td colSpan={9} style={{padding:'8px 14px',background:'var(--violet-dim)',borderBottom:'1px solid var(--border)'}}>
                                   <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap',fontSize:12}}>
                                     <span style={{fontWeight:700,color:'#a78bfa'}}>Suggested categories</span>
                                     <span style={{color:'var(--text-3)'}}>most common on similar lines in this project:</span>
                                     {sugg.map(([cat,n])=>(
-                                      <button key={cat} onClick={()=>{updateLine(l.id,{cat});setCatSuggest(null);}} style={{padding:'4px 11px',borderRadius:999,border:'1px solid rgba(124,58,237,0.35)',background:'var(--bg-3)',color:'#a78bfa',fontWeight:700,fontSize:11,boxShadow:'none'}}>{cat} <span style={{opacity:0.55,fontWeight:600}}>×{n}</span></button>
+                                      <button key={cat} onClick={()=>{updateLine(l.id,{cat});setCatSuggest(null);}} style={{padding:'4px 11px',borderRadius:999,border:'1px solid rgba(139,92,246,0.35)',background:'var(--bg-3)',color:'#a78bfa',fontWeight:700,fontSize:11,boxShadow:'none'}}>{cat} <span style={{opacity:0.55,fontWeight:600}}>×{n}</span></button>
                                     ))}
                                     <button onClick={()=>setCatSuggest(null)} style={{marginLeft:'auto',background:'none',border:'none',color:'var(--text-3)',fontSize:13,boxShadow:'none'}}>✕</button>
                                   </div>
@@ -2821,7 +2951,7 @@ function ExportStep({project,onUpdate}){
             const on=!!checklist[doc];
             return (
               <button key={doc} onClick={()=>toggleDoc(doc)} style={{display:'flex',width:'100%',textAlign:'left',alignItems:'flex-start',gap:12,padding:'10px 18px',background:'none',border:'none',borderBottom:'1px solid var(--border)',cursor:'pointer',boxShadow:'none'}}>
-                <span style={{width:18,height:18,borderRadius:'var(--radius-sm)',border:on?'none':'1.5px solid var(--border-strong)',background:on?'var(--teal)':'transparent',display:'inline-flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:1}}>{on&&<CheckIcon size={10} color="#050d1a"/>}</span>
+                <span style={{width:18,height:18,borderRadius:'var(--radius-sm)',border:on?'none':'1.5px solid var(--border-strong)',background:on?'var(--teal)':'transparent',display:'inline-flex',alignItems:'center',justifyContent:'center',flexShrink:0,marginTop:1}}>{on&&<CheckIcon size={10} color="var(--bg)"/>}</span>
                 <span style={{fontSize:13,color:on?'var(--text-3)':'var(--text-2)',textDecoration:on?'line-through':'none',lineHeight:1.5}}>{doc}</span>
               </button>
             );
@@ -2848,14 +2978,14 @@ function ExportStep({project,onUpdate}){
       {untLines.length>0&&<div style={{marginBottom:14}}><Alert type="warning">You still have {untLines.length} untagged lines. You can export now, but this is usually worth reviewing first.</Alert></div>}
       {warns>0&&<div style={{marginBottom:18}}><Alert type="warning">{warns} validation warnings remain. Export is still allowed so you can keep moving.</Alert></div>}
 
-      <Btn variant="primary" onClick={doExport} disabled={busy||lines.length===0} style={{padding:'14px 28px',fontSize:14}}>{busy?'Generating workbook…':lines.length===0?'No lines to export':'⬇ Download workbook'}</Btn>
+      <Btn variant="primary" onClick={doExport} disabled={busy||lines.length===0} style={{padding:'14px 28px',fontSize:14}}>{busy?'Generating workbook…':lines.length===0?'No lines to export':<><DownloadIcon/> Download workbook</>}</Btn>
 
       {(project.exports||[]).length>0&&(
         <div style={{marginTop:28}}>
           <div style={{fontSize:11,color:'var(--text-3)',textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:10,fontWeight:700}}>Export history</div>
           {[...(project.exports||[])].reverse().map(e=>(
             <div key={e.id} style={{background:'var(--bg-card)',border:`1px solid ${e.stale?'rgba(245,158,11,0.35)':'var(--border)'}`,borderRadius:'var(--radius)',padding:'12px 14px',marginBottom:8,display:'grid',gridTemplateColumns:'24px 1fr auto auto auto',gap:10,alignItems:'center',fontSize:12,boxShadow:'var(--shadow-sm)'}}>
-              <span style={{fontSize:18}}>📥</span>
+              <span style={{display:'flex',alignItems:'center',color:'var(--text-3)'}}><DownloadIcon size={16}/></span>
               <span style={{color:'var(--text-2)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{e.filename}</span>
               <span className="tnum" style={{color:'var(--teal)',fontWeight:800,whiteSpace:'nowrap'}}>{fmt(e.qe)} QE</span>
               {e.stale&&<Chip color="amber" small>stale</Chip>}
@@ -2946,7 +3076,7 @@ function App(){
       {showWelcome&&<WelcomeModal onDone={dismissWelcome}/>}
       <Sidebar view={view} setView={setView} project={project} setProject={p=>{setProject(p);if(!p)setView('projects');}} hasKey={hasKey}/>
       <div style={{flex:1,overflow:'auto',display:'flex',flexDirection:'column'}}>
-        <div style={{padding:'12px 24px',borderBottom:'1px solid var(--border)',background:'var(--bg-glass)',backdropFilter:'blur(12px)',WebkitBackdropFilter:'blur(12px)',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,position:'sticky',top:0,zIndex:20}}>
+        <div style={{height:52,padding:'0 28px',borderBottom:'1px solid var(--border)',background:'rgba(8,12,20,0.8)',backdropFilter:'blur(20px)',WebkitBackdropFilter:'blur(20px)',display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,position:'sticky',top:0,zIndex:20}}>
           <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
             <Chip color={saveColor} small>{saveLabel}</Chip>
             <Chip color={storageMode==='indexeddb'?'green':'amber'} small>{storageMode==='indexeddb'?'IndexedDB storage':'Fallback storage'}</Chip>
